@@ -1,0 +1,30 @@
+# See https://atom.io/docs/latest/creating-a-package#menus for more details
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle emp-template-management'
+      'command': 'emp-template-management:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'emp-template-management'
+      'submenu': [
+        {
+          'label': 'Toggle'
+          'command': 'emp-template-management:temp-management'
+        }
+      ]
+    ]
+  }
+  {
+    'label': 'Emp'
+    'submenu': [
+        {type: 'separator'}
+        { 'label': 'Template Management1', 'command': 'emp-template-management:temp-management' }
+        {type: 'separator'}
+    ]
+  }
+]
