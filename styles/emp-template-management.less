@@ -193,6 +193,10 @@
     }
   }
 
+  .textarea {
+    background-color:@input-background-color;
+
+  }
   .editor-container {
     margin: @component-padding*2 0;
     &:last-child {
@@ -309,9 +313,70 @@
     line-height: 1;
   }
 
+  .control-group {
+    margin-top:  @component-padding;
+  }
+
+
   .control-label {
     -webkit-user-select: none;
     cursor: default;
+  }
+
+
+  .controle-logo {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    width: 100%;
+
+    .meta-user {
+      flex: 1 0 auto;
+      margin-top: @component-padding;
+      margin-right: @component-padding;
+
+      .avatar {
+        border-radius: @component-border-radius;
+        // height: 24px;
+        // width: 24px;
+        display: inline-block;
+        vertical-align: middle;
+        background-color: hsla(0,0%,0%,.1);
+      }
+
+      .author {
+        color: @text-color-subtle;
+        margin-left: @component-padding;
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+
+    .meta-controls {
+      margin-top: @component-padding;
+      .install-button.is-installing {
+        opacity: 1; // override disabled style
+        background-image: linear-gradient(to right, transparent 50%, hsla(0,0%,0%,.15) 50%);
+        background-size: 10px 100%;
+        -webkit-animation: available-package-is-installing .5s linear infinite;
+      }
+
+      .status-indicator {
+        padding: 0;
+        width: @component-padding/2;
+        min-width: 4px;
+        pointer-events: none;
+        transition: background .4s;
+        background: @background-color-success;
+        &.is-disabled {
+          background: @background-color-warning;
+        }
+      }
+    }
+
+
+
   }
 
   .info-label {

@@ -16,6 +16,14 @@ module.exports =
   EMP_INSTALL:'Install'
 
   EMP_NAME_DEFAULT: 'default'
+  EMP_DEFAULT_VER: '0.1'
+  EMP_TEMPLATES_PATH:'templates'
+  EMP_TEMPLATES_JSON: 'templates.json'
+  EMP_TEMPLATE_JSON: 'template.json'
+
+  EMP_LOGO_DIR:"image"
+
+
 
 
 
