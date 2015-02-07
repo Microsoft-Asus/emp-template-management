@@ -1,10 +1,14 @@
 # _ = require 'underscore-plus'
 {$$, TextEditorView, View} = require 'atom-space-pen-views'
+path = require 'path'
+fs = require 'fs'
+emp = require '../exports/emp'
 # {Subscriber} = require 'emissary'
 # fuzzaldrin = require 'fuzzaldrin'
 
 AvailableTemplateView = require './available-template-view'
 # ErrorView = require './error-view'
+templates_json = null
 
 module.exports =
 class InstalledTemplatePanel extends View
@@ -35,7 +39,15 @@ class InstalledTemplatePanel extends View
     @packageViews = []
 
     # @filterEditor.getModel().onDidStopChanging => @matchPackages()
+    if !templates_path = atom.project.templates_path
+      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
+      templates_path =atom.project.templates_path
+    templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
 
+    @loadTemplates1()
+
+  refresh_detail:() ->
+    console.log "do refresh"
     @loadTemplates1()
 
   loadTemplates1: ->
@@ -51,18 +63,32 @@ class InstalledTemplatePanel extends View
     #   packageViews.push(packView) # used for search filterin'
     #   packageRow.append(packView)
 
-    templates = [{name:"emp", description:"this is a test", version:"0.1"},
-                 {name:"ebank", description:"this is a ebank", version:"0.11"},
-                 {name:"gdb", description:"this is a gdb", version:"0.14"},
-                 {name:"boc", description:"this is a boc", version:"1.1"},
-                 {name:"other", description:"this is a other", version:"3.1"}
-                ]
-    for template in templates
-      tempRow = $$ -> @div class: 'row'
-      @templatePackages.append tempRow
-      # name, description, version, repository
-      tempView = new AvailableTemplateView(template)
-      tempRow.append tempView
+    if fs.existsSync templates_json
+      json_data = fs.readFileSync templates_json
+      templates_obj = JSON.parse json_data
+      delete templates_obj.templates?[emp.EMP_DEFAULT_TYPE]?.length
+      for name, obj of templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+        tempRow = $$ -> @div class: 'row'
+        @templatePackages.append tempRow
+        # name, description, version, repository
+        tempView = new AvailableTemplateView(obj)
+        tempRow.append tempView
+
+
+
+
+    # templates = [{name:"emp", description:"this is a test", version:"0.1"},
+    #              {name:"ebank", description:"this is a ebank", version:"0.11"},
+    #              {name:"gdb", description:"this is a gdb", version:"0.14"},
+    #              {name:"boc", description:"this is a boc", version:"1.1"},
+    #              {name:"other", description:"this is a other", version:"3.1"}
+    #             ]
+    # for template in templates
+    #   tempRow = $$ -> @div class: 'row'
+    #   @templatePackages.append tempRow
+    #   # name, description, version, repository
+    #   tempView = new AvailableTemplateView(template)
+    #   tempRow.append tempView
 
   #
   #   packageViews

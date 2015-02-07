@@ -86,6 +86,7 @@ class EmpTmpManagementView extends ScrollView
 
   showPanel: (name, opts) ->
     if panel = @getOrCreatePanel(name)
+      panel.refresh_detail?()
       @panels.children().hide()
       @panels.append(panel) unless $.contains(@panels[0], panel[0])
       panel.beforeShow?(opts)

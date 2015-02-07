@@ -22,8 +22,8 @@ class InstalledTemplatePanel extends ScrollView
     logo_path =  path.join __dirname, '../../images/logo'
     logo_imgs = fs.readdirSync(logo_path).filter((ele)-> !ele.match(/^\./ig))
     index = Math.round Math.random()*(logo_imgs.length-1)
-    console.log index
-    console.log logo_imgs
+    # console.log index
+    # console.log logo_imgs
     logo_img = path.join logo_path,logo_imgs[index]
 
     @div =>
@@ -51,7 +51,7 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'setting-description', "Template Package Name"
                 @subview "template_name", new TextEditorView(mini: true,attributes: {id: 'template_name', type: 'string'},  placeholderText: ' Template Name')
 
-
+          # 包版本号
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
@@ -62,6 +62,26 @@ class InstalledTemplatePanel extends ScrollView
                 # @div class: 'editor-container', =>
                 @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
 
+          # 包类型
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板类型"
+                  @div class: 'setting-description', "目前分为控件"
+              @div class: 'controls', =>
+                # @div class: 'editor-container', =>
+                @select outlet:"type_select", id: "type", class: 'form-control', =>
+
+                  if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
+                    atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
+                    emp_cbb_types = emp.EMP_CPP_TYPE_DEF
+                  for option in emp_cbb_types
+                    @option value: option, option
+                  @option selected:'select', value: emp.EMP_DEFAULT_TYPE, emp.EMP_DEFAULT_TYPE
+
+
+          # 包图标
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
@@ -134,6 +154,7 @@ class InstalledTemplatePanel extends ScrollView
     fs.readFile templates_json, (err, data) ->
       if err
         console.log "no exist"
+        templates_obj = null
       else
         templates_obj = JSON.parse data
 
@@ -150,8 +171,8 @@ class InstalledTemplatePanel extends ScrollView
 
     @logo_select.change (event) =>
       # console.log @logo_select
-      console.log @logo_select.val()
-      console.log @logo_image.attr("src", @logo_select.val())
+      # console.log @logo_select.val()
+      @logo_image.attr("src", @logo_select.val())
       # console.log @logo_image
 
     # @option_default.on 'click', ->
@@ -265,32 +286,28 @@ class InstalledTemplatePanel extends ScrollView
               log_view.append tmp_opt
             # console.log log_view
 
-
-
-
-
   do_submit: ->
     console.log "do_submit"
     temp_path = @template_path.getEditor().getText()?.trim()
     temp_name = @template_name.getEditor().getText()?.trim()
-    temp_ver = @template_ver.getEditor().getText()?.trim()
-    temp_desc = @template_desc.getEditor().getText()?.trim()
+    temp_type = @type_select.val()
+    console.log temp_type
+
+    # console.log temp_logo
 
     template_store_path = path.join templates_store_path, temp_name
     template_json = path.join template_store_path, emp.EMP_TEMPLATE_JSON
     temp_obj = null
     # if fs.existsSync templates_json
 
-    if !templates_obj?.templates[temp_name]
+    if !templates_obj?.templates[temp_type][temp_name]
       if !templates_obj
         templates_obj = @new_templates_obj()
-        temp_obj = @new_template_obj(temp_name, temp_ver, temp_path, temp_desc)
-      else
-        temp_obj = @new_template_obj(temp_name, temp_ver, temp_path, temp_desc)
 
-      console.log "-----------"
-      templates_obj.templates[temp_name] = temp_obj
-      templates_obj.length += 1
+      temp_obj = @new_template_obj(temp_name, temp_path)
+      console.log templates_obj
+      templates_obj.templates[temp_type][temp_name] = temp_obj
+      templates_obj.templates[temp_type].length += 1
       json_str = JSON.stringify(templates_obj)
 
       fs.writeFileSync templates_json, json_str
@@ -302,8 +319,6 @@ class InstalledTemplatePanel extends ScrollView
     else
       console.log "exist -------"
       emp.show_info("该模板已经存在~")
-
-
 
   copy_template: (to_path, basic_dir)->
     # console.log "copy  template`````--------"
@@ -333,8 +348,20 @@ class InstalledTemplatePanel extends ScrollView
 
 
 
-  new_template_obj: (name, ver, path, desc, logo)->
-    {name:name, version:ver, path:path, desc: desc, logo:logo}
+  new_template_obj: (name, path)->
+    ver = @template_ver.getEditor().getText()?.trim()
+    desc = @template_desc.getEditor().getText()?.trim()
+    logo = @logo_select.val()
+
+    {name:name, version:ver, path:path, desc: desc, logo:logo, available:true}
 
   new_templates_obj: ->
-    {templates:{}, length:0}
+    tmp_obj = {templates:{}, length:0}
+    if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
+      atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
+      emp_cbb_types = emp.EMP_CPP_TYPE_DEF
+    emp_cbb_types.push emp.EMP_DEFAULT_TYPE
+
+    for cbb_type in emp_cbb_types
+      tmp_obj.templates[cbb_type] = new Object(length:0)
+    tmp_obj

@@ -2,18 +2,20 @@
 {View} = require 'atom-space-pen-views'
 # {Subscriber} = require 'emissary'
 # shell = require 'shell'
+logo_image_size = '48px'
+logo_image_big_size = '156px'
 
 module.exports =
 class AvailableTemplateView extends View
   # Subscriber.includeInto(this)
 
-  @content: ({name, description, version, repository}) ->
+  @content: ({name, version, path, desc, logo}) ->
     # stars, downloads
     # lol wat
     # owner = AvailablePackageView::ownerFromRepository(repository)
-    console.log name, description, version, repository
+    # console.log name, description, version, repository
     owner = "jcrom"
-    description ?= ''
+    # description ?= ''
 
     @div class: 'available-package-view col-lg-8', =>
       @div class: 'stats pull-right', =>
@@ -21,27 +23,27 @@ class AvailableTemplateView extends View
           @span class: 'icon icon-versions'
           @span class:'value', version
 
-        @span class: 'stats-item', =>
-          @span class: 'icon icon-cloud-download'
-          @span outlet: 'downloadCount', class: 'value'
+        # @span class: 'stats-item', =>
+        #   @span class: 'icon icon-cloud-download'
+        #   @span outlet: 'downloadCount', class: 'value'
 
       @div class: 'body', =>
         @h4 class: 'card-name', =>
           @a outlet: 'packageName', name
-        @span outlet: 'packageDescription', class: 'package-description', description
+        @span outlet: 'packageDescription', class: 'package-description', desc
 
       @div class: 'meta', =>
         @div class: 'meta-user', =>
-          @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-            @img outlet: 'avatar', class: 'avatar', src: 'https://github.com/jcrom.png' # A transparent gif so there is no "broken border"
-          @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
+          # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
+          @img outlet: 'logo_img', class: 'avatar', src: "#{logo}", click:'image_format'  # A transparent gif so there is no "broken border"
+          # @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
         @div class: 'meta-controls', =>
           # @div class: 'btn-group', =>
           #   @button type: 'button', class: 'btn btn-info icon icon-cloud-download install-button', outlet: 'installButton', 'Install'
           @div outlet: 'buttons', class: 'btn-group', =>
-            @button type: 'button', class: 'btn icon icon-gear',           outlet: 'settingsButton', 'Settings'
-            @button type: 'button', class: 'btn icon icon-trashcan',       outlet: 'uninstallButton', 'Uninstall'
-            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablementButton', =>
+            @button type: 'button', class: 'btn icon icon-gear',           outlet: 'edit_button', 'Edit'
+            @button type: 'button', class: 'btn icon icon-trashcan',       outlet: 'uninstall_button', 'Uninstall'
+            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
               @span class: 'disable-text', 'Disable'
             @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
@@ -86,6 +88,21 @@ class AvailableTemplateView extends View
     #     atom.packages.disablePackage(@pack.name)
     #   @updateEnablement()
     #   false
+
+
+  image_format: ->
+    console.log 'image_format'
+    console.log @logo_img.css('height')
+    if @logo_img.css('height') is logo_image_size
+      # @logo_img.css('height', logo_image_big_size)
+      # @logo_img.css('width', logo_image_big_size)
+      @logo_img.css('height', 'logo_image_big_size')
+      @logo_img.css('width', 'logo_image_big_size')
+    else
+      @logo_img.css('height', logo_image_size)
+      @logo_img.css('width', logo_image_size)
+      
+
 
   detached: ->
     # @unsubscribe()

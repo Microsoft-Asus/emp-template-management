@@ -22,7 +22,13 @@ module.exports =
   EMP_TEMPLATE_JSON: 'template.json'
 
   EMP_LOGO_DIR:"image"
+  EMP_DEFAULT_TYPE: "componment"
 
+  # config key
+  EMP_CBB_TYPE: 'emp-template-management.cbb_type'
+
+  # config value
+  EMP_CPP_TYPE_DEF:["package"]
 
 
 

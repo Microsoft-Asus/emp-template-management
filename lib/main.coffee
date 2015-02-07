@@ -23,6 +23,16 @@ temp_deserializer =
 atom.deserializers.add(temp_deserializer)
 
 module.exports =
+  # config:
+  #   cbb_type:
+  #     title: '控件类型'
+  #     description: '模板类型, 默认为控件, 可以自定义类型,在此处添加,重启管理器即可.'
+  #     type: "string"
+  #     default: emp.EMP_DEFAULT_TYPE, "package"
+  #     order: 1
+
+
+
   activate: (state)->
     # console.log "emp active~:#{state}"
     atom.workspace.addOpener (uri) ->
