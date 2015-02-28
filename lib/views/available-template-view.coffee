@@ -1,5 +1,6 @@
 # _ = require 'underscore-plus'
 {View} = require 'atom-space-pen-views'
+emp = require '../exports/emp'
 # {Subscriber} = require 'emissary'
 # shell = require 'shell'
 logo_image_size = '48px'
@@ -93,15 +94,15 @@ class AvailableTemplateView extends View
   image_format: ->
     console.log 'image_format'
     console.log @logo_img.css('height')
-    if @logo_img.css('height') is logo_image_size
+    if @logo_img.css('height') is emp.LOGO_IMAGE_SIZE
       # @logo_img.css('height', logo_image_big_size)
       # @logo_img.css('width', logo_image_big_size)
-      @logo_img.css('height', 'logo_image_big_size')
-      @logo_img.css('width', 'logo_image_big_size')
+      @logo_img.css('height', emp.LOGO_IMAGE_BIG_SIZE)
+      @logo_img.css('width', emp.LOGO_IMAGE_BIG_SIZE)
     else
-      @logo_img.css('height', logo_image_size)
-      @logo_img.css('width', logo_image_size)
-      
+      @logo_img.css('height', emp.LOGO_IMAGE_SIZE)
+      @logo_img.css('width', emp.LOGO_IMAGE_SIZE)
+
 
 
   detached: ->

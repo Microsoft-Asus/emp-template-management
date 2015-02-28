@@ -46,6 +46,11 @@ class InstalledTemplatePanel extends View
 
     @loadTemplates1()
 
+  matchPackages: () ->
+    # console.log @filterEditor
+    # console.log @filterEditor.getText()
+    console.log "matchPackagesmatchPackagesmatchPackages"
+
   refresh_detail:() ->
     console.log "do refresh"
     @loadTemplates1()

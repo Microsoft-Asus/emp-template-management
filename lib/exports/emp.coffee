@@ -6,6 +6,8 @@ os = require 'os'
 module.exports =
   EMP_TEMP_URI : 'emp://template_management_wizard'
 
+  LOGO_IMAGE_SIZE : '48px'
+  LOGO_IMAGE_BIG_SIZE : '156px'
 
   TEMP_WIZARD_VIEW: 'EmpTemplateView'
   DEFAULT_PANEL: 'OverView'
@@ -22,6 +24,10 @@ module.exports =
   EMP_TEMPLATE_JSON: 'template.json'
 
   EMP_LOGO_DIR:"image"
+  EMP_HTML_DIR:"xhtml"
+  EMP_CSS_DIR:"css"
+  EMP_LUA_DIR:"lua"
+
   EMP_DEFAULT_TYPE: "componment"
 
   # config key

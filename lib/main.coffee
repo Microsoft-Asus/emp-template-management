@@ -1,4 +1,5 @@
 EmpTmpManaWizardView = require './views/emp-template-management-view'
+EmpCcbView = require './views/componment-view'
 
 empTmpManagementView = null
 emp = require './exports/emp'
@@ -22,8 +23,13 @@ temp_deserializer =
 
 atom.deserializers.add(temp_deserializer)
 
+
+
 module.exports =
-  # config:
+  config:
+    showOnRightSide:
+      type: 'boolean'
+      default: true
   #   cbb_type:
   #     title: '控件类型'
   #     description: '模板类型, 默认为控件, 可以自定义类型,在此处添加,重启管理器即可.'
@@ -44,6 +50,26 @@ module.exports =
 
 
     atom.commands.add "atom-workspace",
-      "emp-template-management:temp-management", -> open_temp_wizard_panel(emp.DEFAULT_PANEL)
+      "emp-template-management:temp-management": -> open_temp_wizard_panel(emp.DEFAULT_PANEL)
+
+    # @doc 创建 ccb 视图
+    @emp_componment_view = new EmpCcbView(state.emp_ccb_panel_state)
+
+  serialize: ->
+    emp_ccb_panel_state: @emp_componment_view.serialize()
+
+  deactivate: ->
+    @emp_componment_view.destroy()
+
+
+  # @doc 创建 ccb 视图
+  # create_ccb_panel: (state)->
+  #   console.log "show ccb"
+  #   unless @emp_componment_view
+  #
+  #
+  #     # @emp_componment_view.show_toolbar()
+  #   @emp_componment_view
+
 
 module.exports.open_temp_wizard = open_temp_wizard_panel

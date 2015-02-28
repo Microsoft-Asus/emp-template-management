@@ -1,5 +1,9 @@
 # _ = require 'underscore-plus'
-{$, $$, TextEditorView, ScrollView} = require 'atom'
+# {TextEditorView} = require 'atom-space-pen-views'
+# {ScrollView} = require 'atom'
+
+{$, $$, ScrollView} = require 'atom'
+{TextEditorView} = require 'atom-space-pen-views'
 path = require 'path'
 fs = require 'fs'
 # {Subscriber} = require 'emissary'
@@ -40,7 +44,9 @@ class InstalledTemplatePanel extends ScrollView
                 @label class: 'control-label', =>
                   @div class: 'info-label', "模板路径"
                   @div class: 'setting-description', "Root Dir Name"
+                # @div class: 'editor-container', =>
                 @subview "template_path", new TextEditorView(mini: true,attributes: {id: 'template_path', type: 'string'},  placeholderText: ' Template Path')
+                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_path',' Chose Path '
 
           @div class: 'section-body', =>
@@ -49,6 +55,7 @@ class InstalledTemplatePanel extends ScrollView
                 @label class: 'control-label', =>
                   @div class: 'info-label', "模板名称"
                   @div class: 'setting-description', "Template Package Name"
+                # @div class: 'editor-container', =>
                 @subview "template_name", new TextEditorView(mini: true,attributes: {id: 'template_name', type: 'string'},  placeholderText: ' Template Name')
 
           # 包版本号
@@ -59,6 +66,7 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'info-label', "模板版本"
                   @div class: 'setting-description', "默认为0.1, 每次+0.1"
               @div class: 'controls', =>
+                # @div class: 'editor-container', =>
                 # @div class: 'editor-container', =>
                 @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
 
@@ -79,7 +87,6 @@ class InstalledTemplatePanel extends ScrollView
                   for option in emp_cbb_types
                     @option value: option, option
                   @option selected:'select', value: emp.EMP_DEFAULT_TYPE, emp.EMP_DEFAULT_TYPE
-
 
           # 包图标
           @div class: 'section-body', =>
@@ -110,6 +117,27 @@ class InstalledTemplatePanel extends ScrollView
                 # @div class: 'editor-container', =>
                 @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
 
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板报文"
+                  @div class: 'setting-description', "模板插入的报文实体"
+                # @div class: 'editor-container', =>
+                @subview "template_html", new TextEditorView(mini: true,attributes: {id: 'template_html', type: 'string'},  placeholderText: ' Template Html Content')
+                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+                @button class: 'control-btn btn btn-info', click:'select_html',' Chose File '
+
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板样式"
+                  @div class: 'setting-description', "模板插入的样式实体"
+                # @div class: 'editor-container', =>
+                @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
+                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+                @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
 
             # @div class: 'control-group', =>
             #   @div class: 'controls', =>
@@ -166,8 +194,9 @@ class InstalledTemplatePanel extends ScrollView
 
     # console.log @template_path_e.getEditor().getText()
 
-    @template_path.getEditor().on 'contents-modified', =>
-      console.log @template_path.getEditor().getText()
+    # @template_path.getModel().onDidStopChanging =>
+    # # @template_path.getEditor().on 'contents-modified', =>
+    #   console.log @template_path.getText()
 
     @logo_select.change (event) =>
       # console.log @logo_select
@@ -247,29 +276,48 @@ class InstalledTemplatePanel extends ScrollView
     console.log "----"
 
   select_path: (e, element)->
-    tmp_path = @template_path.getEditor().getText()
-    @promptForPath(@template_path, @template_name, @template_ver, @logo_select, tmp_path)
+    tmp_path = @template_path.getText()
+    view_set = {path:@template_path,name:@template_name,ver:@template_ver,logo:@logo_select,html:@template_html,css:@template_css}
+    @prompt_for_path(view_set, tmp_path)
 
-  promptForPath: (path_view, name_view, ver_view, log_view, def_path) ->
+  prompt_for_path: (view_set, def_path) ->
     if def_path
-      dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory', 'createDirectory'], (pathsToOpen) =>
-        @refresh_path( pathsToOpen, path_view, name_view, ver_view, log_view)
+      dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
+        @refresh_path( paths_to_open, view_set)
     else
-      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'createDirectory'], (pathsToOpen) =>
-        @refresh_path( pathsToOpen, path_view, name_view, ver_view, log_view)
+      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
+        @refresh_path( paths_to_open, view_set)
 
-  refresh_path: (new_paths, path_view, name_view, ver_view, log_view)->
+  refresh_path: (new_paths, view_set)->
     if new_paths
       console.log new_paths
       new_path = new_paths[0]
-      path_view.getEditor().setText(new_path)
+      view_set.path.setText(new_path)
       path_state = fs.statSync new_path
 
       if path_state?.isDirectory()
         console.log "----------------"
         name = path.basename new_path
-        name_view.getEditor().setText(name)
-        ver_view.getEditor().setText(emp.EMP_DEFAULT_VER)
+        view_set.name.setText(name)
+        view_set.ver.setText(emp.EMP_DEFAULT_VER)
+
+        html_path = path.join new_path, emp.EMP_HTML_DIR
+        fs.readdir html_path, (err, files) =>
+          if err
+            console.log "no exist html files"
+          else
+            html_files = files.filter((ele)-> !ele.match(/^\./ig))
+            if html_files?.length
+              view_set.html.setText(path.join html_path,html_files[0])
+
+        css_path = path.join new_path, emp.EMP_CSS_DIR
+        fs.readdir css_path, (err, files) =>
+          if err
+            console.log "no exist css file"
+          else
+            css_files = files.filter((ele)-> !ele.match(/^\./ig))
+            if css_files?.length
+              view_set.css.setText(path.join css_path, css_files[0])
 
         logo_path =  path.join new_path,emp.EMP_LOGO_DIR
         fs.readdir logo_path, (err, files) =>
@@ -277,21 +325,49 @@ class InstalledTemplatePanel extends ScrollView
             console.log "no exist"
           else
             logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-            console.log logo_images
+            # console.log logo_images
             for logo in logo_images
               tmp_opt = document.createElement 'option'
               tmp_opt.text = logo
               tmp_opt.value = path.join logo_path, logo
-              console.log tmp_opt
-              log_view.append tmp_opt
+              # console.log tmp_opt
+              view_set.logo.append tmp_opt
             # console.log log_view
+
+  # callback function for button
+  select_html: (e, element)->
+    console.log "select html"
+    tmp_con = @template_html.getText()
+    @prompt_for_file(@template_html, tmp_con)
+
+  select_css: (e, element)->
+    console.log "select css"
+    # console.log element
+    tmp_con = @template_css.getText()
+    @prompt_for_file(@template_css, tmp_con)
+
+  prompt_for_file: (file_view, tmp_con) ->
+    if tmp_con
+      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openDirectory', 'openFile'], (paths_to_open) =>
+        # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
+        @refresh_editor(file_view, paths_to_open)
+    else
+      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (paths_to_open) =>
+        # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
+        @refresh_editor(file_view, paths_to_open)
+
+  refresh_editor: (file_view, new_paths) ->
+    if new_paths
+      console.log new_paths
+      new_path = new_paths[0]
+      file_view.setText(new_path)
 
   do_submit: ->
     console.log "do_submit"
-    temp_path = @template_path.getEditor().getText()?.trim()
-    temp_name = @template_name.getEditor().getText()?.trim()
+    temp_path = @template_path.getText()?.trim()
+    temp_name = @template_name.getText()?.trim()
     temp_type = @type_select.val()
-    console.log temp_type
+    # console.log temp_type
 
     # console.log temp_logo
 
@@ -304,14 +380,21 @@ class InstalledTemplatePanel extends ScrollView
       if !templates_obj
         templates_obj = @new_templates_obj()
 
-      temp_obj = @new_template_obj(temp_name, temp_path)
+      pre_logo_path = @logo_select.val()
+      logo_basename = path.basename pre_logo_path
+      template_logo_path = path.join template_store_path, logo_basename
+      emp.mkdir_sync template_store_path
+      if !fs.existsSync(template_logo_path)#, 'utf8'
+        tmp_con = fs.readFileSync pre_logo_path
+        fs.writeFileSync template_logo_path, tmp_con
+
+      temp_obj = @new_template_obj(temp_name, template_store_path, template_logo_path)
       console.log templates_obj
       templates_obj.templates[temp_type][temp_name] = temp_obj
       templates_obj.templates[temp_type].length += 1
       json_str = JSON.stringify(templates_obj)
-
       fs.writeFileSync templates_json, json_str
-      emp.mkdir_sync template_store_path
+
       temp_str = JSON.stringify temp_obj
       fs.writeFileSync template_json, temp_str
       @copy_template(template_store_path, temp_path)
@@ -326,13 +409,14 @@ class InstalledTemplatePanel extends ScrollView
     # console.log basic_dir
     files = fs.readdirSync(basic_dir)
     for template in files
-      f_path = path.join basic_dir, template
-      t_path = path.join to_path, template
-      if fs.lstatSync(f_path).isDirectory()
-        emp.mkdir_sync(t_path)
-        @copy_template(t_path, f_path)
-      else
-        @copy_content(t_path, f_path)
+      if !template.match(/^\./ig)
+        f_path = path.join basic_dir, template
+        t_path = path.join to_path, template
+        if fs.lstatSync(f_path).isDirectory()
+          emp.mkdir_sync(t_path)
+          @copy_template(t_path, f_path)
+        else
+          @copy_content(t_path, f_path)
 
 
   # string_replace: (str) ->
@@ -342,18 +426,19 @@ class InstalledTemplatePanel extends ScrollView
   #   str
 
   copy_content: (t_path, f_path)->
+    # console.log "copy file: #{t_path}, #{f_path}"
     f_name = path.basename f_path
     f_con = fs.readFileSync f_path
-    fs.writeFileSync t_path, f_con #, 'utf8'
+    fs.writeFileSync t_path, f_con  unless fs.existsSync(path.join t_path, f_name)#, 'utf8'
 
+  new_template_obj: (name, path, logo)->
+    ver = @template_ver.getText()?.trim()
+    desc = @template_desc.getText()?.trim()
+    html_temp = @template_html.getText()?.trim()
+    css_temp = @template_css.getText()?.trim()
+    # logo = @logo_select.val()
 
-
-  new_template_obj: (name, path)->
-    ver = @template_ver.getEditor().getText()?.trim()
-    desc = @template_desc.getEditor().getText()?.trim()
-    logo = @logo_select.val()
-
-    {name:name, version:ver, path:path, desc: desc, logo:logo, available:true}
+    {name:name, version:ver, path:path, desc: desc, logo:logo, html:html_temp, css:css_temp, available:true}
 
   new_templates_obj: ->
     tmp_obj = {templates:{}, length:0}

@@ -1,6 +1,6 @@
 {
   "name": "emp-template-management",
-  "main": "./lib/main.coffee",
+  "main": "./lib/main",
   "version": "0.0.0",
   "description": "Emp 模板管理工具",
   "maintainers": [
@@ -9,9 +9,10 @@
       "email": "ju.chao@rytong.com"
     }
   ],
-  "activationCommands": {
-    "atom-workspace": "emp-template-management:temp-management"
-  },
+  "activationEvents": [
+    "emp-template-management:temp-management",
+    "emp-template-management:ccb-panel"
+  ],
   "repository": "https://github.com/atom/emp-template-management",
   "license": "MIT",
   "engines": {

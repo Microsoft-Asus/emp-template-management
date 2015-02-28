@@ -1,0 +1,190 @@
+@import "ui-variables";
+
+.ccb-view-resizer {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  cursor: default;
+  -webkit-user-select: none;
+  min-width: 100px;
+  width: 200px;
+  z-index: 2;
+
+  .ccb-view-scroller {
+    width: 100%;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    .gen_panel {
+      -webkit-flex: 1;
+      display: -webkit-flex;
+      min-height: 0;
+      min-width: 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      // overflow: auto;
+      -webkit-flex-flow: column;
+      .ccb-head-bar {
+        top:0px;
+        height:30px;
+        width:100%;
+        padding: 5px; // 0 5px 0;
+        // color: @text-color;
+        // font-size: 1em;
+        display:block;
+
+        .icon-btn-bor {
+          width:24%;
+          text-align:center;
+          margin-right: 1px;
+          border-right: 1px solid #ccc;
+        }
+        .icon-btn {
+          width:24%;
+          text-align:center;
+          margin-right: 1px;
+        }
+
+      }
+      // .ccb-head-bottom {
+      //   bottom:0px;
+      //   height:30px;
+      //   width:100%;
+      //   padding: 5px 0 5px 0;
+      //   // color: @text-color;
+      //   // font-size: 1em;
+      //   display:block;
+      //   position:absolute;
+      //
+      // }
+
+      .ccb-view-panel {
+        // padding:5px;
+        -webkit-flex: 1;
+        display: -webkit-flex;
+        position:relative;
+        overflow: auto;
+        .ccb-view-detail {
+          padding: 2px;
+          position: absolute;
+          top: 0;
+          right: 0;
+          left: 0;
+          display: -webkit-flex;
+          -webkit-flex-flow: column;
+        }
+      }
+    }
+  }
+
+  .ccb-view-resize-handle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    cursor: col-resize;
+    z-index: 3;
+
+  }
+
+  &[data-show-on-right-side='true'] {
+    .g {
+      left: -5px;
+    }
+  }
+
+  &[data-show-on-right-side='false'] {
+    .ccb-view-resize-handle {
+      right: -5px;
+    }
+  }
+}
+
+.ccb-view {
+  min-width: -webkit-min-content;
+
+  min-height: 100%;
+  // padding-left: @component-icon-padding;
+  // padding-right: @component-padding;
+  // margin-left:@component-icon-padding;
+  position: relative;
+  // height:100%;
+  // overflow: auto;
+
+  .ccb_li_view {
+    // padding: 0 @component-icon-padding 0 @component-icon-padding;
+    // padding-right: @component-padding;
+    border-bottom: 1px solid #ccc;
+    display:block;
+    display: -webkit-flex;
+
+    .temp_logo {
+      // flex: 1 0 auto;
+      -webkit-flex-direction: column;
+      display:block;
+      min-width:48px;
+      margin-top: @component-padding/4;
+      margin-right: @component-padding/4;
+
+      .avatar {
+        border-radius: @component-border-radius;
+        height: 48px;
+        width: 48px;
+        display: inline-block;
+        vertical-align: left;
+        background-color: hsla(0,0%,0%,.1);
+      }
+
+
+    }
+
+    // .temp_name {
+    //
+    // }
+
+    .temp_name {
+      margin-top: @component-padding/2;
+      -webkit-flex-direction: column;
+      display:block;
+      max-width:200px;
+      .name_header {
+        margin: 0 0 @component-padding/2 0;
+
+      }
+      .name_detail {
+        white-space: normal;
+      }
+
+      .temp_desc {
+        white-space: normal;
+        line-height: 1.4;
+        max-width:200px;
+        display:block;
+
+      }
+
+
+    }
+
+
+
+  }
+
+  // This fixes #110, see that issue for more details
+  .entry:before {
+    content: '';
+    position: absolute;
+  }
+}
+
+.platform-win32 {
+  .cbb-view-resizer {
+    .cbb-view-resize-handle {
+      cursor: ew-resize;
+    }
+  }
+}
