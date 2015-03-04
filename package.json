@@ -1,0 +1,26 @@
+{
+  "name": "emp-template-management",
+  "main": "./lib/main",
+  "version": "0.0.0",
+  "description": "Emp 模板管理工具",
+  "maintainers": [
+    {
+      "name": "Ju Chao",
+      "email": "ju.chao@rytong.com"
+    }
+  ],
+  "activationEvents": [
+    "emp-template-management:temp-management",
+    "emp-template-management:ccb-panel"
+  ],
+  "repository": "https://github.com/atom/emp-template-management",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  },
+  "dependencies": {
+    "underscore-plus": "*",
+    "atom-space-pen-views": "^2.0.2"
+
+  }
+}
