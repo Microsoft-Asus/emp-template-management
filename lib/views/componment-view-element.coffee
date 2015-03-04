@@ -1,4 +1,5 @@
 {View} = require 'atom-space-pen-views'
+{Range} = require 'atom'
 emp = require '../exports/emp'
 # {Subscriber} = require 'emissary'
 
@@ -6,6 +7,7 @@ emp = require '../exports/emp'
 module.exports =
 class ComponmentEleView extends View
   # Subscriber.includeInto(this)
+  snippets:null
 
   @content: ({name, version, path, desc, logo}) ->
     @li class:'two-lines ccb_li_view', click: 'do_click', =>
@@ -40,7 +42,33 @@ class ComponmentEleView extends View
 
   do_click: ->
     console.log @com
-    html_temp = @com.html
-    file_con = fs.readFileSync html_temp
+    if !@snippets
+      html_temp = @com.html
+      @snippets = fs.readFileSync html_temp, 'utf-8'
+    console.log @snippets
     editor = atom.workspace.getActiveEditor()
-    if editor
+    # console.log body_parser.parse file_con
+    # snippetBody = '<${1:div}> asd $2 asd \n</${1:div}>$0'
+
+    # tmpr = require atom.packages.activePackages.snippets.mainModulePath
+    atom.packages.activePackages.snippets?.mainModule?.insert @snippets
+
+
+    # if editor
+    #   editor.insertText file_con, select:true,autoIndentNewline:true
+    #   selections = editor.getSelections()
+    #   console.log selections
+    #   for selection in selections
+    #     if not selection.isEmpty()
+    #       range = selection.getBufferRange()
+    #       console.log range
+    #       selection.destroy()
+    #
+    #       # editor.addCursorAtBufferPosition(range.end)
+    #       console.log range.start
+    #
+    #       # tmp_range = new Range([range.start.row, 0], [range.start.row, 3])
+    #       # newSelection = editor.addSelectionForBufferRange(tmp_range)
+    #       # selections.push newSelection
+    #       # editor.focus()
+    #       editor.addCursorAtBufferPosition(range.start)

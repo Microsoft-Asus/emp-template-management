@@ -111,16 +111,6 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "描述"
-                  @div class: 'setting-description', "为你的模板添加描述"
-              @div class: 'controls', =>
-                # @div class: 'editor-container', =>
-                @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
-
-          @div class: 'section-body', =>
-            @div class: 'control-group', =>
-              @div class: 'controls', =>
-                @label class: 'control-label', =>
                   @div class: 'info-label', "模板报文"
                   @div class: 'setting-description', "模板插入的报文实体"
                 # @div class: 'editor-container', =>
@@ -138,6 +128,17 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "描述"
+                  @div class: 'setting-description', "为你的模板添加描述"
+              @div class: 'controls', =>
+                # @div class: 'editor-container', =>
+                @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
+                # @textarea "", class: "native-key-bindings editor-colors", rows: 8, outlet: "template_desc", placeholder: "Template Describtion"
 
             # @div class: 'control-group', =>
             #   @div class: 'controls', =>
@@ -380,16 +381,16 @@ class InstalledTemplatePanel extends ScrollView
       if !templates_obj
         templates_obj = @new_templates_obj()
 
-      pre_logo_path = @logo_select.val()
-      logo_basename = path.basename pre_logo_path
-      template_logo_path = path.join template_store_path, logo_basename
       emp.mkdir_sync template_store_path
-      if !fs.existsSync(template_logo_path)#, 'utf8'
-        tmp_con = fs.readFileSync pre_logo_path
-        fs.writeFileSync template_logo_path, tmp_con
+      temp_obj = @new_template_obj(temp_name, template_store_path)
+      # console.log templates_obj
+      # console.log temp_obj
+      if temp_path
+        @copy_template(template_store_path, temp_path)
 
-      temp_obj = @new_template_obj(temp_name, template_store_path, template_logo_path)
-      console.log templates_obj
+      @format_template(template_store_path, temp_obj)
+      # console.log temp_obj
+
       templates_obj.templates[temp_type][temp_name] = temp_obj
       templates_obj.templates[temp_type].length += 1
       json_str = JSON.stringify(templates_obj)
@@ -397,11 +398,23 @@ class InstalledTemplatePanel extends ScrollView
 
       temp_str = JSON.stringify temp_obj
       fs.writeFileSync template_json, temp_str
-      @copy_template(template_store_path, temp_path)
+
       emp.show_info("添加模板 完成~")
     else
       console.log "exist -------"
       emp.show_info("该模板已经存在~")
+
+  format_template: (to_path, temp_obj) ->
+    if temp_obj.logo
+      temp_obj.logo = @copy_content_ch(to_path, temp_obj.logo, emp.EMP_LOGO_DIR)
+    if temp_obj.html
+      temp_obj.html = @copy_content_ch(to_path, temp_obj.html, emp.EMP_HTML_DIR)
+    if temp_obj.css
+      temp_obj.css = @copy_content_ch(to_path, temp_obj.css, emp.EMP_CSS_DIR)
+    if temp_obj.lua
+      temp_obj.lua = @copy_content_ch(to_path, temp_obj.lua, emp.EMP_LUA_DIR)
+    temp_obj
+
 
   copy_template: (to_path, basic_dir)->
     # console.log "copy  template`````--------"
@@ -425,13 +438,29 @@ class InstalledTemplatePanel extends ScrollView
   #     str = str.replace(o.k, o.v)
   #   str
 
-  copy_content: (t_path, f_path)->
-    # console.log "copy file: #{t_path}, #{f_path}"
+  copy_content_ch: (t_path, f_path, add_path="") ->
+    # console.log t_path
+    # console.log f_path
+    to_path = path.join t_path, add_path
+    # console.log to_path
+    emp.mkdir_sync(to_path)
     f_name = path.basename f_path
     f_con = fs.readFileSync f_path
-    fs.writeFileSync t_path, f_con  unless fs.existsSync(path.join t_path, f_name)#, 'utf8'
+    re_file = path.join to_path, f_name
+    # force copy
+    fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
+    re_file
 
-  new_template_obj: (name, path, logo)->
+  copy_content: (t_path, f_path)->
+    # console.log "copy file: #{t_path}, #{f_path}"
+    # f_name = path.basename f_path
+    f_con = fs.readFileSync f_path
+    # re_file = path.join t_path, f_name
+    # force copy
+    fs.writeFileSync t_path, f_con  #unless fs.existsSync(re_file)#, 'utf8'
+
+  new_template_obj: (name, path)->
+    logo = @logo_select.val()
     ver = @template_ver.getText()?.trim()
     desc = @template_desc.getText()?.trim()
     html_temp = @template_html.getText()?.trim()

@@ -96,8 +96,6 @@ class EmpDebugAdpPackageView extends View
         tempView = new ComponmentElementView(obj)
         @list.append tempView
 
-
-
   attach: ->
     @load_default_componment()
     atom.workspace.addRightPanel(item: this)
