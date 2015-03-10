@@ -25,7 +25,7 @@
         {type: 'separator'}
         { 'label': 'Template Management1', 'command': 'emp-template-management:temp-management' }
         {type: 'separator'}
-        {'label': 'CCB Panel', 'command': 'emp-template-management:ccb-panel'}
+        {'label': 'cbb Panel', 'command': 'emp-template-management:cbb-panel'}
     ]
   }
 ]

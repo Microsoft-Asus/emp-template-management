@@ -105,7 +105,7 @@ class InstalledTemplatePanel extends ScrollView
                       @select outlet:"logo_select", id: "logo", class: 'form-control', =>
                         # for option in ["emp", "ebank", "boc", "gdb"]
                         @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
-                      @button class: 'control-btn btn btn-info', click:'select_path',' Chose Other Logo '
+                      @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -176,10 +176,10 @@ class InstalledTemplatePanel extends ScrollView
     if !templates_store_path = atom.project.templates_path
       atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
       templates_store_path =atom.project.templates_path
-    console.log "store_path: #{templates_store_path}"
+    # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     templates_json = path.join templates_store_path, emp.EMP_TEMPLATES_JSON
-    console.log templates_json
+    # console.log templates_json
     fs.readFile templates_json, (err, data) ->
       if err
         console.log "no exist"
@@ -347,6 +347,31 @@ class InstalledTemplatePanel extends ScrollView
     tmp_con = @template_css.getText()
     @prompt_for_file(@template_css, tmp_con)
 
+  # btn callback for logo
+  select_logo: (e, element)->
+    tmp_path = @template_logo.getText()
+    dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (logo_path) =>
+      # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
+      path_state = fs.statSync logo_path
+      if path_state?.isDirectory()
+        fs.readdir logo_path, (err, files) =>
+          if err
+            console.log "no exist"
+          else
+            logo_images = files.filter((ele)-> !ele.match(/^\./ig))
+            # console.log logo_images
+            for logo in logo_images
+              tmp_opt = document.createElement 'option'
+              tmp_opt.text = logo
+              tmp_opt.value = path.join logo_path, logo
+              # console.log tmp_opt
+              @logo_select.append tmp_opt
+      else
+        tmp_opt = document.createElement 'option'
+        tmp_opt.text = path.basename logo_path
+        tmp_opt.value = path.join logo_path, logo_path
+        @logo_select.append tmp_opt
+
   prompt_for_file: (file_view, tmp_con) ->
     if tmp_con
       dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openDirectory', 'openFile'], (paths_to_open) =>
@@ -369,7 +394,6 @@ class InstalledTemplatePanel extends ScrollView
     temp_name = @template_name.getText()?.trim()
     temp_type = @type_select.val()
     # console.log temp_type
-
     # console.log temp_logo
 
     template_store_path = path.join templates_store_path, temp_name

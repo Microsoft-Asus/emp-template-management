@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "emp-template-management:temp-management",
-    "emp-template-management:ccb-panel"
+    "emp-template-management:cbb-panel",
+    "emp-template-management:quick-add-cbb"
   ],
   "repository": "https://github.com/atom/emp-template-management",
   "license": "MIT",

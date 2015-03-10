@@ -10,7 +10,7 @@ class ComponmentEleView extends View
   snippets:null
 
   @content: ({name, version, path, desc, logo}) ->
-    @li class:'two-lines ccb_li_view', click: 'do_click', =>
+    @li class:'two-lines cbb_li_view', click: 'do_click', =>
       # @div class:'avatar'
       @div class: 'temp_logo', =>
         # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>

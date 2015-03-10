@@ -9,4 +9,5 @@
 # https://atom.io/docs/latest/advanced/keymaps
 'atom-workspace':
   'ctrl-alt-i': 'emp-template-management:temp-management'
-  'ctrl-alt-u':'emp-template-management:ccb-panel'
+  'ctrl-alt-u':'emp-template-management:cbb-panel'
+  'ctrl-alt-y':'emp-template-management:quick-add-cbb'

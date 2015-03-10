@@ -14,25 +14,25 @@ module.exports =
 class EmpDebugAdpPackageView extends View
 
   @content: ->
-    @div class:'ccb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
-      @div class:'ccb-view-scroller', =>
+    @div class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
+      @div class:'cbb-view-scroller', =>
         @div class: 'gen_panel', =>
-          @div class:'ccb-head-bar', =>
+          @div class:'cbb-head-bar', =>
             @span class:'inline-block status-added icon icon-diff-added icon-btn-bor '
             @span class:'inline-block status-modified icon icon-diff-modified icon-btn-bor '
             @span class:'inline-block status-removed icon icon-diff-removed icon-btn-bor '
             @span class:'inline-block status-renamed icon icon-diff-renamed icon-btn '
-          @div class:'ccb-view-panel', =>
-            @div class:'ccb-view-detail', =>
+          @div class:'cbb-view-panel', =>
+            @div class:'cbb-view-detail', =>
           #
-          # @div class:'ccb-head-bottom', "test"
+          # @div class:'cbb-head-bottom', "test"
 
-      # @div class:'ccb-view-scroller', =>
-              @ol class: 'list-group ccb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
+      # @div class:'cbb-view-scroller', =>
+              @ol class: 'list-group cbb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
                 # @li =>
                 #
                 #   @ol class:'list-group', =>
-                    # @li class:'two-lines ccb_li_view', =>
+                    # @li class:'two-lines cbb_li_view', =>
                     #   # @div class:'avatar'
                     #   @div class: 'temp_logo', =>
                     #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
@@ -40,7 +40,7 @@ class EmpDebugAdpPackageView extends View
                     #   @div class: 'temp_name', =>
                     #     @h4 class:'name_header', "name"
                     #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
-                    # @li class:'two-lines ccb_li_view', =>
+                    # @li class:'two-lines cbb_li_view', =>
                     #   # @div class:'avatar'
                     #   @div class: 'temp_logo', =>
                     #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
@@ -48,7 +48,7 @@ class EmpDebugAdpPackageView extends View
                     #   @div class: 'temp_name', =>
                     #     @h4 class:'name_header', "name2"
                     #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
-                    # @li class:'two-lines ccb_li_view', =>
+                    # @li class:'two-lines cbb_li_view', =>
                     #   # @div class:'avatar'
                     #   @div class: 'temp_logo', =>
                     #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
@@ -57,7 +57,7 @@ class EmpDebugAdpPackageView extends View
                     #     @h4 class:'name_header', "name3"
                     #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
 
-      @div class:'ccb-view-resize-handle'
+      @div class:'cbb-view-resize-handle'
 
 
   initialize: ->
@@ -69,7 +69,7 @@ class EmpDebugAdpPackageView extends View
     project_path = atom.project.getPath()
     console.log "init"
     atom.commands.add "atom-workspace",
-      "emp-template-management:ccb-panel": => @toggle()
+      "emp-template-management:cbb-panel": => @toggle()
 
     if !templates_path = atom.project.templates_path
       atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH

@@ -1,6 +1,6 @@
 @import "ui-variables";
 
-.ccb-view-resizer {
+.cbb-view-resizer {
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -10,7 +10,7 @@
   width: 200px;
   z-index: 2;
 
-  .ccb-view-scroller {
+  .cbb-view-scroller {
     width: 100%;
     position: absolute;
     top: 0;
@@ -28,7 +28,7 @@
       left: 0;
       // overflow: auto;
       -webkit-flex-flow: column;
-      .ccb-head-bar {
+      .cbb-head-bar {
         top:0px;
         height:30px;
         width:100%;
@@ -50,7 +50,7 @@
         }
 
       }
-      // .ccb-head-bottom {
+      // .cbb-head-bottom {
       //   bottom:0px;
       //   height:30px;
       //   width:100%;
@@ -62,13 +62,13 @@
       //
       // }
 
-      .ccb-view-panel {
+      .cbb-view-panel {
         // padding:5px;
         -webkit-flex: 1;
         display: -webkit-flex;
         position:relative;
         overflow: auto;
-        .ccb-view-detail {
+        .cbb-view-detail {
           padding: 2px;
           position: absolute;
           top: 0;
@@ -81,7 +81,7 @@
     }
   }
 
-  .ccb-view-resize-handle {
+  .cbb-view-resize-handle {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -98,13 +98,13 @@
   }
 
   &[data-show-on-right-side='false'] {
-    .ccb-view-resize-handle {
+    .cbb-view-resize-handle {
       right: -5px;
     }
   }
 }
 
-.ccb-view {
+.cbb-view {
   min-width: -webkit-min-content;
 
   min-height: 100%;
@@ -115,7 +115,7 @@
   // height:100%;
   // overflow: auto;
 
-  .ccb_li_view {
+  .cbb_li_view {
     // padding: 0 @component-icon-padding 0 @component-icon-padding;
     // padding-right: @component-padding;
     border-bottom: 1px solid #ccc;
@@ -166,12 +166,7 @@
         display:block;
 
       }
-
-
     }
-
-
-
   }
 
   // This fixes #110, see that issue for more details

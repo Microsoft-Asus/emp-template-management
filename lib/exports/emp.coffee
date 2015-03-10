@@ -4,6 +4,10 @@ path = require 'path'
 os = require 'os'
 
 module.exports =
+
+  ENTERKEY:13
+  ESCAPEKEY:27
+
   EMP_TEMP_URI : 'emp://template_management_wizard'
 
   LOGO_IMAGE_SIZE : '48px'
@@ -34,7 +38,7 @@ module.exports =
   EMP_CBB_TYPE: 'emp-template-management.cbb_type'
 
   # config value
-  EMP_CPP_TYPE_DEF:["package"]
+  EMP_CPP_TYPE_DEF:[]
 
 
 
