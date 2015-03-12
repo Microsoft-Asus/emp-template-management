@@ -14,7 +14,7 @@ class ComponmentEleView extends View
       # @div class:'avatar'
       @div class: 'temp_logo', =>
         # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-        @img outlet: 'logo_img', class: 'avatar', src: "#{logo}", #click:'image_format'
+        @img outlet: 'logo_img', class: 'avatar', src: "#{logo}" #click:'image_format'
       @div class: 'temp_name', =>
         @h4 class:'name_header', "#{name}"
         @span class:'name_detail' ,"#{desc}"

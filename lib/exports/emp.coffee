@@ -32,6 +32,15 @@ module.exports =
   EMP_CSS_DIR:"css"
   EMP_LUA_DIR:"lua"
 
+  # 存储类型
+  EMP_CON_TYPE: '0'
+  EMP_FILE_TYPE: '1'
+
+  EMP_DEFAULT_HTML_TEMP: "default.xhtml"
+  EMP_DEFAULT_CSS_TEMP: "default.css"
+  EMP_DEFAULT_LUA_TEMP: "default.lua"
+  EMP_DEFAULT_LOGO: "images/logo/logo_s.png"
+
   EMP_DEFAULT_TYPE: "componment"
 
   # config key
@@ -40,6 +49,16 @@ module.exports =
   # config value
   EMP_CPP_TYPE_DEF:[]
 
+  new_templates_obj: ->
+    tmp_obj = {templates:{}, length:0}
+    if !emp_cbb_types = atom.config.get @EMP_CBB_TYPE
+      atom.config.set @EMP_CBB_TYPE, @EMP_CPP_TYPE_DEF
+      emp_cbb_types = @EMP_CPP_TYPE_DEF
+    emp_cbb_types.push @EMP_DEFAULT_TYPE
+
+    for cbb_type in emp_cbb_types
+      tmp_obj.templates[cbb_type] = new Object(length:0)
+    tmp_obj
 
 
 
@@ -268,6 +287,10 @@ module.exports.mkdirs_sync = (root_dir, dir_list) ->
     if !fs.existsSync(tmp_dir)
       fs.mkdirSync(tmp_dir);
 
+mkdir_sync_safe = (tmp_dir) ->
+   if !fs.existsSync(tmp_dir)
+     mkdir_sync_safe(path.dirname tmp_dir)
+     fs.mkdirSync(tmp_dir);
 
 mk_dirs_sync = (p, made) ->
   # default mode is 0777
@@ -306,3 +329,4 @@ valid_ip = (ip_add)->
 
 module.exports.mk_dirs_sync = mk_dirs_sync
 module.exports.valid_ip = valid_ip
+module.exports.mkdir_sync_safe = mkdir_sync_safe

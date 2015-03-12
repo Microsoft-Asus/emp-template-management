@@ -1,4 +1,5 @@
 EmpTmpManaWizardView = require './views/emp-template-management-view'
+EmpTempManagement = require './views/emp-template-management'
 EmpCbbView = require './views/componment-view'
 QuickAddCbbView = require './views/quick-add-cbb-view'
 
@@ -54,8 +55,9 @@ module.exports =
       "emp-template-management:temp-management": -> open_temp_wizard_panel(emp.DEFAULT_PANEL)
 
     # @doc 创建 cbb 视图
-    @emp_componment_view = new EmpCbbView(state.emp_cbb_panel_state)
-    @emp_quick_add_view = new QuickAddCbbView()
+    @emp_temp_management = new EmpTempManagement()
+    @emp_componment_view = new EmpCbbView(state.emp_cbb_panel_state, @emp_temp_management)
+    @emp_quick_add_view = new QuickAddCbbView(@emp_temp_management)
 
   serialize: ->
     emp_cbb_panel_state: @emp_componment_view.serialize()

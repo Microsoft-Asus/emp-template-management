@@ -403,7 +403,7 @@ class InstalledTemplatePanel extends ScrollView
 
     if !templates_obj?.templates[temp_type][temp_name]
       if !templates_obj
-        templates_obj = @new_templates_obj()
+        templates_obj = emp.new_templates_obj()
 
       emp.mkdir_sync template_store_path
       temp_obj = @new_template_obj(temp_name, template_store_path)
@@ -492,14 +492,3 @@ class InstalledTemplatePanel extends ScrollView
     # logo = @logo_select.val()
 
     {name:name, version:ver, path:path, desc: desc, logo:logo, html:html_temp, css:css_temp, available:true}
-
-  new_templates_obj: ->
-    tmp_obj = {templates:{}, length:0}
-    if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
-      atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
-      emp_cbb_types = emp.EMP_CPP_TYPE_DEF
-    emp_cbb_types.push emp.EMP_DEFAULT_TYPE
-
-    for cbb_type in emp_cbb_types
-      tmp_obj.templates[cbb_type] = new Object(length:0)
-    tmp_obj
