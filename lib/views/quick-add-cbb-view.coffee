@@ -5,10 +5,12 @@ remote = require 'remote'
 dialog = remote.require 'dialog'
 
 emp = require '../exports/emp'
+CbbEle = require '../util/emp_cbb_element'
 label_hide = "报文内容:--------------------点击显示--------------------"
 label_show = "报文内容(点击隐藏):"
 templates_store_path = null
 templates_obj = null
+
 
 module.exports =
 class QuickAddCbbView extends View
@@ -170,97 +172,66 @@ class QuickAddCbbView extends View
     else
       @logo_img.css('height', emp.LOGO_IMAGE_SIZE)
       @logo_img.css('width', emp.LOGO_IMAGE_SIZE)
+  #
+  # # 生成 cbb 模板
+  # create_snippet1: ->
+  #   console.log "button down"
+  #   cbb_name = @cbb_name.getText()?.trim()
+  #   cbb_type = emp.EMP_DEFAULT_TYPE
+  #   template_store_path = path.join templates_store_path, cbb_type, cbb_name
+  #   template_json = path.join template_store_path, emp.EMP_TEMPLATE_JSON
+  #   temp_obj = null
+  #   templates_obj = null
+  #   try
+  #     fs_data = fs.readFileSync @templates_json
+  #     templates_obj = JSON.parse fs_data
+  #   catch
+  #     templates_obj = null
+  #
+  #   # console.log templates_obj
+  #   if !templates_obj?.templates[cbb_type][cbb_name]
+  #     if !templates_obj
+  #       templates_obj = emp.new_templates_obj()
+  #     emp.mkdir_sync_safe template_store_path
+  #     temp_obj = @new_template_obj(cbb_name, template_store_path)
+  #     @format_template(template_store_path, temp_obj)
+  #
+  #     templates_obj.templates[cbb_type][cbb_name] = temp_obj
+  #     templates_obj.templates[cbb_type].length += 1
+  #     json_str = JSON.stringify(templates_obj)
+  #     console.log @templates_json
+  #     console.log templates_obj
+  #
+  #     fs.writeFileSync @templates_json, json_str
+  #
+  #     temp_str = JSON.stringify temp_obj
+  #     console.log template_json
+  #     console.log temp_str
+  #     fs.writeFileSync template_json, temp_str
+  #     emp.show_info("添加模板 完成~")
+  #     @destroy()
+  #   else
+  #     console.log "exist -------"
+  #     emp.show_info("该模板已经存在~")
 
-  # 生成 cbb 模板
   create_snippet: ->
     console.log "button down"
     cbb_name = @cbb_name.getText()?.trim()
     cbb_type = emp.EMP_DEFAULT_TYPE
-    template_store_path = path.join templates_store_path, cbb_type, cbb_name
-    template_json = path.join template_store_path, emp.EMP_TEMPLATE_JSON
-    temp_obj = null
-    templates_obj = null
-    try
-      fs_data = fs.readFileSync @templates_json
-      templates_obj = JSON.parse fs_data
-    catch
-      templates_obj = null
-
-    # console.log templates_obj
-    if !templates_obj?.templates[cbb_type][cbb_name]
-      if !templates_obj
-        templates_obj = emp.new_templates_obj()
-      emp.mkdir_sync_safe template_store_path
-      temp_obj = @new_template_obj(cbb_name, template_store_path)
-      @format_template(template_store_path, temp_obj)
-
-      templates_obj.templates[cbb_type][cbb_name] = temp_obj
-      templates_obj.templates[cbb_type].length += 1
-      json_str = JSON.stringify(templates_obj)
-      console.log @templates_json
-      console.log templates_obj
-
-      fs.writeFileSync @templates_json, json_str
-
-      temp_str = JSON.stringify temp_obj
-      console.log template_json
-      console.log temp_str
-      fs.writeFileSync template_json, temp_str
-      emp.show_info("添加模板 完成~")
-      @destroy()
-    else
-      console.log "exist -------"
-      emp.show_info("该模板已经存在~")
-
-  create_snippet: ->
-    console.log "button down"
-    cbb_name = @cbb_name.getText()?.trim()
-    cbb_type = emp.EMP_DEFAULT_TYPE
-    ccb_obj = @new_template_obj()
-    @emp_temp_management.add_ccb_with_content(ccb_obj)
+    ccb_obj = @new_template_obj(cbb_name)
+    @emp_temp_management.add_element(ccb_obj)
     emp.show_info("添加模板 完成~")
     @destroy()
 
-  new_template_obj: ()->
+  new_template_obj: (cbb_name)->
     cbb_desc = @cbb_desc.getText()?.trim()
     cbb_logo = @cbb_logo.getText()?.trim()
-    cbb_name = @cbb_name.getText()?.trim()
+    # cbb_name = @cbb_name.getText()?.trim()
     ccb_con = @snippet?.val()
-    cbb_type = emp.EMP_DEFAULT_TYPE
-
-    {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
-    type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}
-
+    # cbb_type = emp.EMP_DEFAULT_TYPE
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo)
+    cbb_obj.set_con ccb_con, emp.EMP_QHTML
 
 
-  format_template: (to_path, temp_obj) ->
-    if temp_obj.logo
-      temp_obj.logo = @copy_content_ch(to_path, temp_obj.logo, emp.EMP_LOGO_DIR)
-    else
-      temp_obj.logo = path.join __dirname,'../../',emp.EMP_DEFAULT_LOGO
-    if html_con = @snippet?.val()
-      temp_obj.html = @create_file(to_path, html_con, emp.EMP_DEFAULT_HTML_TEMP, emp.EMP_HTML_DIR)
-    if css_con = @snippet_css?.val()
-      temp_obj.css = @create_file(to_path, css_con, emp.EMP_DEFAULT_CSS_TEMP, emp.EMP_CSS_DIR)
-    if lua_con = @snippet_lua?.val()
-      temp_obj.lua = @create_file(to_path, lua_con, emp.EMP_DEFAULT_LUA_TEMP, emp.EMP_LUA_DIR)
-    temp_obj
-
-  copy_content_ch: (t_path, f_path, add_path="") ->
-    # console.log t_path
-    # console.log f_path
-    to_path = path.join t_path, add_path
-    # console.log to_path
-    emp.mkdir_sync(to_path)
-    f_name = path.basename f_path
-    f_con = fs.readFileSync f_path
-    re_file = path.join to_path, f_name
-    # force copy
-    fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
-    re_file
-
-  create_file: (t_path, content, temp_name, add_path="") ->
-    to_path = path.join t_path, add_path
-    emp.mkdir_sync(to_path)
-    re_file = path.join to_path, temp_name
-    fs.writeFileSync re_file, content
+    # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
+    # type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}

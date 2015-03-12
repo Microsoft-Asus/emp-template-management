@@ -41,7 +41,19 @@ module.exports =
   EMP_DEFAULT_LUA_TEMP: "default.lua"
   EMP_DEFAULT_LOGO: "images/logo/logo_s.png"
 
+
+  # 代码根目录
+  EMP_DEFAULT_PACKAGE: "default"
+  # 代码类型
   EMP_DEFAULT_TYPE: "componment"
+
+  # 代码列表
+  EMP_CBB_LIST: "list_info"
+
+  # 快速添加 报文类型
+  EMP_QHTML:'0'
+  EMP_QCSS:'1'
+  EMP_QLUA:'2'
 
   # config key
   EMP_CBB_TYPE: 'emp-template-management.cbb_type'
