@@ -31,16 +31,22 @@ class EmpTemplateManagement
 
   initialize: ->
     console.log "initial"
+    # console.log "$1"
     @templates_obj = {templates:[], length:0}
-    @default_package = new CbbPackage(templates_store_path, emp.EMP_DEFAULT_PACKAGE)
+    @default_package = new CbbPackage(templates_store_path, {name:emp.EMP_DEFAULT_PACKAGE})
     @store_package(@default_package)
 
 
   # TODO
   initial_package: ->
     console.log "initialize packages"
-    @default_package = @templates_obj[emp.EMP_DEFAULT_PACKAGE]
+    @packages = @get_pacakges()
+    console.log @packages
+    # @default_package = @templates_obj[emp.EMP_DEFAULT_PACKAGE]
+    @default_package = new CbbPackage(templates_store_path, @templates_obj[emp.EMP_DEFAULT_PACKAGE])
 
+    # temp_str = JSON.stringify @default_package
+    # console.log temp_str
 
     # if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
     #   atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
@@ -79,11 +85,14 @@ class EmpTemplateManagement
   add_element: (ccb_obj) ->
     console.log "add_element"
     package_name = ccb_obj.own_package
-    if own_pack = @templates_obj[package_name]
+    if own_pack = @packages[package_name]
       own_pack.add_element ccb_obj
     else
       @default_package.add_element(ccb_obj)
     # @refresh()
+
+  get_pacakges: ->
+    packages = @templates_obj.templates
 
 
   # add_ccb_with_content: (cbb_obj)->

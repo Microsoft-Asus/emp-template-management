@@ -2,7 +2,6 @@ emp = require '../exports/emp'
 
 module.exports =
 class EmpCbbPackage
-  templates_json: null
   name:null
   logo:null
   type_list: []
@@ -12,23 +11,37 @@ class EmpCbbPackage
 
 
 
-  constructor: (@store_path, @name, @obj_json)->
+  constructor: (@store_path, @obj_json)->
     console.log "constructor a new emp root"
 
-    @type_list.push emp.EMP_DEFAULT_TYPE
-    @package_path = path.join @store_path, @name
+    @name = @obj_json.name
+    @logo = @obj_json.logo
+    if !@type_list = @obj_json.type
+      @type_list = []
+      @type_list.push emp.EMP_DEFAULT_TYPE
+    if !@package_path = @obj_json.path
+      @package_path = path.join @store_path, @name
+
     emp.mkdir_sync_safe @package_path
     emp.mkdir_sync_safe path.join(@package_path, emp.EMP_DEFAULT_TYPE)
     @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
-    if !@obj_json
-      @obj_json = {name:@name, type:@type_list, path:@package_path, logo:@logo}
+    if fs.existsSync @template_json
+      json_con = fs.readFileSync @template_json
+      @obj_json = @templates_obj = JSON.parse json_con
+
+
+    console.log @obj_json
+    if !@obj_json[emp.EMP_DEFAULT_TYPE]
       @obj_json[emp.EMP_DEFAULT_TYPE] = {}
+    console.log @obj_json
+
 
 
   refresh: ->
+    console.log @get_json()
     temp_str = JSON.stringify @get_json()
-    console.log @template_json
-    console.log temp_str
+    # console.log @template_json
+    # console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
 
@@ -47,10 +60,19 @@ class EmpCbbPackage
 
   # 添加子元素
   add_element: (ccb_obj) ->
-    if @obj_json[ccb_obj.type]
-      # TODO 如果已存在添加提醒
-      ccb_obj.create(@package_path, @name)
-      ccb_info = ccb_obj.get_info()
-      @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
+    console.log "add_element"
+    console.log  @obj_json
+    console.log ccb_obj
+    # TODO 如果已存在添加提醒
+    if !@obj_json[ccb_obj.type]
+      ccb_obj.type = emp.EMP_DEFAULT_TYPE
+
+    ccb_obj.create(@package_path, @name)
+    ccb_info = ccb_obj.get_info()
+    @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
+
+    # temp_str = JSON.stringify ccb_obj
+    # console.log temp_str
+
 
     @refresh()

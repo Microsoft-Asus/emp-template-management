@@ -46,23 +46,24 @@ class EmpCbbEle
 
 
   refresh: ->
-    temp_str = JSON.stringify @get_json()
-    console.log @template_json
+
+    # temp_str = JSON.stringify @get_json()
+    temp_str = JSON.stringify this
     console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
   # element information
   get_info: ->
-    {name:@name, version:@ver, path:null, desc: @desc,
+    {name:@name, version:@ver, element_path:@element_path, desc: @desc,
     type: @type, logo:@log}
 
   # element json content
   get_json: ->
     if !@ele_json
-      @ele_json = {name:@name, version:@ver, path:null, desc: @desc,
+      @ele_json = {name:@name, version:@ver, desc: @desc,
       type: @type, logo:@log, html:@html, css:@css, lua:@css,
       available:@available, own_package: @own_package, images:@detail_image,
-      package_path:@element_path, element_path:@element_path}
+      package_path:@package_path, element_path:@element_path}
     else
       @ele_json
 
@@ -117,7 +118,6 @@ class EmpCbbEle
       @css.body = @copy_content_ch(to_path, @css.body,  emp.EMP_CSS_DIR)
     if @lua?.type is emp.EMP_FILE_TYPE
       @lua.body = @copy_content_ch(to_path, @lua.body, emp.EMP_LUA_DIR)
-    temp_obj
 
   copy_content_ch: (t_path, f_path, add_path="") ->
     # console.log t_path

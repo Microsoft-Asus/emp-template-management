@@ -218,8 +218,9 @@ class QuickAddCbbView extends View
     console.log "button down"
     cbb_name = @cbb_name.getText()?.trim()
     cbb_type = emp.EMP_DEFAULT_TYPE
-    ccb_obj = @new_template_obj(cbb_name)
-    @emp_temp_management.add_element(ccb_obj)
+    cbb_obj = @new_template_obj(cbb_name)
+    console.log cbb_obj
+    @emp_temp_management.add_element(cbb_obj)
     emp.show_info("添加模板 完成~")
     @destroy()
 
@@ -227,10 +228,11 @@ class QuickAddCbbView extends View
     cbb_desc = @cbb_desc.getText()?.trim()
     cbb_logo = @cbb_logo.getText()?.trim()
     # cbb_name = @cbb_name.getText()?.trim()
-    ccb_con = @snippet?.val()
+    cbb_con = @snippet?.val()
     # cbb_type = emp.EMP_DEFAULT_TYPE
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo)
-    cbb_obj.set_con ccb_con, emp.EMP_QHTML
+    cbb_obj.set_con cbb_con, emp.EMP_QHTML
+    cbb_obj
 
 
     # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
