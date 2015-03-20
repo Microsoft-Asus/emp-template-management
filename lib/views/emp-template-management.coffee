@@ -32,9 +32,9 @@ class EmpTemplateManagement
   initialize: ->
     console.log "initial"
     # console.log "$1"
-    @templates_obj = {templates:[], length:0}
-    @default_package = new CbbPackage(templates_store_path, {name:emp.EMP_DEFAULT_PACKAGE})
-    @store_package(@default_package)
+    @templates_obj = {templates:[], length:0, level:emp.EMP_JSON_ALL}
+    @default_package = @create_new_package(emp.EMP_DEFAULT_PACKAGE)
+    # @store_package(@default_package)
 
 
   # TODO
@@ -62,12 +62,33 @@ class EmpTemplateManagement
     #   tmp_obj
     # tmp_obj
 
+  # 判断模板集是否存在
+  check_exist_cbb: (name) ->
+    if @packages[name]
+      true
+    else
+      false
+
+  # 创建新的 package 集
+  create_new_package: (name, desc, logo) ->
+    if !@packages[name]
+      tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo})
+      @store_package(tmp_package)
+      tmp_package
+    else
+      return false
+
+  # 保存创建修改
   store_package:(cbb_package)->
     @packages[cbb_package.name] = cbb_package
     @templates_obj.templates.push cbb_package.name
     @templates_obj[cbb_package.name] = cbb_package.get_info()
     @refresh()
 
+  delete_package: (name)->
+    @templates_obj.templates = @templates_obj.templates.filter (ele) -> ele isnt name
+    delete @templates_obj[name]
+    @refresh()
 
   refresh: ->
     temp_str = JSON.stringify @templates_obj
@@ -93,6 +114,10 @@ class EmpTemplateManagement
 
   get_pacakges: ->
     packages = @templates_obj.templates
+
+  get_package_obj: (name)->
+    @templates_obj[name]
+
 
 
   # add_ccb_with_content: (cbb_obj)->

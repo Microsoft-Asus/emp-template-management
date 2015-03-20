@@ -54,8 +54,9 @@ module.exports =
     atom.commands.add "atom-workspace",
       "emp-template-management:temp-management": -> open_temp_wizard_panel(emp.DEFAULT_PANEL)
 
-    # @doc 创建 cbb 视图
     @emp_temp_management = new EmpTempManagement()
+    atom.project.cbb_management = @emp_temp_management
+    # @doc 创建 cbb 视图
     @emp_componment_view = new EmpCbbView(state.emp_cbb_panel_state, @emp_temp_management)
     @emp_quick_add_view = new QuickAddCbbView(@emp_temp_management)
 

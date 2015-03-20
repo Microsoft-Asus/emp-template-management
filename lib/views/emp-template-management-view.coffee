@@ -44,6 +44,7 @@ class EmpTmpManagementView extends ScrollView
 
   initializePanels: ->
     return if @panels.size > 0
+    # console.log  atom.project.cbb_management
 
 
     @panelsByName = {}

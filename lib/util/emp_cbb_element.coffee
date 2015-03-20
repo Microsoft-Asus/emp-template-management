@@ -17,6 +17,7 @@ class EmpCbbEle
   package_path: null
   element_path: null
   ele_json:null
+  lv:emp.EMP_JSON_ELE
 
   constructor: (@name, @desc, @logo)->
     console.log "constructor a new emp cbb element"
@@ -49,21 +50,22 @@ class EmpCbbEle
 
     # temp_str = JSON.stringify @get_json()
     temp_str = JSON.stringify this
-    console.log temp_str
+    # console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
   # element information
   get_info: ->
     {name:@name, version:@ver, element_path:@element_path, desc: @desc,
-    type: @type, logo:@log}
+    type: @type, logo:@logo}
 
   # element json content
   get_json: ->
     if !@ele_json
       @ele_json = {name:@name, version:@ver, desc: @desc,
-      type: @type, logo:@log, html:@html, css:@css, lua:@css,
-      available:@available, own_package: @own_package, images:@detail_image,
-      package_path:@package_path, element_path:@element_path}
+      type: @type, logo:@logo, html:@html, css:@css, lua:@css,
+      available:@available, own_package: @own_package,
+      images:@detail_image, package_path:@package_path,
+      element_path:@element_path, level:@lv}
     else
       @ele_json
 

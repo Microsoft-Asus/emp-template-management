@@ -323,7 +323,59 @@
     cursor: default;
   }
 
+  .control-foot {
+    margin-top:  @component-padding*2;
+    border-top: 1px solid #ccc;
+  }
 
+  .control-tab {
+    width:100%;
+    max-height:350px;
+    background-color: #e7e7e7;
+    box-shadow: -1px 0px 1px -1px #aeaeae inset;
+    .btn-td {
+      // align:"right";
+      max-width:25%;
+      .btn {
+        height:auto;
+        margin: 1px 1px 1px 0;
+      }
+    }
+  }
+
+  .control-ol {
+    // padding: 5px;
+    margin: 5px;
+    left: 0;
+    right: 9em;
+    min-width: 0;
+    // position: absolute;
+    overflow: auto;
+    -webkit-flex-direction: column;
+    border: 1px solid #ccc;
+    background-color: #e7e7e7;
+    box-shadow: -1px 0px 1px -1px #aeaeae inset;
+
+  }
+
+  .btn-box {
+    float:right;
+    display:inline;
+    height:auto;
+    .btn {
+      height:auto;
+      margin: 1px 1px 1px 0;
+    }
+  }
+  .btn {
+    height:auto;
+    margin: 1px 1px 1px 0;
+  }
+
+
+  .btn-box-n {
+    float:right;
+  }
   .controle-logo {
     display: flex;
     flex-wrap: wrap;
