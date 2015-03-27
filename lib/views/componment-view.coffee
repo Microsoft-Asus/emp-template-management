@@ -6,10 +6,6 @@ crypto = require 'crypto'
 emp = require '../exports/emp'
 ComponmentElementView = require './componment-view-element'
 
-
-templates_json = null
-
-
 module.exports =
 class EmpDebugAdpPackageView extends View
 
@@ -71,10 +67,10 @@ class EmpDebugAdpPackageView extends View
     atom.commands.add "atom-workspace",
       "emp-template-management:cbb-panel": => @toggle()
 
-    if !templates_path = atom.project.templates_path
-      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-      templates_path =atom.project.templates_path
-    templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
+    # if !templates_path = atom.project.templates_path
+    #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
+    #   templates_path =atom.project.templates_path
+    # templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
 
     # @load_default_componment()
     this
@@ -82,19 +78,28 @@ class EmpDebugAdpPackageView extends View
   load_default_componment: ->
     @list.empty()
 
-    if fs.existsSync templates_json
-      json_data = fs.readFileSync templates_json
-      templates_obj = JSON.parse json_data
-      delete templates_obj.templates?[emp.EMP_DEFAULT_TYPE]?.length
+    @cbb_management = atom.project.cbb_management
+    tool_setting = @cbb_management.get_tool_detail()
 
-      console.log "templates obj"
-      # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+    first_setting = tool_setting[emp.TOOL_FIRST]
 
-      for name, obj of templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
-        # @list.append tempRow
-        # name, description, version, repository
-        tempView = new ComponmentElementView(obj)
-        @list.append tempView
+    pack = @cbb_management.get_pacakge first_setting.pack_name
+    console.log pack
+    ele_list = pack.get_element first_setting.type_name
+    console.log ele_list
+    # if fs.existsSync templates_json
+    #   json_data = fs.readFileSync templates_json
+    #   templates_obj = JSON.parse json_data
+    #   delete templates_obj.templates?[emp.EMP_DEFAULT_TYPE]?.length
+
+    console.log "templates obj"
+    # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+
+    for name, obj of ele_list
+      # @list.append tempRow
+      # name, description, version, repository
+      tempView = new ComponmentElementView(obj)
+      @list.append tempView
 
   attach: ->
     @load_default_componment()

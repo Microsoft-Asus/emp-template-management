@@ -1,54 +1,55 @@
 # _ = require 'underscore-plus'
 {View} = require 'atom-space-pen-views'
-emp = require '../exports/emp'
+emp = require '../../exports/emp'
 # {Subscriber} = require 'emissary'
 # shell = require 'shell'
 logo_image_size = '48px'
 logo_image_big_size = '156px'
 
 module.exports =
-class AvailableTemplateView extends View
+class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)
 
-  @content: ({name, version, path, desc, logo}) ->
+  @content: (element) ->
     # stars, downloads
     # lol wat
     # owner = AvailablePackageView::ownerFromRepository(repository)
     # console.log name, description, version, repository
-    owner = "jcrom"
+    # owner = "jcrom"
     # description ?= ''
+    @div class: 'row', =>
+      @div class: 'available-package-view col-lg-8', =>
+        @div class: 'stats pull-right', =>
+          @span class: "stats-item", =>
+            @span class: 'icon icon-versions'
+            @span class:'value', element.version
 
-    @div class: 'available-package-view col-lg-8', =>
-      @div class: 'stats pull-right', =>
-        @span class: "stats-item", =>
-          @span class: 'icon icon-versions'
-          @span class:'value', version
+          # @span class: 'stats-item', =>
+          #   @span class: 'icon icon-cloud-download'
+          #   @span outlet: 'downloadCount', class: 'value'
 
-        # @span class: 'stats-item', =>
-        #   @span class: 'icon icon-cloud-download'
-        #   @span outlet: 'downloadCount', class: 'value'
+        @div class: 'body', =>
+          @h4 class: 'card-name', =>
+            @a outlet: 'packageName', element.name
+          @span outlet: 'packageDescription', class: 'package-description', element.desc
 
-      @div class: 'body', =>
-        @h4 class: 'card-name', =>
-          @a outlet: 'packageName', name
-        @span outlet: 'packageDescription', class: 'package-description', desc
+        @div class: 'meta', =>
+          @div class: 'meta-user', =>
+            # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
+            @img outlet: 'logo_img', class: 'avatar', src: "#{element.logo}", click:'image_format'  # A transparent gif so there is no "broken border"
+            # @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
+          @div class: 'meta-controls', =>
+            # @div class: 'btn-group', =>
+            #   @button type: 'button', class: 'btn btn-info icon icon-cloud-download install-button', outlet: 'installButton', 'Install'
+            @div outlet: 'buttons', class: 'btn-group', =>
+              @button type: 'button', class: 'btn icon icon-gear',           outlet: 'edit_button', 'Edit'
+              @button type: 'button', class: 'btn icon icon-trashcan',       outlet: 'uninstall_button', 'Uninstall'
+              @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
+                @span class: 'disable-text', 'Disable'
+              @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
-      @div class: 'meta', =>
-        @div class: 'meta-user', =>
-          # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-          @img outlet: 'logo_img', class: 'avatar', src: "#{logo}", click:'image_format'  # A transparent gif so there is no "broken border"
-          # @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
-        @div class: 'meta-controls', =>
-          # @div class: 'btn-group', =>
-          #   @button type: 'button', class: 'btn btn-info icon icon-cloud-download install-button', outlet: 'installButton', 'Install'
-          @div outlet: 'buttons', class: 'btn-group', =>
-            @button type: 'button', class: 'btn icon icon-gear',           outlet: 'edit_button', 'Edit'
-            @button type: 'button', class: 'btn icon icon-trashcan',       outlet: 'uninstall_button', 'Uninstall'
-            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
-              @span class: 'disable-text', 'Disable'
-            @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
-
-  initialize: (@pack, @packageManager, opts) ->
+  initialize: (@element) ->
+    console.log @element
     # It might be useful to either wrap @pack in a class that has a ::validate
     # method, or add a method here. At the moment I think all cases of malformed
     # package metadata are handled here and in ::content but belt and suspenders,

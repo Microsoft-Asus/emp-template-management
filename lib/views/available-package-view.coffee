@@ -9,8 +9,8 @@ logo_image_big_size = '156px'
 module.exports =
 class AvailablePackageView extends View
 
-  @content: (@package_obj) ->
-    console.log @package_obj
+  @content: (@fa_view, @package_obj) ->
+    # console.log @package_obj
     # stars, downloads
     # lol wat
     # owner = AvailablePackageView::ownerFromRepository(repository)
@@ -50,11 +50,10 @@ class AvailablePackageView extends View
           @div outlet: 'buttons', class: 'btn-group', =>
             @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit', 'Edit'
             @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
-            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
-              @span class: 'disable-text', 'Disable'
+            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'detail_utton', click:'show_detail', 'Detail'
             @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
-  initialize: (@package_obj) ->
+  initialize: (@fa_view, @package_obj) ->
     @cbb_management = atom.project.cbb_management
 
 
@@ -77,9 +76,22 @@ class AvailablePackageView extends View
   do_uninstall: ->
     tmp_flag = @show_alert()
     console.log tmp_flag
-    if tmp_flag
-      console.log "do"
-      @cbb_management.delete_package(@package_obj.name)
+    switch tmp_flag
+      when 1
+        console.log "1"
+        @cbb_management.delete_package_detail(@package_obj.name)
+        emp.show_info "删除成功！"
+        @fa_view.refresh_detail()
+      when 2
+        console.log "2"
+        @cbb_management.delete_package(@package_obj.name)
+        emp.show_info "删除成功！"
+        @fa_view.refresh_detail()
+      else return
+
+  do_edit:->
+    console.log 'do_edit'
+    @fa_view.show_edit_panel(@package_obj)
 
 
   show_alert: (replace_con, relative_path, editor) ->
@@ -90,3 +102,7 @@ class AvailablePackageView extends View
         '同时删除文件': -> return 1
         '是': -> return 2
         '否': -> return 3
+
+
+  show_detail:->
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_CCB_PACK_DETAIL, {back: emp.EMP_TEMPLATE}, @package_obj)

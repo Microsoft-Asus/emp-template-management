@@ -229,8 +229,8 @@ class QuickAddCbbView extends View
     cbb_logo = @cbb_logo.getText()?.trim()
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_con = @snippet?.val()
-    # cbb_type = emp.EMP_DEFAULT_TYPE
-    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo)
+    cbb_type = @type_select.val()
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type)
     cbb_obj.set_con cbb_con, emp.EMP_QHTML
     cbb_obj
 

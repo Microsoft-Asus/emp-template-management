@@ -1,4 +1,5 @@
 emp = require '../exports/emp'
+fs_plus = require 'fs-plus'
 
 module.exports =
 class EmpCbbPackage
@@ -11,10 +12,9 @@ class EmpCbbPackage
   obj_json:null
   lv: emp.EMP_JSON_PACK
 
-
-
   constructor: (@store_path, @obj_json) ->
-    console.log "constructor a new emp root"
+    # console.log "constructor a new emp root"
+    # console.log @obj_json
 
     @name = @obj_json.name
     @logo = @obj_json.logo
@@ -30,7 +30,7 @@ class EmpCbbPackage
     @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
     if fs.existsSync @template_json
       json_con = fs.readFileSync @template_json
-      @obj_json = @templates_obj = JSON.parse json_con
+      @obj_json = JSON.parse json_con
     # console.log @obj_json
     if !@obj_json[emp.EMP_DEFAULT_TYPE]
       @obj_json[emp.EMP_DEFAULT_TYPE] = {}
@@ -45,7 +45,7 @@ class EmpCbbPackage
 
   # 包信息
   get_info: () ->
-    console.log "package info"
+    # console.log "package info"
     {name:@name, type:@type_list, path:@package_path, logo:@logo, desc:@desc, level:@lv}
 
   get_json: () ->
@@ -54,6 +54,11 @@ class EmpCbbPackage
     else
       @obj_json
 
+  get_element: (tmp_type)->
+    return @obj_json[tmp_type]
+
+  get_type: ->
+    return @type_list
 
   # 添加子元素
   add_element: (ccb_obj) ->
@@ -68,3 +73,50 @@ class EmpCbbPackage
     ccb_info = ccb_obj.get_info()
     @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
     @refresh()
+
+  edit_detail: (new_obj)->
+
+    @logo = new_obj.logo
+    @desc = new_obj.desc
+
+    @obj_json.logo = @logo
+    @obj_json.desc = @desc
+    @obj_json.type = new_obj.type
+    @type_list = new_obj.type
+
+    if @name isnt new_obj.name
+      @name = new_obj.name
+      @obj_json.name = @name
+
+      if fs.existsSync @package_path
+        new_package_path = path.join @store_path, @name
+        fs_plus.move @package_path,new_package_path
+        @package_path = new_package_path
+
+    for tmp_type in new_obj.add_type
+      tmp_type_dir = path.join @package_path,tmp_type
+      fs.exists tmp_type_dir, (exists) ->
+        if !exists
+          fs.mkdir tmp_type_dir, (err) ->
+            console.log err unless !err
+
+    for tmp_type in new_obj.del_type
+      tmp_type_dir = path.join @package_path,tmp_type
+      fs.exists tmp_type_dir, (exists) ->
+        if exists
+          fs_plus.remove tmp_type_dir,(err) ->
+            console.log err unless !err
+
+    for new_type, old_type in new_obj.edit_type
+      tmp_old_dir = path.join @package_path,old_type
+      fs.exists tmp_old_dir, (exists) ->
+        tmp_new_type = path.join @package_path,new_type
+        if exists
+          fs_plus.move tmp_old_dir,tmp_new_type
+        else
+          fs.mkdir tmp_new_type, (err) ->
+            console.log err unless !err
+
+    @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
+    if fs.existsSync @template_json
+      @refresh()

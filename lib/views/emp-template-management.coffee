@@ -2,6 +2,7 @@
 # fs = require 'fs'
 # path = require 'path'
 emp = require '../exports/emp'
+fs_plus = require 'fs-plus'
 CbbPackage = require '../util/emp_cbb_package'
 
 templates_store_path = null
@@ -10,14 +11,16 @@ module.exports =
 class EmpTemplateManagement
   templates_json: null
   packages:{}
+  # package_list:[]
   default_package:null
 
   constructor: ->
-    console.log "constructor"
+    # console.log "constructor"
+
     if !templates_store_path = atom.project.templates_path
       atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
       templates_store_path =atom.project.templates_path
-    console.log "stsore_path: #{templates_store_path}"
+    # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     @templates_json = path.join templates_store_path, emp.EMP_TEMPLATES_JSON
 
@@ -32,7 +35,8 @@ class EmpTemplateManagement
   initialize: ->
     console.log "initial"
     # console.log "$1"
-    @templates_obj = {templates:[], length:0, level:emp.EMP_JSON_ALL}
+    @templates_obj = {templates:[], length:0,
+    level:emp.EMP_JSON_ALL, atom_tool_setting:@initial_tool_setting()}
     @default_package = @create_new_package(emp.EMP_DEFAULT_PACKAGE)
     # @store_package(@default_package)
 
@@ -40,10 +44,15 @@ class EmpTemplateManagement
   # TODO
   initial_package: ->
     console.log "initialize packages"
-    @packages = @get_pacakges()
-    console.log @packages
+    package_list = @get_pacakges_list()
+    console.log package_list
     # @default_package = @templates_obj[emp.EMP_DEFAULT_PACKAGE]
     @default_package = new CbbPackage(templates_store_path, @templates_obj[emp.EMP_DEFAULT_PACKAGE])
+    @packages[emp.EMP_DEFAULT_PACKAGE] = @default_package
+    for tmp_package in package_list
+      unless tmp_package is emp.EMP_DEFAULT_PACKAGE
+        @packages[tmp_package] = new CbbPackage templates_store_path,  @templates_obj[tmp_package]
+
 
     # temp_str = JSON.stringify @default_package
     # console.log temp_str
@@ -70,13 +79,34 @@ class EmpTemplateManagement
       false
 
   # 创建新的 package 集
-  create_new_package: (name, desc, logo) ->
+  create_new_package: (name, desc, logo, type) ->
+    console.log name
+    console.log @packages
     if !@packages[name]
-      tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo})
+      tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo, type:type})
       @store_package(tmp_package)
       tmp_package
     else
       return false
+
+  edit_package: (old_name, name, desc, logo, type, add_type, edit_type, del_type) ->
+    console.log @packages
+    tmp_package = @packages[old_name]
+    delete @packages[old_name]
+    @templates_obj.templates = @templates_obj.templates.filter (tmp_pack) -> tmp_pack isnt old_name
+    if tmp_package
+      tmp_package.edit_detail({name:name, desc:desc, logo:logo, type:type, add_type:add_type,edit_type:edit_type, del_type:del_type})
+      @store_package(tmp_package)
+      tmp_package
+    else
+      return false
+
+  refresh_package: (cbb_package)->
+
+    @packages[cbb_package.name] = cbb_package
+    @templates_obj.templates.push cbb_package.name
+    @templates_obj[cbb_package.name] = cbb_package.get_info()
+    @refresh()
 
   # 保存创建修改
   store_package:(cbb_package)->
@@ -85,10 +115,21 @@ class EmpTemplateManagement
     @templates_obj[cbb_package.name] = cbb_package.get_info()
     @refresh()
 
+  # 删除模板集得相关描述
   delete_package: (name)->
+    console.log name
     @templates_obj.templates = @templates_obj.templates.filter (ele) -> ele isnt name
+    delete @packages[name]
     delete @templates_obj[name]
     @refresh()
+
+  # 删除模板集的所有内容
+  delete_package_detail:(name) ->
+    tmp_obj = @templates_obj[name]
+    tmp_dir = path.join templates_store_path, name
+    fs_plus.removeSync(tmp_dir) unless !fs.existsSync tmp_dir
+    @delete_package(name)
+
 
   refresh: ->
     temp_str = JSON.stringify @templates_obj
@@ -112,76 +153,30 @@ class EmpTemplateManagement
       @default_package.add_element(ccb_obj)
     # @refresh()
 
+  get_pacakge: (name)->
+    @packages[name]
+
   get_pacakges: ->
-    packages = @templates_obj.templates
+    @packages
+
+  get_pacakges_list: ->
+    @templates_obj.templates
 
   get_package_obj: (name)->
     @templates_obj[name]
 
 
+  initial_tool_setting: ->
+    tool_list = {1:{pack_name:emp.EMP_DEFAULT_PACKAGE, type_name:emp.EMP_DEFAULT_TYPE}}
+    return tool_list
 
-  # add_ccb_with_content: (cbb_obj)->
-  #       # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
-  #       # type: cbb_type, logo:{type:emp.EMP_FILE_TYPE, con:cbb_logo}, html:{type:emp.EMP_CON_TYPE, con:ccb_con}, css:null, lua:null, available:true}
-  #   re_arr = @check_cbb_name(cbb_obj.name)
-  #
-  #   cbb_name = re_arr.name
-  #   cbb_root = re_arr.root
-  #   cbb_type = cbb_obj.type
-  #   template_store_path = path.join templates_store_path, cbb_root, cbb_type, cbb_name
-  #   emp.mkdir_sync_safe template_store_path
-  #   template_json = path.join template_store_path, emp.EMP_TEMPLATE_JSON
-  #
-  #   if !@templates_obj?[cbb_root]?[cbb_type]?[cbb_name]
-  #     if !@templates_obj
-  #       @templates_obj = @new_templates_obj()
-  #
-  #     @format_template(template_store_path, cbb_obj)
-  #
-  #     @templates_obj[cbb_root][cbb_type][cbb_name] = cbb_obj
-  #     # @templates_obj[cbb_root][cbb_type].length += 1
-  #     json_str = JSON.stringify(@templates_obj)
-  #     console.log @templates_json
-  #     console.log @templates_obj
-  #
-  #     fs.writeFileSync @templates_json, json_str
-  #
-  #     temp_str = JSON.stringify cbb_obj
-  #     console.log template_json
-  #     console.log temp_str
-  #     fs.writeFileSync template_json, temp_str
-  #
-  #
-  #
-  # format_template: (to_path, temp_obj) ->
-  #   if temp_obj.logo
-  #     temp_obj.logo = @copy_content_ch(to_path, temp_obj.logo, emp.EMP_LOGO_DIR)
-  #   else
-  #     temp_obj.logo = path.join __dirname,'../../',emp.EMP_DEFAULT_LOGO
-  #   if temp_obj.html?.type is emp.EMP_FILE_TYPE
-  #     temp_obj.html.body = @copy_content_ch(to_path, temp_obj.html.body, emp.EMP_HTML_DIR)
-  #
-  #   if temp_obj.css?.type is emp.EMP_FILE_TYPE
-  #     temp_obj.css.body = @copy_content_ch(to_path, temp_obj.css.body,  emp.EMP_CSS_DIR)
-  #   if temp_obj.lua?.type is emp.EMP_FILE_TYPE
-  #     temp_obj.lua.body = @copy_content_ch(to_path, temp_obj.lua.body, emp.EMP_LUA_DIR)
-  #   temp_obj
-  #
-  # copy_content_ch: (t_path, f_path, add_path="") ->
-  #   # console.log t_path
-  #   # console.log f_path
-  #   to_path = path.join t_path, add_path
-  #   # console.log to_path
-  #   emp.mkdir_sync(to_path)
-  #   f_name = path.basename f_path
-  #   f_con = fs.readFileSync f_path
-  #   re_file = path.join to_path, f_name
-  #   # force copy
-  #   fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
-  #   re_file
-  #
-  # create_file: (t_path, content, temp_name, add_path="") ->
-  #   to_path = path.join t_path, add_path
-  #   emp.mkdir_sync(to_path)
-  #   re_file = path.join to_path, temp_name
-  #   fs.writeFileSync re_file, content
+  get_tool_detail: () ->
+    tool_list = @templates_obj.atom_tool_setting
+    tool_list ?= @initial_tool_setting()
+
+  refresh_tool_detail: (new_setting) ->
+    # console.log "do refresh"
+    @templates_obj.atom_tool_setting = new_setting
+    @refresh()
+
+    # return tool_list #[count]

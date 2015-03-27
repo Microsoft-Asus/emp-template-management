@@ -10,7 +10,11 @@ module.exports =
 class AddPackagePanel extends View
   # Subscriber.includeInto(this)
   type_view:{}
+  edit_type:{}
+  add_type:[]
+  delete_type:[]
   editing_view:null
+  add_flag: true
 
 
   @content: ->
@@ -58,7 +62,7 @@ class AddPackagePanel extends View
               @subview "package_type_add", new TextEditorView(mini: true,attributes: {id: 'package_type_add', type: 'string'},  placeholderText: ' Type Name')
             # @div class:'controls', =>
               @div class:'btn-box-n', =>
-                @button class:'btn btn-info', click:'do_add',"Add"
+                @button class:'btn btn-info', click:'do_add_type',"Add"
 
             @div outlet:'ele_edit_panel', class: 'controls', style:"display:none;", =>
               @subview "package_type_edit", new TextEditorView(mini: true,attributes: {id: 'package_type_edit', type: 'string'},  placeholderText: ' Type Name')
@@ -77,11 +81,11 @@ class AddPackagePanel extends View
             @div class: 'controls', =>
               @div class:'controle-logo', =>
                 @div class: 'meta-user', =>
-                  @img outlet:"logo_image", class: 'avatar', src:"#{logo_img}"
+                  @img outlet:"logo_image", class: 'avatar', src:""
                 @div class:'meta-controls', =>
                   @div class:'btn-group', =>
                     @select outlet:"logo_select", id: "logo", class: 'form-control', =>
-                      @option value: emp.EMP_NAME_DEFAULT, emp.EMP_NAME_DEFAULT
+                      # @option value: emp.EMP_NAME_DEFAULT, emp.EMP_NAME_DEFAULT
                     @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
 
         @div class: 'section-body', =>
@@ -93,13 +97,15 @@ class AddPackagePanel extends View
   initialize: (@fa_view) ->
     console.log "add package pane;"
     @cbb_management = atom.project.cbb_management
-    logo_img = emp.get_default_logo()
+    @logo_img = emp.get_default_logo()
     @logo_select.change (event) =>
       if @logo_select.val() is emp.EMP_NAME_DEFAULT
-        @logo_image.attr("src", logo_img)
+        @logo_image.attr("src", @logo_img)
       else
         @logo_image.attr("src", @logo_select.val())
+    @initial_input()
 
+  initial_input: ->
     def_type = emp.EMP_CPP_TYPE_DEF
     # def_type.push "test"
     # def_type.push "test1"
@@ -117,11 +123,70 @@ class AddPackagePanel extends View
       @type_view[tmp_name]= tmp_view
       @ccb_tree.append tmp_view
 
+    @package_name.setText ""
+    @package_desc.setText ""
+    @package_type_add.setText ""
+    @package_type_edit.setText ""
+
+    # 设置默认图片
+    @logo_select.empty()
+    def_opt = document.createElement 'option'
+    def_opt.text = path.basename emp.EMP_NAME_DEFAULT
+    def_opt.value = emp.EMP_NAME_DEFAULT
+    def_opt.selected = "selected"
+    @logo_select.append def_opt
+    @logo_image.attr("src", @logo_img)
+
+
+  set_add_flag:(tmp_flag=true)->
+    @add_flag=tmp_flag
+
+
+  #用于编辑时设置初始值
+  set_edit_state: (tmp_obj)->
+    console.log tmp_obj
+    @initial_input()
+
+    @set_add_flag(false)
+    @package_name.setText(tmp_obj.name)
+    @package_desc.setText(tmp_obj.desc)
+    @old_name = tmp_obj.name
+
+    if tmp_obj.logo
+      tmp_opt = document.createElement 'option'
+      tmp_opt.text = path.basename tmp_obj.logo
+      tmp_opt.value = tmp_obj.logo
+      # console.log tmp_opt
+      tmp_opt.selected = "selected"
+      # tmp_opt.attr('selected', true)
+      @logo_select.append tmp_opt
+      @logo_image.attr("src", tmp_obj.logo)
+
+    type_list = tmp_obj.type_list
+
+    for tmp_type in type_list
+      unless tmp_type is emp.EMP_DEFAULT_TYPE
+        tmp_view = new CcbEleView(this, tmp_type)
+        @type_view[tmp_type]= tmp_view
+        @ccb_tree.append tmp_view
+
+
   # 按键回调
   do_cancel: ()->
     @fa_view.cancel_add_panel()
 
   do_ok: ->
+    # if @add_flag
+    @do_submit_add()
+    # else
+      # @do_submit_edit()
+
+  do_submit_edit: ->
+    console.log "this is  edit!"
+    @set_add_flag()
+
+
+  do_submit_add: ->
     # console.log "do ok"
     if !tmp_name = @package_name.getText()?.trim()
       emp.show_warnning emp.EMP_NO_EMPTY
@@ -129,14 +194,30 @@ class AddPackagePanel extends View
     tmp_logo = null
     if @logo_select.val() isnt emp.EMP_NAME_DEFAULT
       tmp_logo = @logo_select.val()
-    if @cbb_management.check_exist_cbb()
+
+    type_list = []
+    for tmp_type of @type_view
+      type_list.push tmp_type
+    # console.log type_list
+    # console.log @cbb_management.check_exist_cbb()
+    
+    if !@add_flag
+      tmp_obj = @cbb_management.edit_package(@old_name,
+        tmp_name, tmp_desc, tmp_logo, type_list,
+        @add_type, @edit_type, @delete_type)
+      emp.show_info emp.EMP_EDIT_SUCCESS
+      # @do_cancel()
+      @fa_view.success_add_panel()
+      @initial_input()
+    else if @cbb_management.check_exist_cbb()
       emp.show_warnning emp.EMP_EXIST
       return
     else
-      tmp_obj = @cbb_management.create_new_package(tmp_name, tmp_desc, tmp_logo)
+      tmp_obj = @cbb_management.create_new_package(tmp_name, tmp_desc, tmp_logo, type_list)
       emp.show_info emp.EMP_ADD_SUCCESS
       # @do_cancel()
       @fa_view.success_add_panel()
+      @initial_input()
 
   # 取消对类型编辑
   do_cancel_edit: ->
@@ -147,20 +228,39 @@ class AddPackagePanel extends View
   over_edit: ->
     new_name = @package_type_edit.getText()
     # console.log new_name
+
     old_name = @editing_view.name
-    delete @type_view[old_name]
-    @type_view[new_name]=@editing_view
-    # 完成编辑后回调子级
-    @editing_view.over_edit_callback new_name
+    # 如果是新增加的
+    if @add_type.filter((tmp_type) -> tmp_type is old_name)
+      @add_type = @add_type.filter (tmp_type) -> tmp_type isnt old_name
+      @add_type.push new_name
+
+      delete @type_view[old_name]
+      @type_view[new_name]=@editing_view
+      @editing_view.over_edit_callback new_name
+    else
+
+      if !origin_name = @edit_type[@editing_view.name]
+        origin_name = @editing_view.name
+
+      if old_name isnt new_name
+        # edit_type
+        @edit_type[new_name] = origin_name
+        delete @type_view[old_name]
+        @type_view[new_name]=@editing_view
+
+        # 完成编辑后回调子级
+        @editing_view.over_edit_callback new_name
 
     @editing_view = null
     # console.log @type_view
+
     # 隐藏编辑窗口
     @do_cancel_edit()
 
   # 增加新的类型
-  do_add: ->
-    # console.log @type_view
+  do_add_type: ->
+    # console.log @type_view add_type
     tmp_text = @package_type_add.getText().trim()
     if !tmp_text
       emp.show_warnning emp.EMP_NO_EMPTY
@@ -169,6 +269,10 @@ class AddPackagePanel extends View
       tmp_view = new CcbEleView(this, tmp_text)
       @type_view[tmp_text]= tmp_view
       @ccb_tree.append tmp_view
+      if @delete_type.filter((tmp_type) -> tmp_type is tmp_text)
+        @delete_type = @delete_type.filter (tmp_type) -> tmp_type isnt tmp_text
+      else
+        @add_type.push tmp_text
     else
       emp.show_warnning emp.EMP_DUPLICATE
 
@@ -199,6 +303,15 @@ class AddPackagePanel extends View
     console.log @type_view
     console.log name
     delete @type_view[name]
+
+    if old_name = @edit_type[name]
+      @delete_type.push old_name
+      delete @edit_type[name]
+    else if @add_type.filter((tmp_type) -> tmp_type is name)
+      @add_type = @add_type.filter (tmp_type) -> tmp_type isnt name
+
+    else
+      @delete_type.push name
 
   #在子级点击 element编辑 时的回调
   do_edit_callback: (name)->

@@ -7,7 +7,7 @@ EmpAddPackPanel = require './template_list/add-package-panel'
 # {Subscriber} = require 'emissary'
 # fuzzaldrin = require 'fuzzaldrin'
 
-AvailableTemplateView = require './available-template-view'
+# AvailableTemplateView = require './available-template-view'
 AvailablePackageView = require './available-package-view'
 # ErrorView = require './error-view'
 templates_json = null
@@ -46,8 +46,8 @@ class InstalledTemplatePanel extends View
 
     # @filterEditor.getModel().onDidStopChanging => @matchPackages()
     @cbb_management = atom.project.cbb_management
-    packages = @cbb_management.get_pacakges()
-    console.log packages
+    # packages = @cbb_management.get_pacakges()
+    # console.log packages
 
 
     # if !templates_path = atom.project.templates_path
@@ -63,11 +63,11 @@ class InstalledTemplatePanel extends View
     console.log "matchPackagesmatchPackagesmatchPackages"
 
   refresh_detail:() ->
-    console.log "do refresh"
+    # console.log "do refresh"
     @loadTemplates1()
 
   loadTemplates1: ->
-    console.log "loadTemplates1"
+    # console.log "loadTemplates1"
     @templatePackages.empty()
 
     # for pack, index in packages
@@ -77,13 +77,14 @@ class InstalledTemplatePanel extends View
     #   packageViews.push(packView) # used for search filterin'
     #   packageRow.append(packView)
     packages = @cbb_management.get_pacakges()
-    for ccb_name in packages
-      tmp_obj = @cbb_management.get_package_obj(ccb_name)
+    console.log packages
+    for ccb_name,ccb_obj of packages
+      # tmp_obj = @cbb_management.get_package_obj(ccb_name)
       tempRow = $$ -> @div class: 'row'
       @templatePackages.append tempRow
       # name, description, version, repository
       # tempView = new AvailableTemplateView(tmp_obj)
-      tempView = new AvailablePackageView(tmp_obj)
+      tempView = new AvailablePackageView(this, ccb_obj)
       tempRow.append tempView
 
   # 添加新的 package 类别
@@ -91,6 +92,12 @@ class InstalledTemplatePanel extends View
     console.log 'show_add_panel'
     @package_list.hide()
     @add_package_panel.show()
+
+  show_edit_panel: (tmp_obj)->
+    @add_package_panel.set_edit_state(tmp_obj)
+    @show_add_panel()
+
+
     #
     # if fs.existsSync templates_json
     #   json_data = fs.readFileSync templates_json

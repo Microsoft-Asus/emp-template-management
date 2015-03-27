@@ -5,6 +5,11 @@ os = require 'os'
 
 module.exports =
 
+  TOOL_FIRST:"1"
+  TOOL_SECOND: "2"
+  TOOL_THIRD: "3"
+  TOOL_FOURTH: "4"
+
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'
@@ -19,6 +24,8 @@ module.exports =
   EMP_DUPLICATE: "该输入项已经存在!"
   EMP_EXIST: "该添加项已经存在!"
   EMP_ADD_SUCCESS: "添加成功!"
+  EMP_EDIT_SUCCESS: "编辑成功!"
+  EMP_SAVE_SUCCESS: "保存成功!"
 
 
   ENTERKEY:13
@@ -35,7 +42,10 @@ module.exports =
   EMP_TEMPLATE:'Template'
   EMP_UPLOAD:'UpLoad'
   EMP_DOWNLOAD:'Download'
+  EMP_Setting:'Cbb Tool Setting'
   EMP_INSTALL:'Install'
+
+  EMP_CCB_PACK_DETAIL:'Ccb_pack_detail'
 
   EMP_NAME_DEFAULT: 'default'
   EMP_DEFAULT_VER: '0.1'
@@ -77,7 +87,7 @@ module.exports =
   # config value
   EMP_CPP_TYPE_DEF:[]
 
-  
+
 
   new_templates_obj: ->
     tmp_obj = {templates:{}, length:0}

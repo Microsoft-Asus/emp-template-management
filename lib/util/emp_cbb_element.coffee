@@ -19,37 +19,19 @@ class EmpCbbEle
   ele_json:null
   lv:emp.EMP_JSON_ELE
 
-  constructor: (@name, @desc, @logo)->
+  constructor: (@name, @desc, @logo, @type)->
     console.log "constructor a new emp cbb element"
     @check_cbb_name()
     # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
     # type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}
 
-  set_con: (tmp_con, ctype) ->
-    tmp_obj = @new_con_obj(tmp_con)
-    switch ctype
-      when emp.EMP_QHTML then @html = tmp_obj
-      when emp.EMP_QCSS then @css = tmp_obj
-      when emp.EMP_QLUA then @lua = tmp_obj
-
-  set_file: (tmp_file) ->
-    tmp_obj = @new_file_obj(tmp_file)
-    switch ctype
-      when emp.EMP_QHTML then @html = tmp_obj
-      when emp.EMP_QCSS then @css = tmp_obj
-      when emp.EMP_QLUA then @lua = tmp_obj
-
-  new_con_obj:(tmp_con) ->
-    {type:emp.EMP_CON_TYPE, body:tmp_con}
-
-  new_file_obj:(tmp_file) ->
-    {type:emp.EMP_FILE_TYPE, body:tmp_file}
 
 
   refresh: ->
 
-    # temp_str = JSON.stringify @get_json()
-    temp_str = JSON.stringify this
+    temp_str = JSON.stringify @get_json()
+    # console.log this
+    # temp_str = JSON.stringify this
     # console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
@@ -102,11 +84,8 @@ class EmpCbbEle
     # console.log @templates_json
     # console.log @templates_obj
 
-    # fs.writeFileSync @templates_json, json_str
 
     @refresh()
-
-
 
   format_template: (to_path) ->
     if @logo
@@ -133,3 +112,23 @@ class EmpCbbEle
     # force copy
     fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
     re_file
+
+  set_con: (tmp_con, ctype) ->
+    tmp_obj = @new_con_obj(tmp_con)
+    switch ctype
+      when emp.EMP_QHTML then @html = tmp_obj
+      when emp.EMP_QCSS then @css = tmp_obj
+      when emp.EMP_QLUA then @lua = tmp_obj
+
+  set_file: (tmp_file) ->
+    tmp_obj = @new_file_obj(tmp_file)
+    switch ctype
+      when emp.EMP_QHTML then @html = tmp_obj
+      when emp.EMP_QCSS then @css = tmp_obj
+      when emp.EMP_QLUA then @lua = tmp_obj
+
+  new_con_obj:(tmp_con) ->
+    {type:emp.EMP_CON_TYPE, body:tmp_con}
+
+  new_file_obj:(tmp_file) ->
+    {type:emp.EMP_FILE_TYPE, body:tmp_file}
