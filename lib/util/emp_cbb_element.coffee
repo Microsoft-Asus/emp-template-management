@@ -19,12 +19,14 @@ class EmpCbbEle
   ele_json:null
   lv:emp.EMP_JSON_ELE
 
-  constructor: (@name, @desc, @logo, @type)->
+  constructor: (@name, @desc, @logo, @type, tmp_pack)->
     console.log "constructor a new emp cbb element"
-    @check_cbb_name()
-    # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
-    # type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}
+    console.log @type
 
+    if !tmp_pack
+      @check_cbb_name()
+    else
+      @own_package = tmp_pack
 
 
   refresh: ->
@@ -120,7 +122,7 @@ class EmpCbbEle
       when emp.EMP_QCSS then @css = tmp_obj
       when emp.EMP_QLUA then @lua = tmp_obj
 
-  set_file: (tmp_file) ->
+  set_file: (tmp_file, ctype) ->
     tmp_obj = @new_file_obj(tmp_file)
     switch ctype
       when emp.EMP_QHTML then @html = tmp_obj

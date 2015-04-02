@@ -1,7 +1,3 @@
-# _ = require 'underscore-plus'
-# {TextEditorView} = require 'atom-space-pen-views'
-# {ScrollView} = require 'atom'
-
 {$, $$, ScrollView} = require 'atom'
 {TextEditorView} = require 'atom-space-pen-views'
 path = require 'path'
@@ -14,9 +10,11 @@ fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 emp = require '../exports/emp'
+CbbEle = require '../util/emp_cbb_element'
 templates_store_path = null
 templates_json = null
 templates_obj = null
+default_select_pack = emp.EMP_DEFAULT_PACKAGE
 
 module.exports =
 class InstalledTemplatePanel extends ScrollView
@@ -75,18 +73,22 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
+                  @div class: 'info-label', "模板所属包"
+                  @div class: 'setting-description', "插件包所属选择"
+              @div class: 'controls', =>
+                # @div class: 'editor-container', =>
+                @select outlet:"pack_select", id: "pack", class: 'form-control'
+
+          # 包类型
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
                   @div class: 'info-label', "模板类型"
                   @div class: 'setting-description', "目前分为控件"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
-                @select outlet:"type_select", id: "type", class: 'form-control', =>
-
-                  if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
-                    atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
-                    emp_cbb_types = emp.EMP_CPP_TYPE_DEF
-                  for option in emp_cbb_types
-                    @option value: option, option
-                  @option selected:'select', value: emp.EMP_DEFAULT_TYPE, emp.EMP_DEFAULT_TYPE
+                @select outlet:"type_select", id: "type", class: 'form-control'
 
           # 包图标
           @div class: 'section-body', =>
@@ -168,17 +170,22 @@ class InstalledTemplatePanel extends ScrollView
       @div class: 'footer-div', =>
         @div class: 'footer-detail', =>
           # @button class: 'footer-btn btn btn-info inline-block-tight', click:'do_cancel','  Cancel  '
-          @button class: 'footer-btn btn btn-info inline-block-tight', click:'do_submit',' Ok '
+          @button class: 'footer-btn btn btn-info inline-block-tight', click:'create_snippet',' Ok '
 
   initialize: () ->
     super
     @packageViews = []
+    @cbb_management = atom.project.cbb_management
+    @packs = @cbb_management.get_pacakges()
+
     if !templates_store_path = atom.project.templates_path
       atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
       templates_store_path =atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
+
+    @cbb_management = atom.project.cbb_management
     # console.log templates_json
     fs.readFile templates_json, (err, data) ->
       if err
@@ -187,90 +194,41 @@ class InstalledTemplatePanel extends ScrollView
       else
         templates_obj = JSON.parse data
 
-    #
-    # if fs.existsSync templates_json
-    #   console.log "exists"
-    #   fs.readFileSync templates_json
-    #   templates_obj = JSON.parse templates_json
-
-    # console.log @template_path_e.getEditor().getText()
-
-    # @template_path.getModel().onDidStopChanging =>
-    # # @template_path.getEditor().on 'contents-modified', =>
-    #   console.log @template_path.getText()
 
     @logo_select.change (event) =>
-      # console.log @logo_select
-      # console.log @logo_select.val()
       @logo_image.attr("src", @logo_select.val())
-      # console.log @logo_image
+    @do_initial()
 
-    # @option_default.on 'click', ->
-    #   "click default"
-    # console.log @template_name_editor
-    # console.log @template_name_editor.show()
-    #
-    # g_select = @name_select
-    # g_editor = @template_name_editor
-    # @name_select.change (event, p2, p3) ->
-    #   # console.log "val channge"
-    #   console.log event
-      # console.log p2
-      # console.log p3
-      # current_view = event.currentTargetView()
-      # console.log event.targetView()
-      # temp_editor = event.targetView().template_name_editor
-      # console.log temp_editor
-      # console.log event.targetView().name_select
-      #
-      # event.targetView().name_select.hide()
-      # temp_editor.show()
+  do_initial: ()->
+    @pack_select.change (event) =>
+      tmp_name = @pack_select.val()
+      tmp_obj = @packs[tmp_name]
+      type_list = tmp_obj.get_type()
+      @type_select.empty()
+      for tmp_type in type_list
+        @type_select.append @new_option(tmp_type)
 
-      # console.log current_view
-      # parent_view = current_view.parent()?[0]
-      # console.log parent_view
+    @pack_select.empty()
+    for name, obj of @packs
+      if name is default_select_pack
+        @pack_select.append @new_selec_option(name)
+      else
+        @pack_select.append @new_option(name)
+    # console.log @packs
+    tmp_pack = @packs[default_select_pack]
+    # console.log tmp_pack
+    type_list = tmp_pack.get_type()
+    @type_select.empty()
+    for tmp_type in type_list
+      @type_select.append @new_option(tmp_type)
 
+  new_option: (name)->
+    $$ ->
+      @option value: name, name
 
-      # tmp_name = g_select.val()
-      # # console.log tmp_name
-      # if tmp_name is emp.EMP_NAME_DEFAULT
-      # #   # @emp_log_color_list.css('background-color', tmp_color)
-      #
-      #   g_select.hide()
-      #   console.log g_editor
-      #   console.log g_select
-      #   g_editor.getModel().show()
-
-
-
-      #   client_id = @emp_client_list.val()
-      #   if client_id isnt @default_color_name
-      #     log_map[client_id].set_color(tmp_color)
-      # else
-      #   @emp_log_color_list.css('background-color', @default_color_value)
-        # @find('atom-text-editor[id]').views().forEach (editorView) =>
-        #   # editor = editorView.getModel()
-        #   console.log name
-        #   name = editorView.attr('id')
-        #   type = editorView.attr('type')
-        #
-        #   if name is 'template_name'
-        #     editorView.show()
-        # editor.setPlaceholderText("Default: #{defaultValue}")
-
-      # @observe name, (value) =>
-      #   if @isDefault(name)
-      #     stringValue = ''
-      #   else
-      #     stringValue = @valueToString(value) ? ''
-      #
-      #   return if stringValue is editor.getText()
-      #   return if _.isEqual(value, @parseValue(type, editor.getText()))
-      #
-      #   editorView.setText(stringValue)
-      #
-      # editor.onDidStopChanging =>
-      #   @set(name, @parseValue(type, editor.getText()))
+  new_selec_option: (name) ->
+    $$ ->
+      @option selected:'select', value: name, name
 
   detached: ->
     # @unsubscribe()
@@ -439,11 +397,8 @@ class InstalledTemplatePanel extends ScrollView
       temp_obj.lua = @copy_content_ch(to_path, temp_obj.lua, emp.EMP_LUA_DIR)
     temp_obj
 
-
   copy_template: (to_path, basic_dir)->
-    # console.log "copy  template`````--------"
-    # console.log to_path
-    # console.log basic_dir
+
     files = fs.readdirSync(basic_dir)
     for template in files
       if !template.match(/^\./ig)
@@ -454,13 +409,6 @@ class InstalledTemplatePanel extends ScrollView
           @copy_template(t_path, f_path)
         else
           @copy_content(t_path, f_path)
-
-
-  # string_replace: (str) ->
-  #   map = [{'k':/\$\{app\}/ig,'v':@app_name}, {'k':/\$\{ecl_ewp\}/ig,'v':@ewp_dir}]
-  #   for o in map
-  #     str = str.replace(o.k, o.v)
-  #   str
 
   copy_content_ch: (t_path, f_path, add_path="") ->
     # console.log t_path
@@ -492,3 +440,26 @@ class InstalledTemplatePanel extends ScrollView
     # logo = @logo_select.val()
 
     {name:name, version:ver, path:path, desc: desc, logo:logo, html:html_temp, css:css_temp, available:true}
+
+  create_snippet: ->
+    console.log "button down"
+    cbb_name = @template_name.getText()?.trim()
+    cbb_obj = @new_template_obj2(cbb_name)
+    console.log cbb_obj
+    @cbb_management.add_element(cbb_obj)
+    emp.show_info("添加模板 完成~")
+    # @destroy()
+
+  new_template_obj2: (cbb_name)->
+    cbb_desc = @template_desc.getText()?.trim()
+    cbb_logo = @logo_select.val()
+    # cbb_name = @cbb_name.getText()?.trim()
+    cbb_html = @template_html.getText()?.trim()
+    cbb_css = @template_css.getText()?.trim()
+    cbb_pack = @pack_select.val()
+    cbb_type = @type_select.val()
+    console.log cbb_type
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack)
+    cbb_obj.set_file cbb_html, emp.EMP_QHTML
+    cbb_obj.set_file cbb_css, emp.EMP_QCSS
+    cbb_obj

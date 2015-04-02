@@ -1,5 +1,7 @@
+![EMP](https://raw.githubusercontent.com/wiki/RYTong/emp-debugger/images/emp.png)
 # emp-template-management package
 
-A short description of your package.
-
-![A screenshot of your package](https://f.cloud.github.com/assets/69169/2290250/c35d867a-a017-11e3-86be-cd7c5bf3ff9b.gif)
+## Emp Template Management
+通过 `ctrl+alt+y` 來快速添加模板.
+通过 `ctrl+alt+i` 來呼出模板管理界面.
+通过 `ctrl+alt+u` 來呼出模板使用界面.

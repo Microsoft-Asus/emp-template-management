@@ -8,7 +8,9 @@ emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'
 label_hide = "报文内容:--------------------点击显示--------------------"
 label_show = "报文内容(点击隐藏):"
-templates_store_path = null
+css_label_hide = "模板样式内容:--------------------点击显示--------------------"
+css_label_show = "模板样式内容(点击隐藏):"
+# templates_store_path = null
 templates_obj = null
 
 
@@ -25,6 +27,12 @@ class QuickAddCbbView extends View
             @div class:'list-item', =>
               @label outlet:'snippet_label', label_show
         @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "模板内容"
+      @div  class:'div_snippet', =>
+        @ul class:'list-tree has-collapsable-children', click:'collapsable_css', =>
+          @li outlet:'root_li_css', class:'list-nested-item', =>
+            @div class:'list-item', =>
+              @label outlet:'css_label', css_label_show
+        @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet_css", placeholder: "模板样式内容"
       @div class:'div_box_r', =>
         @label class:'lab',"模板名称:"
         @subview "cbb_name", new TextEditorView(mini:true, placeholderText: 'Snippet name')
@@ -61,11 +69,11 @@ class QuickAddCbbView extends View
     atom.commands.add "atom-workspace",
       "emp-template-management:quick-add-cbb": => @toggle()
 
-    if !templates_store_path = atom.project.templates_path
-      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-      templates_store_path =atom.project.templates_path
-    # console.log "stsore_path: #{templates_store_path}"
-    emp.mkdir_sync templates_store_path
+    # if !templates_store_path = atom.project.templates_path
+    #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
+    #   templates_store_path =atom.project.templates_path
+    # # console.log "stsore_path: #{templates_store_path}"
+    # emp.mkdir_sync templates_store_path
     # console.log templates_json
 
 
@@ -76,7 +84,7 @@ class QuickAddCbbView extends View
     @on 'keydown', (e) =>
       if e.which is emp.ESCAPEKEY
         @detach()
-    fields = [ @snippet, @cbb_name, @cbb_desc]
+    fields = [ @snippet, @cbb_name, @cbb_desc, @snippet_css]
     # @cbb_name, @cbb_desc, @cbb_else,
     for field in fields
       field.on 'core:confirm', (event) =>
@@ -91,6 +99,7 @@ class QuickAddCbbView extends View
     cbb_name = @cbb_name.getText().length
     cbb_desc = @cbb_desc.getText().length
     snippet = @snippet.val().length
+    snippet_css = @snippet_css.val().length
     validate = (input, el) ->
       if input is 0
         el.addClass "invalid"
@@ -99,11 +108,14 @@ class QuickAddCbbView extends View
         el.removeClass "invalid"
         el.addClass "valid"
     validate snippet, @snippet
+    validate snippet_css, @snippet_css
     validate cbb_name, @cbb_name
     validate cbb_desc, @cbb_desc
 
 
+
   set_textarea_hight: ->
+    console.log "set textarea"
     @snippet.css "max-height", (window.innerHeight * 0.8 ) + "px"
 
   toggle: ->
@@ -141,14 +153,26 @@ class QuickAddCbbView extends View
     # console.log 'collapsable_text ---'
     if @snippet.isVisible()
       @snippet.hide()
-      if !@root_li.hasClass('collapsed')
-        @root_li.removeClass('expanded').addClass('collapsed')
+      if !@root_li_css.hasClass('collapsed')
+        @root_li_css.removeClass('expanded').addClass('collapsed')
       @snippet_label.text(label_hide)
     else
       @snippet.show()
+      if @root_li_css.hasClass('collapsed')
+        @root_li_css.removeClass('collapsed').addClass('expanded')
+      @snippet_label.text(label_show)
+
+  collapsable_css: ->
+    if @snippet_css.isVisible()
+      @snippet_css.hide()
+      if !@root_li.hasClass('collapsed')
+        @root_li.removeClass('expanded').addClass('collapsed')
+      @css_label.text(css_label_hide)
+    else
+      @snippet_css.show()
       if @root_li.hasClass('collapsed')
         @root_li.removeClass('collapsed').addClass('expanded')
-      @snippet_label.text(label_show)
+      @css_label.text(css_label_show)
 
   # btn callback for logo
   select_logo: (e, element)->
@@ -228,9 +252,11 @@ class QuickAddCbbView extends View
     cbb_logo = @cbb_logo.getText()?.trim()
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_con = @snippet?.val()
+    cbb_css = @snippet_css?.val()
     cbb_type = @type_select.val()
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type)
     cbb_obj.set_con cbb_con, emp.EMP_QHTML
+    cbb_obj.set_con cbb_css, emp.EMP_QCSS
     cbb_obj
 
 

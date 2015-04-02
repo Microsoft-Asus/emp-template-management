@@ -29,7 +29,8 @@ class EmpCbbPackage
       @package_path = path.join @store_path, @name
 
     emp.mkdir_sync_safe @package_path
-    emp.mkdir_sync_safe path.join(@package_path, emp.EMP_DEFAULT_TYPE)
+    for tmp_dir in @type_list
+      emp.mkdir_sync_safe path.join(@package_path, tmp_dir)
     @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
     if fs.existsSync @template_json
       json_con = fs.readFileSync @template_json
@@ -72,17 +73,16 @@ class EmpCbbPackage
         @refresh()
       @cbb_management.refresh_package(this)
 
-
-
   # 添加子元素
   add_element: (ccb_obj) ->
     console.log "add_element"
     console.log  @obj_json
     console.log ccb_obj
     # TODO 如果已存在添加提醒
-    if !@obj_json[ccb_obj.type]
+    if !(@obj_json.type.indexOf(ccb_obj.type)+1)
       ccb_obj.type = emp.EMP_DEFAULT_TYPE
-
+    else if !@obj_json[ccb_obj.type]
+      @obj_json[ccb_obj.type] = {}
     ccb_obj.create(@package_path, @name)
     ccb_info = ccb_obj.get_info()
     @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
