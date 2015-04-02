@@ -42,7 +42,7 @@ class AvailableTypePanel extends View
       # console.log ele_list
       for ele, ele_obj of ele_list
         # console.log ele_obj
-        ele_panel = new AvailableTemplatePanel(ele_obj)
+        ele_panel = new AvailableTemplatePanel(ele_obj, this, @pack, @type)
         @ele_panels.push ele_panel
         @template_element.append ele_panel
 

@@ -43,8 +43,6 @@ class EmpCbbPackage
   refresh: ->
     # console.log @get_json()
     temp_str = JSON.stringify @get_json()
-    # console.log @template_json
-    # console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
   # 包信息
@@ -76,13 +74,14 @@ class EmpCbbPackage
   # 添加子元素
   add_element: (ccb_obj) ->
     console.log "add_element"
-    console.log  @obj_json
-    console.log ccb_obj
+    # console.log  @obj_json
+    # console.log ccb_obj
     # TODO 如果已存在添加提醒
     if !(@obj_json.type.indexOf(ccb_obj.type)+1)
       ccb_obj.type = emp.EMP_DEFAULT_TYPE
     else if !@obj_json[ccb_obj.type]
       @obj_json[ccb_obj.type] = {}
+
     ccb_obj.create(@package_path, @name)
     ccb_info = ccb_obj.get_info()
     @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
@@ -133,3 +132,18 @@ class EmpCbbPackage
 
     if fs.existsSync @template_json
       @refresh()
+
+  # 删除模板集得相关描述
+  delete_element: (name, type)->
+    # console.log name
+    delete @obj_json[type][name]
+    @refresh()
+
+  # 删除模板元素的所有内容
+  delete_element_detail:(name, type) ->
+    # console.log name
+    ele_obj = @obj_json[type][name]
+    tmp_dir = ele_obj.element_path
+    fs_plus.removeSync(tmp_dir) unless !fs.existsSync tmp_dir
+    @delete_element(name, type)
+    # @delete_package(name)

@@ -79,8 +79,8 @@ class QuickAddCbbView extends View
 
   handle_event: ->
     @validate_fields()
-    window.addEventListener 'resize', =>
-      @set_textarea_hight()
+    # window.addEventListener 'resize', =>
+    #   @set_textarea_hight()
     @on 'keydown', (e) =>
       if e.which is emp.ESCAPEKEY
         @detach()
@@ -115,7 +115,7 @@ class QuickAddCbbView extends View
 
 
   set_textarea_hight: ->
-    console.log "set textarea"
+    # console.log "set textarea"
     @snippet.css "max-height", (window.innerHeight * 0.8 ) + "px"
 
   toggle: ->

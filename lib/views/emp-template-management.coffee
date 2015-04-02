@@ -130,7 +130,6 @@ class EmpTemplateManagement
     fs_plus.removeSync(tmp_dir) unless !fs.existsSync tmp_dir
     @delete_package(name)
 
-
   refresh: ->
     temp_str = JSON.stringify @templates_obj
     # console.log template_json

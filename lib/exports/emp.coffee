@@ -43,7 +43,7 @@ module.exports =
   DEFAULT_PANEL: 'OverView'
 
   EMP_TEMPLATE:'Template'
-  EMP_UPLOAD:'UpLoad'
+  EMP_UPLOAD:'Add Template'
   EMP_DOWNLOAD:'Download'
   EMP_Setting:'Cbb Tool Setting'
   EMP_EXI:'Export/Inport'

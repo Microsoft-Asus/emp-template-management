@@ -21,20 +21,13 @@ class EmpCbbEle
 
   constructor: (@name, @desc, @logo, @type, tmp_pack)->
     console.log "constructor a new emp cbb element"
-    console.log @type
-
     if !tmp_pack
       @check_cbb_name()
     else
       @own_package = tmp_pack
 
-
   refresh: ->
-
     temp_str = JSON.stringify @get_json()
-    # console.log this
-    # temp_str = JSON.stringify this
-    # console.log temp_str
     fs.writeFileSync @template_json, temp_str
 
   # element information

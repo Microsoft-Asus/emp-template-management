@@ -28,12 +28,6 @@ class AvailablePackageView extends View
       @div class: 'stats pull-right', =>
         @span class: "stats-item", =>
           @span class: 'icon icon-versions'
-          # @span class:'value', version
-
-        # @span class: 'stats-item', =>
-        #   @span class: 'icon icon-cloud-download'
-        #   @span outlet: 'downloadCount', class: 'value'
-
       @div class: 'body', =>
         @h4 class: 'card-name', =>
           @a outlet: 'packageName', @package_obj.name
@@ -49,9 +43,10 @@ class AvailablePackageView extends View
           #   @button type: 'button', class: 'btn btn-info icon icon-cloud-download install-button', outlet: 'installButton', 'Install'
           @div outlet: 'buttons', class: 'btn-group', =>
             @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit', 'Edit'
-            @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
-            @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'detail_utton', click:'show_detail', 'Detail'
-            @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
+            if @package_obj.name isnt emp.EMP_DEFAULT_PACKAGE
+              @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
+            @button type: 'button', class: 'btn icon icon-repo', outlet: 'detail_utton', click:'show_detail', 'Detail'
+            # @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
   initialize: (@fa_view, @package_obj) ->
     @cbb_management = atom.project.cbb_management

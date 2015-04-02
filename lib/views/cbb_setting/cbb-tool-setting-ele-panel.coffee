@@ -65,10 +65,10 @@ class CbbToolSettingPanel extends View
       # console.log @logo_select
       # console.log @logo_select.val()
       tmp_name = @pack_select.val()
-      console.log  @pack_select.val()
+      # console.log  @pack_select.val()
 
       tmp_obj = @packs[tmp_name]
-      console.log tmp_obj
+      # console.log tmp_obj
       type_list = tmp_obj.get_type()
       @type_select.empty()
 

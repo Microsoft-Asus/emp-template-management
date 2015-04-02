@@ -2,18 +2,10 @@
 {TextEditorView} = require 'atom-space-pen-views'
 path = require 'path'
 fs = require 'fs'
-# {Subscriber} = require 'emissary'
-# fuzzaldrin = require 'fuzzaldrin'
-
-# AvailableTemplateView = require './available-template-view'
-# ErrorView = require './error-view'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'
-templates_store_path = null
-templates_json = null
-templates_obj = null
 default_select_pack = emp.EMP_DEFAULT_PACKAGE
 
 module.exports =
@@ -24,8 +16,6 @@ class InstalledTemplatePanel extends ScrollView
     logo_path =  path.join __dirname, '../../images/logo'
     logo_imgs = fs.readdirSync(logo_path).filter((ele)-> !ele.match(/^\./ig))
     index = Math.round Math.random()*(logo_imgs.length-1)
-    # console.log index
-    # console.log logo_imgs
     logo_img = path.join logo_path,logo_imgs[index]
 
     @div =>
@@ -178,22 +168,8 @@ class InstalledTemplatePanel extends ScrollView
     @cbb_management = atom.project.cbb_management
     @packs = @cbb_management.get_pacakges()
 
-    if !templates_store_path = atom.project.templates_path
-      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-      templates_store_path =atom.project.templates_path
-    # console.log "stsore_path: #{templates_store_path}"
-    emp.mkdir_sync templates_store_path
-    templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
-
     @cbb_management = atom.project.cbb_management
     # console.log templates_json
-    fs.readFile templates_json, (err, data) ->
-      if err
-        console.log "no exist"
-        templates_obj = null
-      else
-        templates_obj = JSON.parse data
-
 
     @logo_select.change (event) =>
       @logo_image.attr("src", @logo_select.val())
@@ -346,111 +322,16 @@ class InstalledTemplatePanel extends ScrollView
       new_path = new_paths[0]
       file_view.setText(new_path)
 
-  do_submit: ->
-    console.log "do_submit"
-    temp_path = @template_path.getText()?.trim()
-    temp_name = @template_name.getText()?.trim()
-    temp_type = @type_select.val()
-    # console.log temp_type
-    # console.log temp_logo
-
-    template_store_path = path.join templates_store_path, temp_name
-    template_json = path.join template_store_path, emp.EMP_TEMPLATE_JSON
-    temp_obj = null
-    # if fs.existsSync templates_json
-
-    if !templates_obj?.templates[temp_type][temp_name]
-      if !templates_obj
-        templates_obj = emp.new_templates_obj()
-
-      emp.mkdir_sync template_store_path
-      temp_obj = @new_template_obj(temp_name, template_store_path)
-      # console.log templates_obj
-      # console.log temp_obj
-      if temp_path
-        @copy_template(template_store_path, temp_path)
-
-      @format_template(template_store_path, temp_obj)
-      # console.log temp_obj
-
-      templates_obj.templates[temp_type][temp_name] = temp_obj
-      templates_obj.templates[temp_type].length += 1
-      json_str = JSON.stringify(templates_obj)
-      fs.writeFileSync templates_json, json_str
-
-      temp_str = JSON.stringify temp_obj
-      fs.writeFileSync template_json, temp_str
-
-      emp.show_info("添加模板 完成~")
-    else
-      console.log "exist -------"
-      emp.show_info("该模板已经存在~")
-
-  format_template: (to_path, temp_obj) ->
-    if temp_obj.logo
-      temp_obj.logo = @copy_content_ch(to_path, temp_obj.logo, emp.EMP_LOGO_DIR)
-    if temp_obj.html
-      temp_obj.html = @copy_content_ch(to_path, temp_obj.html, emp.EMP_HTML_DIR)
-    if temp_obj.css
-      temp_obj.css = @copy_content_ch(to_path, temp_obj.css, emp.EMP_CSS_DIR)
-    if temp_obj.lua
-      temp_obj.lua = @copy_content_ch(to_path, temp_obj.lua, emp.EMP_LUA_DIR)
-    temp_obj
-
-  copy_template: (to_path, basic_dir)->
-
-    files = fs.readdirSync(basic_dir)
-    for template in files
-      if !template.match(/^\./ig)
-        f_path = path.join basic_dir, template
-        t_path = path.join to_path, template
-        if fs.lstatSync(f_path).isDirectory()
-          emp.mkdir_sync(t_path)
-          @copy_template(t_path, f_path)
-        else
-          @copy_content(t_path, f_path)
-
-  copy_content_ch: (t_path, f_path, add_path="") ->
-    # console.log t_path
-    # console.log f_path
-    to_path = path.join t_path, add_path
-    # console.log to_path
-    emp.mkdir_sync(to_path)
-    f_name = path.basename f_path
-    f_con = fs.readFileSync f_path
-    re_file = path.join to_path, f_name
-    # force copy
-    fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
-    re_file
-
-  copy_content: (t_path, f_path)->
-    # console.log "copy file: #{t_path}, #{f_path}"
-    # f_name = path.basename f_path
-    f_con = fs.readFileSync f_path
-    # re_file = path.join t_path, f_name
-    # force copy
-    fs.writeFileSync t_path, f_con  #unless fs.existsSync(re_file)#, 'utf8'
-
-  new_template_obj: (name, path)->
-    logo = @logo_select.val()
-    ver = @template_ver.getText()?.trim()
-    desc = @template_desc.getText()?.trim()
-    html_temp = @template_html.getText()?.trim()
-    css_temp = @template_css.getText()?.trim()
-    # logo = @logo_select.val()
-
-    {name:name, version:ver, path:path, desc: desc, logo:logo, html:html_temp, css:css_temp, available:true}
-
   create_snippet: ->
     console.log "button down"
     cbb_name = @template_name.getText()?.trim()
-    cbb_obj = @new_template_obj2(cbb_name)
-    console.log cbb_obj
+    cbb_obj = @new_template_obj(cbb_name)
+    # console.log cbb_obj
     @cbb_management.add_element(cbb_obj)
     emp.show_info("添加模板 完成~")
     # @destroy()
 
-  new_template_obj2: (cbb_name)->
+  new_template_obj: (cbb_name)->
     cbb_desc = @template_desc.getText()?.trim()
     cbb_logo = @logo_select.val()
     # cbb_name = @cbb_name.getText()?.trim()
@@ -458,7 +339,7 @@ class InstalledTemplatePanel extends ScrollView
     cbb_css = @template_css.getText()?.trim()
     cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
-    console.log cbb_type
+    # console.log cbb_type
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack)
     cbb_obj.set_file cbb_html, emp.EMP_QHTML
     cbb_obj.set_file cbb_css, emp.EMP_QCSS

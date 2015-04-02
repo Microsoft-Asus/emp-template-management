@@ -11,15 +11,16 @@ class ComponmentEleView extends View
 
   @content: ({name, version, path, desc, logo}) ->
     @li class:'two-lines cbb_li_view', click: 'do_click', =>
-      # @div class:'avatar'
       @div class: 'temp_logo', =>
-        # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-        @img outlet: 'logo_img', class: 'avatar', src: "#{logo}" #click:'image_format'
+        @img outlet: 'logo_img', class: 'avatar', src: "#{logo}"
       @div class: 'temp_name', =>
         @h4 class:'name_header', "#{name}"
         @span class:'name_detail' ,"#{desc}"
 
   initialize: (@com) ->
+    @ele_path = @com.element_path
+    @ele_json = path.join @ele_path, emp.EMP_TEMPLATE_JSON
+
     # It might be useful to either wrap @pack in a class that has a ::validate
     # method, or add a method here. At the moment I think all cases of malformed
     # package metadata are handled here and in ::content but belt and suspenders,
@@ -42,16 +43,24 @@ class ComponmentEleView extends View
 
   do_click: ->
     console.log @com
-    if !@snippets
-      html_temp = @com.html
-      @snippets = fs.readFileSync html_temp, 'utf-8'
+    if !@html_snippet
+      ele_json_data = fs.readFileSync @ele_json, 'utf-8'
+      @snippet_obj = JSON.parse ele_json_data
+
+      html_obj = @snippet_obj.html
+      css_obj = @snippet_obj.css
+
+      @html_snippet = @set_con(html_obj)
+      @css_snippet = @set_con(css_obj)
     console.log @snippets
     editor = atom.workspace.getActiveEditor()
     # console.log body_parser.parse file_con
     # snippetBody = '<${1:div}> asd $2 asd \n</${1:div}>$0'
 
     # tmpr = require atom.packages.activePackages.snippets.mainModulePath
-    atom.packages.activePackages.snippets?.mainModule?.insert @snippets
+    atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet
+    if @css_snippet
+      console.log "has css"
 
 
     # if editor
@@ -72,3 +81,12 @@ class ComponmentEleView extends View
     #       # selections.push newSelection
     #       # editor.focus()
     #       editor.addCursorAtBufferPosition(range.start)
+
+  set_con: (tmp_obj) ->
+    if tmp_obj
+      if tmp_obj.type is emp.EMP_CON_TYPE
+        return tmp_obj.body
+      else
+        return fs.readFileSync tmp_obj.body, 'utf-8'
+    else
+      return null

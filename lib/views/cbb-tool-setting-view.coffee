@@ -71,13 +71,14 @@ class CbbToolSettingPanel extends View
     # console.log new_obj
     # console.log @cbb_tools[new_obj.name]
     tmp_name = new_obj.pack_name
+    old_obj = @cbb_tools[new_obj.name]
+    # console.log old_obj
     if tmp_name is null
       return false
+    else if !old_obj
+      return true
     else
-      old_obj = @cbb_tools[new_obj.name]
       return tmp_name isnt old_obj.pack_name or new_obj.type_name isnt old_obj.type_name
-
-
 
     #
     # @append(new TutorialPanel(msg))
