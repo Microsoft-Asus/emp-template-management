@@ -39,9 +39,9 @@ class AvailableTypePanel extends View
     # console.log "loadTemplates1"
     if ele_list = @pack.get_element(@type)
       @template_element.empty()
-      console.log ele_list
+      # console.log ele_list
       for ele, ele_obj of ele_list
-        console.log ele_obj
+        # console.log ele_obj
         ele_panel = new AvailableTemplatePanel(ele_obj)
         @ele_panels.push ele_panel
         @template_element.append ele_panel

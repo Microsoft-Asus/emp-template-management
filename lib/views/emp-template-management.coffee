@@ -22,7 +22,7 @@ class EmpTemplateManagement
       templates_store_path =atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
-    @templates_json = path.join templates_store_path, emp.EMP_TEMPLATES_JSON
+    @templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
 
     if fs.existsSync @templates_json
       json_data = fs.readFileSync @templates_json
@@ -104,7 +104,7 @@ class EmpTemplateManagement
   refresh_package: (cbb_package)->
 
     @packages[cbb_package.name] = cbb_package
-    @templates_obj.templates.push cbb_package.name
+    # @templates_obj.templates.push cbb_package.name
     @templates_obj[cbb_package.name] = cbb_package.get_info()
     @refresh()
 
@@ -178,5 +178,74 @@ class EmpTemplateManagement
     # console.log "do refresh"
     @templates_obj.atom_tool_setting = new_setting
     @refresh()
+
+  merge_package: (tmp_obj, tmp_entries)->
+    tmp_pack_name = tmp_obj.pack
+    tmp_obj = @get_pacakge(tmp_pack_name)
+    tmp_obj ?= @create_new_package(tmp_pack_name, null, null, null)
+    tmp_type_list = tmp_obj.add_type(tmp_obj.type)
+    for name, obj of tmp_entries
+      console.log name
+      tmp_data = obj.getData().toString('utf8')
+      tmp_file_path = path.join templates_store_path,tmp_pack_name, name
+      fs.writeFile tmp_file_path, tmp_data, (err) ->
+         unless !err
+           console.error err
+
+
+
+
+  # merge_package1: (fa_path, tmp_obj, tmp_entries) ->
+  #
+  #   templates = tmp_obj.templates
+  #   ori_templates = @get_pacakges_list()
+  #   # @templates_obj
+  #   templates.forEach (pack) ->
+  #     if ori_templates.indexOf pack
+  #       console.log "do"
+  #
+  #     else
+  #       @templates_obj.templates.push pack
+  #       @templates_obj[pack] = templates[pack]
+  #       # @packages[pack] = new CbbPackage templates_store_path,  templates[pack]
+  #       # @packages[pack].refresh()
+  #       @copy_pack(templates[pack], fa_path, tmp_entries)
+  #       @packages[pack] = new CbbPackage templates_store_path,  templates[pack]
+  #
+  #
+  # copy_pack: (pack_obj, fa_path, tmp_entries) ->
+  #   pack_path = path.join templates_store_path, pack_obj.name
+  #   emp.mkdir_sync pack_path
+  #   fa_path = path.join fa_path, pack_obj.name
+  #   tmp_key = path.join fa_path, emp.EMP_TEMPLATE_JSON
+  #
+  #   store_path = path.join pack_path, emp.EMP_TEMPLATE_JSON
+  #
+  #
+  #
+  #   for tmp_type in pack_obj.type
+  #     emp.mkdir_sync path.join(pack_path, tmp_type)
+
+
+  #
+  # merge_file: (fa_path, tmp_obj, tmp_entries) ->
+  #
+  #   if fa_path is emp.EMP_TEMPLATES_PATH
+  #     console.log " ----"
+  #   else
+  #
+  #
+  #
+  #
+  #   templates = tmp_obj.templates
+  #   ori_templates = @get_pacakges_list()
+
+
+
+    #
+    # @packages[cbb_package.name] = cbb_package
+    # @templates_obj.templates.push cbb_package.name
+    # @templates_obj[cbb_package.name] = cbb_package.get_info()
+
 
     # return tool_list #[count]

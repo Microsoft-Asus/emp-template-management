@@ -29,13 +29,17 @@
       // overflow: auto;
       -webkit-flex-flow: column;
       .cbb-head-bar {
-        top:0px;
+        display: -webkit-flex;
+        -webkit-user-select: none;
+        margin: 0;
+
+        // top:0px;
         height:30px;
-        width:100%;
+        // width:100%;
         padding: 5px; // 0 5px 0;
-        // color: @text-color;
-        // font-size: 1em;
-        display:block;
+        // // color: @text-color;
+        // // font-size: 1em;
+        // display:block;
 
         .icon-btn-bor {
           width:24%;
@@ -48,6 +52,36 @@
           text-align:center;
           margin-right: 1px;
         }
+
+        .tab {
+          font-size: 11px;
+          position: relative;
+          padding-left: 10px;
+          padding-right: 10px;
+          -webkit-user-drag: element;
+          -webkit-flex: 1;
+          max-width: 100px;
+          min-width: 40px;
+          // border: 2px solid @background-color-info;
+        }
+
+        .active {
+          -webkit-flex: 2;
+          width: -webkit-fit-content;
+          border-bottom: solid 4px @background-color-info;
+
+          .title {
+            padding-right: 10px;
+          }
+        }
+
+        .title {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+
 
       }
       // .cbb-head-bottom {

@@ -66,7 +66,6 @@ class QuickAddCbbView extends View
       templates_store_path =atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
-    @templates_json = path.join templates_store_path, emp.EMP_TEMPLATES_JSON
     # console.log templates_json
 
 

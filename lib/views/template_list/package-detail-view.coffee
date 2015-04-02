@@ -49,7 +49,6 @@ class PackageDetailPanel extends View
     # if !templates_path = atom.project.templates_path
     #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
     #   templates_path =atom.project.templates_path
-    # templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
 
     # @loadTemplates()
 

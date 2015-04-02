@@ -10,6 +10,7 @@ InstalledTemplateView = require './emp-installed-template-panel'
 AddTemplateView = require './add-template-view'
 PackageDetailView = require './template_list/package-detail-view'
 CbbToolSettingPanel = require './cbb-tool-setting-view'
+CbbPackImportView = require './cbb-pack-import-view'
 
 module.exports =
 class EmpTmpManagementView extends ScrollView
@@ -57,7 +58,7 @@ class EmpTmpManagementView extends ScrollView
     @addCorePanel emp.EMP_TEMPLATE, 'package', -> new InstalledTemplateView("2")
     @addCorePanel emp.EMP_UPLOAD, 'plus', -> new AddTemplateView("3")
     @addCorePanel emp.EMP_Setting, 'keyboard', -> new CbbToolSettingPanel("4")
-    @addCorePanel emp.EMP_INSTALL, 'cloud-download', -> new GeneralPanel("5")
+    @addCorePanel emp.EMP_EXI, 'cloud-download', -> new CbbPackImportView("5")
     # @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
 
     @addPackagePanel(emp.EMP_CCB_PACK_DETAIL)

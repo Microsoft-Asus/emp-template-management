@@ -49,7 +49,7 @@ class AvailableTemplatePanel extends View
               @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
   initialize: (@element) ->
-    console.log @element
+    # console.log @element
     # It might be useful to either wrap @pack in a class that has a ::validate
     # method, or add a method here. At the moment I think all cases of malformed
     # package metadata are handled here and in ::content but belt and suspenders,

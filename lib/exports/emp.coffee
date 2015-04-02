@@ -13,7 +13,8 @@ module.exports =
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'
-  EMP_JSON_ELE:'2'
+  EMP_JSON_TYPE:'2'
+  EMP_JSON_ELE:'3'
 
   # 默认的描述
   EMP_DEF_DESC: "这是一段默认的描述."
@@ -26,6 +27,8 @@ module.exports =
   EMP_ADD_SUCCESS: "添加成功!"
   EMP_EDIT_SUCCESS: "编辑成功!"
   EMP_SAVE_SUCCESS: "保存成功!"
+  EMP_EXP_SUCCESS: "导出成功!"
+  EMP_NO_EMPTY_PATH: "输入地址项不能为空!"
 
 
   ENTERKEY:13
@@ -43,7 +46,7 @@ module.exports =
   EMP_UPLOAD:'UpLoad'
   EMP_DOWNLOAD:'Download'
   EMP_Setting:'Cbb Tool Setting'
-  EMP_INSTALL:'Install'
+  EMP_EXI:'Export/Inport'
 
   EMP_CCB_PACK_DETAIL:'Ccb_pack_detail'
 
@@ -52,6 +55,8 @@ module.exports =
   EMP_TEMPLATES_PATH:'templates'
   EMP_TEMPLATES_JSON: 'templates.json'
   EMP_TEMPLATE_JSON: 'template.json'
+  EMP_ZIP_DETAIL: 'pack_detail.json'
+
 
   EMP_LOGO_DIR:"image"
   EMP_HTML_DIR:"xhtml"

@@ -15,12 +15,15 @@ class EmpCbbPackage
   constructor: (@store_path, @obj_json) ->
     # console.log "constructor a new emp root"
     # console.log @obj_json
-
+    @cbb_management = atom.project.cbb_management
     @name = @obj_json.name
     @logo = @obj_json.logo
     @desc = @obj_json.desc
     if !@type_list = @obj_json.type
       @type_list = []
+    console.log @type_list
+    if !(@type_list.indexOf(emp.EMP_DEFAULT_TYPE)+1)
+      console.log "push"
       @type_list.push emp.EMP_DEFAULT_TYPE
     if !@package_path = @obj_json.path
       @package_path = path.join @store_path, @name
@@ -59,6 +62,17 @@ class EmpCbbPackage
 
   get_type: ->
     return @type_list
+
+  add_type: (tmp_type) ->
+    if !(@type_list.indexOf(tmp_type)+1)
+      @type_list.push tmp_type
+      @obj_json.type.push tmp_type
+      emp.mkdir_sync_safe path.join(@package_path, tmp_type)
+      if fs.existsSync @template_json
+        @refresh()
+      @cbb_management.refresh_package(this)
+
+
 
   # 添加子元素
   add_element: (ccb_obj) ->
@@ -117,6 +131,5 @@ class EmpCbbPackage
           fs.mkdir tmp_new_type, (err) ->
             console.log err unless !err
 
-    @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
     if fs.existsSync @template_json
       @refresh()

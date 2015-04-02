@@ -8,71 +8,42 @@ ComponmentElementView = require './componment-view-element'
 
 module.exports =
 class EmpDebugAdpPackageView extends View
+  active_panel: null
+
 
   @content: ->
     @div class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
       @div class:'cbb-view-scroller', =>
         @div class: 'gen_panel', =>
-          @div class:'cbb-head-bar', =>
-            @span class:'inline-block status-added icon icon-diff-added icon-btn-bor '
-            @span class:'inline-block status-modified icon icon-diff-modified icon-btn-bor '
-            @span class:'inline-block status-removed icon icon-diff-removed icon-btn-bor '
-            @span class:'inline-block status-renamed icon icon-diff-renamed icon-btn '
-          @div class:'cbb-view-panel', =>
-            @div class:'cbb-view-detail', =>
-          #
-          # @div class:'cbb-head-bottom', "test"
+          @ul class:'cbb-head-bar list-inline', tabindex: -1,=>
+            @li class:'tab sortable', outlet:'tab1', click:'active_tab1', =>
+              @div class:'title', "Tab1"
+            @li class:'tab sortable', outlet:'tab2',click:'active_tab2',=>
+              @div class:'title', "Tab2"
+            @li class:'tab sortable', outlet:'tab3',click:'active_tab3',=>
+              @div class:'title', "Tab3"
+            @li class:'tab sortable', outlet:'tab4',click:'active_tab4',=>
+              @div class:'title', "Tab4"
+          #   @span class:'inline-block status-added icon icon-diff-added icon-btn-bor '
+          #   @span class:'inline-block status-modified icon icon-diff-modified icon-btn-bor '
+          #   @span class:'inline-block status-removed icon icon-diff-removed icon-btn-bor '
+          #   @span class:'inline-block status-renamed icon icon-diff-renamed icon-btn '
+          # @div class:'cbb-view-panel', =>
+          @div class:'cbb-view-detail', =>
 
       # @div class:'cbb-view-scroller', =>
               @ol class: 'list-group cbb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
-                # @li =>
-                #
-                #   @ol class:'list-group', =>
-                    # @li class:'two-lines cbb_li_view', =>
-                    #   # @div class:'avatar'
-                    #   @div class: 'temp_logo', =>
-                    #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-                    #     @img outlet: 'logo_img', class: 'avatar', src: "/work/code/ide/packages/emp-template-management/templates/test/logo.png", click:'image_format'
-                    #   @div class: 'temp_name', =>
-                    #     @h4 class:'name_header', "name"
-                    #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
-                    # @li class:'two-lines cbb_li_view', =>
-                    #   # @div class:'avatar'
-                    #   @div class: 'temp_logo', =>
-                    #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-                    #     @img outlet: 'logo_img', class: 'avatar', src: "/work/code/ide/packages/emp-template-management/templates/test/logo.png", click:'image_format'
-                    #   @div class: 'temp_name', =>
-                    #     @h4 class:'name_header', "name2"
-                    #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
-                    # @li class:'two-lines cbb_li_view', =>
-                    #   # @div class:'avatar'
-                    #   @div class: 'temp_logo', =>
-                    #     # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-                    #     @img outlet: 'logo_img', class: 'avatar', src: "/work/code/ide/packages/emp-template-management/templates/test/logo.png", click:'image_format'
-                    #   @div class: 'temp_name', =>
-                    #     @h4 class:'name_header', "name3"
-                    #     @span class:'name_detail' ,"this si a desc ----- desc, this si a desc ----- desc1, this si a desc ----- desc2,this si a desc ----- desc3"
 
       @div class:'cbb-view-resize-handle'
 
 
   initialize: ->
-    # unless tmp_offline_path = atom.config.get(emp.EMP_OFFLINE_RELATE_DIR)
-      # tmp_offline_path = emp.EMP_OFFLINE_RELATE_PATH_V
-
-
-    # @emp_package_all_view = new PackageAllView()
     project_path = atom.project.getPath()
-    console.log "init"
+    # console.log "init"
     atom.commands.add "atom-workspace",
       "emp-template-management:cbb-panel": => @toggle()
 
-    # if !templates_path = atom.project.templates_path
-    #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-    #   templates_path =atom.project.templates_path
-    # templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
-
-    # @load_default_componment()
+    @active_tab1()
     this
 
   load_default_componment: ->
@@ -124,3 +95,28 @@ class EmpDebugAdpPackageView extends View
   show_toolbar: ->
     console.log "show_detail"
     # @emp_debugger_bar.show_view("test")
+
+  active_tab1: ->
+    # console.log "tab1"
+    @active_panel?.removeClass('active')
+    @active_panel=@tab1
+    @active_panel.addClass('active')
+
+
+  active_tab2: ->
+    # console.log "tab2"
+    @active_panel?.removeClass('active')
+    @active_panel=@tab2
+    @active_panel.addClass('active')
+
+  active_tab3: ->
+    # console.log "tab3"
+    @active_panel?.removeClass('active')
+    @active_panel=@tab3
+    @active_panel.addClass('active')
+
+  active_tab4: ->
+    # console.log "tab4"
+    @active_panel?.removeClass('active')
+    @active_panel=@tab4
+    @active_panel.addClass('active')
