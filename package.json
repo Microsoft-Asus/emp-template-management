@@ -24,7 +24,12 @@
     "atom-space-pen-views": "^2.0.2",
     "fs-plus":"*",
     "moxie-zip": "*",
-    "adm-zip":"*"
+    "adm-zip":"*",
+    "css":"*",
+    "cheerio":"*"
+
+
+
 
   }
 }
