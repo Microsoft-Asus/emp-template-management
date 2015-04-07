@@ -63,6 +63,7 @@ class QuickAddCbbView extends View
       #   @span "", class: "input-group-btn", =>
       #     @button "?", class:"btn", outlet:"sourceHelp"
       @button "Done", class: "createSnippetButton btn btn-primary", click:'create_snippet'
+      @button "Refresh", class: "createSnippetButton btn btn-primary", click:'refresh_panl'
 
   initialize: (@emp_temp_management) ->
     @handle_event()
@@ -294,7 +295,7 @@ class QuickAddCbbView extends View
     console.log cbb_obj
     @emp_temp_management.add_element(cbb_obj)
     emp.show_info("添加模板 完成~")
-    @initial_select()
+    @refresh_panl()
     @destroy()
 
   new_template_obj: (cbb_name)->
@@ -310,6 +311,13 @@ class QuickAddCbbView extends View
     cbb_obj.set_con cbb_css, emp.EMP_QCSS
     cbb_obj
 
+  refresh_panl: ->
+    @initial_select()
 
+    @cbb_desc.setText ""
+    @cbb_logo.setText ""
+    # cbb_name = @cbb_name.getText()?.trim()
+    @snippet?.val("")
+    @snippet_css?.val("")
     # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
     # type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}

@@ -127,11 +127,11 @@ class CbbPackImportView extends View
     @do_select_path(@package_path)
 
   do_select_path: (view)->
-    dialog.showOpenDialog title: 'Select', properties: ['openFile'], (logo_path) => # 'openDirectory'
+    dialog.showOpenDialog title: 'Select', properties: ['openDirectory'], (logo_path) => # 'openDirectory'
       # console.log logo_path
       if logo_path
         path_state = fs.statSync logo_path[0]
-        if path_state?.isFile()
+        if path_state?.isDirectory()
           # @cbb_logo.setText
           console.log logo_path[0]
           view.setText logo_path[0]

@@ -5,6 +5,7 @@ os = require 'os'
 
 module.exports =
 
+  PACKAGE_NAME:"emp-template-management"
   TOOL_FIRST:"1"
   TOOL_SECOND: "2"
   TOOL_THIRD: "3"
