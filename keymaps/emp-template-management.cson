@@ -11,3 +11,4 @@
   'ctrl-alt-i': 'emp-template-management:temp-management'
   'ctrl-alt-u':'emp-template-management:cbb-panel'
   'ctrl-alt-y':'emp-template-management:quick-add-cbb'
+  'ctrl-alt-t':'emp-template-management:quick-add-cbb-css'

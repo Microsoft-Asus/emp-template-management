@@ -21,9 +21,9 @@ class EmpCbbPackage
     @desc = @obj_json.desc
     if !@type_list = @obj_json.type
       @type_list = []
-    console.log @type_list
+    # console.log @type_list
     if !(@type_list.indexOf(emp.EMP_DEFAULT_TYPE)+1)
-      console.log "push"
+      # console.log "push"
       @type_list.push emp.EMP_DEFAULT_TYPE
     if !@package_path = @obj_json.path
       @package_path = path.join @store_path, @name

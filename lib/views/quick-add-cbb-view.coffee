@@ -12,7 +12,9 @@ css_label_hide = "模板样式内容:--------------------点击显示-----------
 css_label_show = "模板样式内容(点击隐藏):"
 # templates_store_path = null
 templates_obj = null
-
+default_select_pack = emp.EMP_DEFAULT_PACKAGE
+default_select_type = emp.EMP_DEFAULT_TYPE
+CSS_FLAG="css"
 
 module.exports =
 class QuickAddCbbView extends View
@@ -40,15 +42,13 @@ class QuickAddCbbView extends View
       @div class:'div_box_r', =>
         @label class:'lab', "模板描述:"
         @subview "cbb_desc", new TextEditorView(mini:true, placeholderText: 'Snippet desc')
+
+      @div class:'div_box', =>
+        @label class:'lab', "模板包:"
+        @select outlet:"pack_select", id: "type", class: 'form-control snippet_select'
       @div class:'div_box', =>
         @label class:'lab', "模板类型:"
-        @select outlet:"type_select", id: "type", class: 'form-control snippet_select', =>
-          if !emp_cbb_types = atom.config.get emp.EMP_CBB_TYPE
-            atom.config.set emp.EMP_CBB_TYPE, emp.EMP_CPP_TYPE_DEF
-            emp_cbb_types = emp.EMP_CPP_TYPE_DEF
-          for option in emp_cbb_types
-            @option value: option, option
-          @option selected:'select', value: emp.EMP_DEFAULT_TYPE, emp.EMP_DEFAULT_TYPE
+        @select outlet:"type_select", id: "type", class: 'form-control snippet_select'
       @div class:'div_logo', =>
         @div class:'div_box', =>
           @label class:'lab',"模板图标:"
@@ -68,13 +68,54 @@ class QuickAddCbbView extends View
     @handle_event()
     atom.commands.add "atom-workspace",
       "emp-template-management:quick-add-cbb": => @toggle()
+      "emp-template-management:quick-add-cbb-css": => @toggle(CSS_FLAG)
 
-    # if !templates_store_path = atom.project.templates_path
-    #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-    #   templates_store_path =atom.project.templates_path
-    # # console.log "stsore_path: #{templates_store_path}"
-    # emp.mkdir_sync templates_store_path
-    # console.log templates_json
+    # pack_select
+    @cbb_management = atom.project.cbb_management
+    @initial_select()
+    # console.log @packs
+
+
+  initial_select: ->
+    @packs = @cbb_management.get_pacakges()
+    @pack_select.change (event) =>
+      tmp_name = @pack_select.val()
+      # console.log  @pack_select.val()
+      tmp_obj = @packs[tmp_name]
+      # console.log tmp_obj
+      type_list = tmp_obj.get_type()
+      @type_select.empty()
+
+      for tmp_type in type_list
+        if tmp_type is default_select_type
+          @type_select.append @new_selec_option(tmp_type)
+        else
+          @type_select.append @new_option(tmp_type)
+
+    @pack_select.empty()
+    for name, obj of @packs
+      if name is default_select_pack
+        @pack_select.append @new_selec_option(name)
+      else
+        @pack_select.append @new_option(name)
+    tmp_pack = @packs[default_select_pack]
+    type_list = tmp_pack.get_type()
+
+    @type_select.empty()
+    for tmp_type in type_list
+      if tmp_type is default_select_type
+        @type_select.append @new_selec_option(tmp_type)
+      else
+        @type_select.append @new_option(tmp_type)
+
+
+  new_option: (name)->
+    $$ ->
+      @option value: name, name
+
+  new_selec_option: (name) ->
+    $$ ->
+      @option selected:'select', value: name, name
 
 
   handle_event: ->
@@ -118,27 +159,35 @@ class QuickAddCbbView extends View
     # console.log "set textarea"
     @snippet.css "max-height", (window.innerHeight * 0.8 ) + "px"
 
-  toggle: ->
+  toggle: (type)->
     if @isVisible()
       @detach()
     else
-      @show()
+      @show(type)
 
-  show: ->
+  show: (type)->
     console.log " show this "
     editor = atom.workspace.getActiveEditor()
     if editor
       selection = editor.getSelection().getText()
       if selection.length > 0
-        @set_snippet(selection)
+        @set_snippet(type, selection)
     atom.workspace.addTopPanel(item: this)
-    @snippet.focus()
 
-  set_snippet: (text)->
+
+  set_snippet: (type, text)->
     # console.log @snippet
-    if @snippet.isHidden()
-      @snippet.show()
-    @snippet.context.value = text
+    switch type
+      when CSS_FLAG
+        @snippet_css.context.value = text
+        @snippet_css.show()
+        @snippet.hide()
+        @snippet_css.focus()
+      else
+        @snippet.context.value = text
+        @snippet_css.hide()
+        @snippet.show()
+        @snippet.focus()
 
 
   # Returns an object that can be retrieved when package is activated
@@ -245,6 +294,7 @@ class QuickAddCbbView extends View
     console.log cbb_obj
     @emp_temp_management.add_element(cbb_obj)
     emp.show_info("添加模板 完成~")
+    @initial_select()
     @destroy()
 
   new_template_obj: (cbb_name)->
@@ -253,8 +303,9 @@ class QuickAddCbbView extends View
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_con = @snippet?.val()
     cbb_css = @snippet_css?.val()
+    cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
-    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type)
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack)
     cbb_obj.set_con cbb_con, emp.EMP_QHTML
     cbb_obj.set_con cbb_css, emp.EMP_QCSS
     cbb_obj
