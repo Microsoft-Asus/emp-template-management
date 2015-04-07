@@ -1,7 +1,7 @@
 {
   "name": "emp-template-management",
   "main": "./lib/main",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Emp 模板管理工具",
   "maintainers": [
     {
@@ -9,7 +9,7 @@
       "email": "ju.chao@rytong.com"
     }
   ],
-    "bugs": {
+  "bugs": {
     "url": "https://github.com/RYTong/emp-template-management/issues"
   },
   "author": "Ju chao <cqjcrom@gmail.com>",
@@ -26,10 +26,10 @@
   "dependencies": {
     "underscore-plus": "*",
     "atom-space-pen-views": "^2.0.2",
-    "fs-plus":"*",
+    "fs-plus": "*",
     "moxie-zip": "*",
-    "adm-zip":"*",
-    "css":"*",
-    "cheerio":"*"
+    "adm-zip": "*",
+    "css": "*",
+    "cheerio": "*"
   }
 }
