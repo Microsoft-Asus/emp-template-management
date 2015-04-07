@@ -9,15 +9,19 @@
       "email": "ju.chao@rytong.com"
     }
   ],
+    "bugs": {
+    "url": "https://github.com/RYTong/emp-template-management/issues"
+  },
+  "author": "Ju chao <cqjcrom@gmail.com>",
   "activationEvents": [
     "emp-template-management:temp-management",
     "emp-template-management:cbb-panel",
     "emp-template-management:quick-add-cbb"
   ],
-  "repository": "https://github.com/atom/emp-template-management",
+  "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",
   "engines": {
-    "atom": ">0.50.0"
+    "atom": ">0.120.0"
   },
   "dependencies": {
     "underscore-plus": "*",
@@ -27,9 +31,5 @@
     "adm-zip":"*",
     "css":"*",
     "cheerio":"*"
-
-
-
-
   }
 }

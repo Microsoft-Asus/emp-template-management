@@ -37,7 +37,7 @@ class ComponmentEleView extends View
     if @logo_img.css('height') is emp.LOGO_IMAGE_SIZE
       # @logo_img.css('height', logo_image_big_size)
       # @logo_img.css('width', logo_image_big_size)
-      @logo_img.css('        @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "模板内容"height', emp.LOGO_IMAGE_BIG_SIZE)
+      @logo_img.css('height', emp.LOGO_IMAGE_BIG_SIZE)
       @logo_img.css('width', emp.LOGO_IMAGE_BIG_SIZE)
     else
       @logo_img.css('height', emp.LOGO_IMAGE_SIZE)
@@ -87,8 +87,9 @@ class ComponmentEleView extends View
 
 
           re_ast = css.parse re_css
-          # console.log re_ast
+          console.log re_ast
           # console.log re_ast.stylesheet
+
           rule_list = re_ast.stylesheet.rules
           tmp_arr = []
           for tmp_rule in rule_list
@@ -96,23 +97,57 @@ class ComponmentEleView extends View
             tmp_arr.push tmp_rule.selectors.toString()
           # console.log tmp_arr
 
+          add_ast = {"type": "stylesheet", "stylesheet": {"rules": []}}
+          add_arr = []
           for tmp_rule in snippet_rule_list
             # console.log tmp_rule
             if !(tmp_arr.indexOf(tmp_rule.selectors.toString())+1)
-              re_ast.stylesheet.rules.push tmp_rule
+              # re_ast.stylesheet.rules.push tmp_rule
+              add_arr.push tmp_rule
+
+          if add_arr.length >0
+            add_ast = {"type": "stylesheet", "stylesheet": {"rules": add_arr}}
+
+            # console.log re_ast
+            # console.log re_ast.stylesheet
+
+            # console.log tmp_arr
+            result = css.stringify(add_ast, { sourcemap: true })
+            # console.log re_ast
+            console.log result.code
+
+            console.log line_count = editor.getLineCount()
+            comment_flag = false
+            # insert_line = 0
+            for i in [0..line_count-1]
+              line_con = editor.lineTextForBufferRow(i)
+              console.log line_con
+              console.log "--------#{i}"
+              if match_re = line_con.match('<style>|<!-.*-->|<!--|-->')
+                if !comment_flag
+                  if match_re[0] is "<style>"
+                    console.log "---------------------"
+                    # insert_line = i
+                    tmp_range = new Range([i+1, 0], [i+1, 0])
+                    editor.setTextInBufferRange(tmp_range, "\n    "+result.code+"\n")
+                    break
+                  else if match_re[0] is '<!--'
+                    comment_flag = true
+                    console.log "------------comment---------"
+                    continue
+                  else if match_re[0] is '-->'
+                    comment_flag = false
+
+                else if match_re[0] is '-->'
+                  comment_flag = false
 
 
-          # console.log re_ast
-          # console.log re_ast.stylesheet
+          # console.log editor.lineTextForBufferRow(0)
 
-          # console.log tmp_arr
-          result = css.stringify(re_ast, { sourcemap: true })
-          # console.log re_ast
-          # console.log result.code
-          if result.code isnt re_css
-            html_obj('style').text("\n"+result.code+"\n")
-            # console.log html_obj.html()
-            editor.setText(html_obj.html())
+          # if result.code isnt re_css
+          #   html_obj('style').text("\n"+result.code+"\n")
+          #   # console.log html_obj.html()
+          #   editor.setText(html_obj.html())
 
 
     catch err
