@@ -11,7 +11,8 @@
   ],
   "activationEvents": [
     "emp-template-management:temp-management",
-    "emp-template-management:ccb-panel"
+    "emp-template-management:cbb-panel",
+    "emp-template-management:quick-add-cbb"
   ],
   "repository": "https://github.com/atom/emp-template-management",
   "license": "MIT",
@@ -20,7 +21,15 @@
   },
   "dependencies": {
     "underscore-plus": "*",
-    "atom-space-pen-views": "^2.0.2"
+    "atom-space-pen-views": "^2.0.2",
+    "fs-plus":"*",
+    "moxie-zip": "*",
+    "adm-zip":"*",
+    "css":"*",
+    "cheerio":"*"
+
+
+
 
   }
 }

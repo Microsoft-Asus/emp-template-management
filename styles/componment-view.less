@@ -1,6 +1,6 @@
 @import "ui-variables";
 
-.ccb-view-resizer {
+.cbb-view-resizer {
   position: relative;
   height: 100%;
   overflow: hidden;
@@ -10,7 +10,7 @@
   width: 200px;
   z-index: 2;
 
-  .ccb-view-scroller {
+  .cbb-view-scroller {
     width: 100%;
     position: absolute;
     top: 0;
@@ -28,14 +28,18 @@
       left: 0;
       // overflow: auto;
       -webkit-flex-flow: column;
-      .ccb-head-bar {
-        top:0px;
+      .cbb-head-bar {
+        display: -webkit-flex;
+        -webkit-user-select: none;
+        margin: 0;
+
+        // top:0px;
         height:30px;
-        width:100%;
+        // width:100%;
         padding: 5px; // 0 5px 0;
-        // color: @text-color;
-        // font-size: 1em;
-        display:block;
+        // // color: @text-color;
+        // // font-size: 1em;
+        // display:block;
 
         .icon-btn-bor {
           width:24%;
@@ -49,8 +53,38 @@
           margin-right: 1px;
         }
 
+        .tab {
+          font-size: 11px;
+          position: relative;
+          padding-left: 10px;
+          padding-right: 10px;
+          -webkit-user-drag: element;
+          -webkit-flex: 1;
+          max-width: 100px;
+          min-width: 40px;
+          // border: 2px solid @background-color-info;
+        }
+
+        .active {
+          -webkit-flex: 2;
+          width: -webkit-fit-content;
+          border-bottom: solid 4px @background-color-info;
+
+          .title {
+            padding-right: 10px;
+          }
+        }
+
+        .title {
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+
+
+
       }
-      // .ccb-head-bottom {
+      // .cbb-head-bottom {
       //   bottom:0px;
       //   height:30px;
       //   width:100%;
@@ -62,13 +96,13 @@
       //
       // }
 
-      .ccb-view-panel {
+      .cbb-view-panel {
         // padding:5px;
         -webkit-flex: 1;
         display: -webkit-flex;
         position:relative;
         overflow: auto;
-        .ccb-view-detail {
+        .cbb-view-detail {
           padding: 2px;
           position: absolute;
           top: 0;
@@ -81,7 +115,7 @@
     }
   }
 
-  .ccb-view-resize-handle {
+  .cbb-view-resize-handle {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -98,13 +132,13 @@
   }
 
   &[data-show-on-right-side='false'] {
-    .ccb-view-resize-handle {
+    .cbb-view-resize-handle {
       right: -5px;
     }
   }
 }
 
-.ccb-view {
+.cbb-view {
   min-width: -webkit-min-content;
 
   min-height: 100%;
@@ -115,7 +149,7 @@
   // height:100%;
   // overflow: auto;
 
-  .ccb_li_view {
+  .cbb_li_view {
     // padding: 0 @component-icon-padding 0 @component-icon-padding;
     // padding-right: @component-padding;
     border-bottom: 1px solid #ccc;
@@ -166,12 +200,7 @@
         display:block;
 
       }
-
-
     }
-
-
-
   }
 
   // This fixes #110, see that issue for more details

@@ -1,5 +1,7 @@
 EmpTmpManaWizardView = require './views/emp-template-management-view'
-EmpCcbView = require './views/componment-view'
+EmpTempManagement = require './views/emp-template-management'
+EmpCbbView = require './views/componment-view'
+QuickAddCbbView = require './views/quick-add-cbb-view'
 
 empTmpManagementView = null
 emp = require './exports/emp'
@@ -52,19 +54,24 @@ module.exports =
     atom.commands.add "atom-workspace",
       "emp-template-management:temp-management": -> open_temp_wizard_panel(emp.DEFAULT_PANEL)
 
-    # @doc 创建 ccb 视图
-    @emp_componment_view = new EmpCcbView(state.emp_ccb_panel_state)
+    @emp_temp_management = new EmpTempManagement()
+    atom.project.cbb_management = @emp_temp_management
+    # @doc 创建 cbb 视图
+    @emp_componment_view = new EmpCbbView(state.emp_cbb_panel_state, @emp_temp_management)
+    @emp_quick_add_view = new QuickAddCbbView(@emp_temp_management)
 
   serialize: ->
-    emp_ccb_panel_state: @emp_componment_view.serialize()
+    emp_cbb_panel_state: @emp_componment_view.serialize()
+    emp_quick_add_cbb_panel_state:@emp_quick_add_view.serialize()
 
   deactivate: ->
     @emp_componment_view.destroy()
+    @emp_quick_add_view.destroy()
 
 
-  # @doc 创建 ccb 视图
-  # create_ccb_panel: (state)->
-  #   console.log "show ccb"
+  # @doc 创建 cbb 视图
+  # create_cbb_panel: (state)->
+  #   console.log "show cbb"
   #   unless @emp_componment_view
   #
   #

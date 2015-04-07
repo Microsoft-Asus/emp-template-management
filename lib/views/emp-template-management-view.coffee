@@ -8,6 +8,9 @@ emp = require '../exports/emp'
 GeneralPanel = require './general-panel'
 InstalledTemplateView = require './emp-installed-template-panel'
 AddTemplateView = require './add-template-view'
+PackageDetailView = require './template_list/package-detail-view'
+CbbToolSettingPanel = require './cbb-tool-setting-view'
+CbbPackImportView = require './cbb-pack-import-view'
 
 module.exports =
 class EmpTmpManagementView extends ScrollView
@@ -44,23 +47,29 @@ class EmpTmpManagementView extends ScrollView
 
   initializePanels: ->
     return if @panels.size > 0
+    # console.log  atom.project.cbb_management
 
 
     @panelsByName = {}
     @on 'click', '.panels-menu li a, .panels-packages li a', (e) =>
-      console.log "click~~~~"
       @showPanel($(e.target).closest('li').attr('name'))
 
     @addCorePanel emp.DEFAULT_PANEL, 'paintcan', -> new GeneralPanel("1")
     @addCorePanel emp.EMP_TEMPLATE, 'package', -> new InstalledTemplateView("2")
     @addCorePanel emp.EMP_UPLOAD, 'plus', -> new AddTemplateView("3")
-    @addCorePanel emp.EMP_INSTALL, 'cloud-download', -> new GeneralPanel("4")
-    @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
+    @addCorePanel emp.EMP_Setting, 'keyboard', -> new CbbToolSettingPanel("4")
+    @addCorePanel emp.EMP_EXI, 'cloud-download', -> new CbbPackImportView("5")
+    # @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
+
+    @addPackagePanel(emp.EMP_CCB_PACK_DETAIL)
+    # @cbb_management = atom.project.cbb_management
+    # packages = @cbb_management.get_pacakges()
+    #
+    # @addPackagePanel(pack) for p_name, pack in packages
 
     @showPanel(@panelToShow) if @panelToShow
     @showPanel(emp.DEFAULT_PANEL) unless @activePanelName
     @sidebar.width(@sidebar.width()) if @isOnDom()
-
 
   addCorePanel: (name, iconName, panel) ->
     panelMenuItem = $$ ->
@@ -74,6 +83,11 @@ class EmpTmpManagementView extends ScrollView
     @panelCreateCallbacks[name] = panelCreateCallback
     @showPanel(name) if @panelToShow is name
 
+  addPackagePanel: (name) ->
+    # @panelDetail ? = {}
+    @addPanel name, null, =>
+      new PackageDetailView()
+
   getOrCreatePanel: (name) ->
     panel = @panelsByName?[name]
     unless panel?
@@ -84,9 +98,9 @@ class EmpTmpManagementView extends ScrollView
         delete @panelCreateCallbacks[name]
     panel
 
-  showPanel: (name, opts) ->
+  showPanel: (name, opts, detail) ->
     if panel = @getOrCreatePanel(name)
-      panel.refresh_detail?()
+      panel.refresh_detail?(detail)
       @panels.children().hide()
       @panels.append(panel) unless $.contains(@panels[0], panel[0])
       panel.beforeShow?(opts)

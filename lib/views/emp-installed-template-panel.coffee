@@ -3,10 +3,12 @@
 path = require 'path'
 fs = require 'fs'
 emp = require '../exports/emp'
+EmpAddPackPanel = require './template_list/add-package-panel'
 # {Subscriber} = require 'emissary'
 # fuzzaldrin = require 'fuzzaldrin'
 
-AvailableTemplateView = require './available-template-view'
+# AvailableTemplateView = require './available-template-view'
+AvailablePackageView = require './available-package-view'
 # ErrorView = require './error-view'
 templates_json = null
 
@@ -16,19 +18,21 @@ class InstalledTemplatePanel extends View
 
   @content: ->
     @div =>
+
       @section class: 'section', =>
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
             @text 'Installed Packages'
             @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
           @div class: 'editor-container', =>
-            @subview 'filterEditor', new TextEditorView(mini: true, placeholderText: 'Filter packages by name')
-
+            # @subview 'filterEditor', new TextEditorView(mini: true, placeholderText: 'Filter packages by name')
+            @button class: 'control-btn btn btn-info', click:'show_add_panel',' Add New Package'
+            # @button class: 'control-btn btn btn-info', click:'show_add_panel',' Add New Package'
           # @div outlet: 'updateErrors'
 
-          @section class: 'sub-section installed-packages', =>
+          @section outlet:'package_list', class: 'sub-section installed-packages', =>
             @h3 class: 'sub-section-heading icon icon-package', =>
-              @text 'Installed Templates'
+              @text 'Installed Packages'
               @span outlet: 'templateCount', class:'section-heading-count', ' (…)'
             @div outlet: 'templatePackages', class: 'container package-container', =>
               @div class: 'alert alert-info loading-area icon icon-hourglass', "Loading packages…"
@@ -37,12 +41,18 @@ class InstalledTemplatePanel extends View
 
   initialize: () ->
     @packageViews = []
+    @add_package_panel = new EmpAddPackPanel(this)
+    @package_list.after @add_package_panel
 
     # @filterEditor.getModel().onDidStopChanging => @matchPackages()
-    if !templates_path = atom.project.templates_path
-      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
-      templates_path =atom.project.templates_path
-    templates_json = path.join templates_path, emp.EMP_TEMPLATES_JSON
+    @cbb_management = atom.project.cbb_management
+    # packages = @cbb_management.get_pacakges()
+    # console.log packages
+
+
+    # if !templates_path = atom.project.templates_path
+    #   atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
+    #   templates_path =atom.project.templates_path
 
     @loadTemplates1()
 
@@ -52,14 +62,12 @@ class InstalledTemplatePanel extends View
     console.log "matchPackagesmatchPackagesmatchPackages"
 
   refresh_detail:() ->
-    console.log "do refresh"
+    # console.log "do refresh"
     @loadTemplates1()
 
   loadTemplates1: ->
-    console.log "loadTemplates1"
+    # console.log "loadTemplates1"
     @templatePackages.empty()
-
-
 
     # for pack, index in packages
     #   packageRow = $$ -> @div class: 'row'
@@ -67,20 +75,46 @@ class InstalledTemplatePanel extends View
     #   packView = new AvailablePackageView(pack, @packageManager, {back: 'Packages'})
     #   packageViews.push(packView) # used for search filterin'
     #   packageRow.append(packView)
+    packages = @cbb_management.get_pacakges()
+    console.log packages
+    for ccb_name,ccb_obj of packages
+      # tmp_obj = @cbb_management.get_package_obj(ccb_name)
+      tempRow = $$ -> @div class: 'row'
+      @templatePackages.append tempRow
+      # name, description, version, repository
+      # tempView = new AvailableTemplateView(tmp_obj)
+      tempView = new AvailablePackageView(this, ccb_obj)
+      tempRow.append tempView
 
-    if fs.existsSync templates_json
-      json_data = fs.readFileSync templates_json
-      templates_obj = JSON.parse json_data
-      delete templates_obj.templates?[emp.EMP_DEFAULT_TYPE]?.length
-      for name, obj of templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
-        tempRow = $$ -> @div class: 'row'
-        @templatePackages.append tempRow
-        # name, description, version, repository
-        tempView = new AvailableTemplateView(obj)
-        tempRow.append tempView
+  # 添加新的 package 类别
+  show_add_panel: ->
+    console.log 'show_add_panel'
+    @package_list.hide()
+    @add_package_panel.show()
+
+  show_edit_panel: (tmp_obj)->
+    @add_package_panel.set_edit_state(tmp_obj)
+    @show_add_panel()
 
 
+    #
+    # if fs.existsSync templates_json
+    #   json_data = fs.readFileSync templates_json
+    #   templates_obj = JSON.parse json_data
+    #   delete templates_obj.templates?[emp.EMP_DEFAULT_TYPE]?.length
+    #   for name, obj of templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+    #     tempRow = $$ -> @div class: 'row'
+    #     @templatePackages.append tempRow
+    #     # name, description, version, repository
+    #     tempView = new AvailableTemplateView(obj)
+    #     tempRow.append tempView
+  cancel_add_panel: ->
+    @package_list.show()
+    @add_package_panel.hide()
 
+  success_add_panel: ->
+    @cancel_add_panel()
+    @refresh_detail()
 
     # templates = [{name:"emp", description:"this is a test", version:"0.1"},
     #              {name:"ebank", description:"this is a ebank", version:"0.11"},
