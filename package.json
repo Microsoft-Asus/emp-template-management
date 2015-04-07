@@ -16,7 +16,8 @@
   "activationEvents": [
     "emp-template-management:temp-management",
     "emp-template-management:cbb-panel",
-    "emp-template-management:quick-add-cbb"
+    "emp-template-management:quick-add-cbb",
+    "emp-template-management:quick-add-cbb-css"
   ],
   "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",

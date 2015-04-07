@@ -21,10 +21,10 @@ class EmpCbbEle
 
   constructor: (@name, @desc, @logo, @type, tmp_pack)->
     console.log "constructor a new emp cbb element"
-    if !tmp_pack
-      @check_cbb_name()
-    else
-      @own_package = tmp_pack
+    # if !tmp_pack
+    #   @check_cbb_name()
+    # else
+    @own_package = tmp_pack
 
   refresh: ->
     temp_str = JSON.stringify @get_json()
@@ -32,7 +32,7 @@ class EmpCbbEle
 
   # element information
   get_info: ->
-    {name:@name, version:@ver, element_path:@element_path, desc: @desc,
+    {name:@name, version:@ver, element_path:@element_path_rel, desc: @desc,
     type: @type, logo:@logo}
 
   # element json content
@@ -41,8 +41,8 @@ class EmpCbbEle
       @ele_json = {name:@name, version:@ver, desc: @desc,
       type: @type, logo:@logo, html:@html, css:@css, lua:@css,
       available:@available, own_package: @own_package,
-      images:@detail_image, package_path:@package_path,
-      element_path:@element_path, level:@lv}
+      images:@detail_image,
+      element_path:@element_path_rel, level:@lv}
     else
       @ele_json
 
@@ -64,49 +64,49 @@ class EmpCbbEle
         # type: cbb_type, logo:{type:emp.EMP_FILE_TYPE, con:cbb_logo}, html:{type:emp.EMP_CON_TYPE, con:ccb_con}, css:null, lua:null, available:true}
 
     @element_path = path.join @package_path, @type, @name
+    @element_path_rel = path.join @own_package, @type, @name
     emp.mkdir_sync_safe @element_path
     @template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
+    @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
 
     # if !@templates_obj?[cbb_root]?[cbb_type]?[cbb_name]
     #   if !@templates_obj
     #     @templates_obj = @new_templates_obj()
 
-    @format_template(@element_path)
+    @format_template()
 
     # @templates_obj[cbb_root][cbb_type][cbb_name] = cbb_obj
     # @templates_obj[cbb_root][cbb_type].length += 1
     # json_str = JSON.stringify(@templates_obj)
     # console.log @templates_json
     # console.log @templates_obj
-
-
     @refresh()
 
   format_template: (to_path) ->
     if @logo
-      @logo = @copy_content_ch(to_path, @logo, emp.EMP_LOGO_DIR)
-    else
-      @logo = path.join __dirname,'../../',emp.EMP_DEFAULT_LOGO
+      @logo = @copy_content_ch(@logo, emp.EMP_LOGO_DIR)
     if @html?.type is emp.EMP_FILE_TYPE
-      @html.body = @copy_content_ch(to_path, @html.body, emp.EMP_HTML_DIR)
+      @html.body = @copy_content_ch(@html.body, emp.EMP_HTML_DIR)
 
     if @css?.type is emp.EMP_FILE_TYPE
-      @css.body = @copy_content_ch(to_path, @css.body,  emp.EMP_CSS_DIR)
+      @css.body = @copy_content_ch(@css.body,  emp.EMP_CSS_DIR)
     if @lua?.type is emp.EMP_FILE_TYPE
-      @lua.body = @copy_content_ch(to_path, @lua.body, emp.EMP_LUA_DIR)
+      @lua.body = @copy_content_ch(@lua.body, emp.EMP_LUA_DIR)
 
-  copy_content_ch: (t_path, f_path, add_path="") ->
+  copy_content_ch: (f_path, add_path="") ->
     # console.log t_path
     # console.log f_path
-    to_path = path.join t_path, add_path
+    to_path = path.join @element_path, add_path
+    to_path_rel = path.join @element_path_rel, add_path
     # console.log to_path
     emp.mkdir_sync(to_path)
     f_name = path.basename f_path
     f_con = fs.readFileSync f_path
     re_file = path.join to_path, f_name
+    re_file_rel = path.join to_path_rel, f_name
     # force copy
     fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
-    re_file
+    re_file_rel
 
   set_con: (tmp_con, ctype) ->
     tmp_obj = @new_con_obj(tmp_con)

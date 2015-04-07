@@ -14,7 +14,12 @@ class ComponmentEleView extends View
   # Subscriber.includeInto(this)
   snippets:null
 
-  @content: ({name, version, path, desc, logo}) ->
+  @content: ({name, version, ele_path, desc, logo}) ->
+    if !logo
+      logo = emp.get_default_logo()
+    else
+      logo = path.join(atom.project.templates_path, logo)
+
     @li class:'two-lines cbb_li_view', click: 'do_click', =>
       @div class: 'temp_logo', =>
         @img outlet: 'logo_img', class: 'avatar', src: "#{logo}"
@@ -22,9 +27,12 @@ class ComponmentEleView extends View
         @h4 class:'name_header', "#{name}"
         @span class:'name_detail' ,"#{desc}"
 
+
+
   initialize: (@com) ->
+    @templates_path = atom.project.templates_path
     @ele_path = @com.element_path
-    @ele_json = path.join @ele_path, emp.EMP_TEMPLATE_JSON
+    @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
 
     # It might be useful to either wrap @pack in a class that has a ::validate
     # method, or add a method here. At the moment I think all cases of malformed
@@ -55,8 +63,8 @@ class ComponmentEleView extends View
       html_obj = @snippet_obj.html
       css_obj = @snippet_obj.css
 
-      @html_snippet = @set_con(html_obj)
-      @css_snippet = @set_con(css_obj)
+      @html_snippet = @set_con(html_obj) unless @html_snippet
+      @css_snippet = @set_con(css_obj) unless @css_snippet
     console.log @snippets
     editor = atom.workspace.getActiveEditor()
     # console.log body_parser.parse file_con
@@ -184,6 +192,7 @@ class ComponmentEleView extends View
       if tmp_obj.type is emp.EMP_CON_TYPE
         return tmp_obj.body
       else
-        return fs.readFileSync tmp_obj.body, 'utf-8'
+        tmp_path = path.join @templates_path, tmp_obj.body
+        return fs.readFileSync tmp_path, 'utf-8'
     else
       return null

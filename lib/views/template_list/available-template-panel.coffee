@@ -11,6 +11,12 @@ class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)
 
   @content: (element) ->
+    logo = element.logo
+    if !logo
+      logo = emp.get_default_logo()
+    else
+      logo = path.join(atom.project.templates_path, logo)
+
     # stars, downloads
     # lol wat
     # owner = AvailablePackageView::ownerFromRepository(repository)
@@ -36,7 +42,7 @@ class AvailableTemplatePanel extends View
         @div class: 'meta', =>
           @div class: 'meta-user', =>
             # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-            @img outlet: 'logo_img', class: 'avatar', src: "#{element.logo}", click:'image_format'  # A transparent gif so there is no "broken border"
+            @img outlet: 'logo_img', class: 'avatar', src: "#{logo}", click:'image_format'  # A transparent gif so there is no "broken border"
             # @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
           @div class: 'meta-controls', =>
             # @div class: 'btn-group', =>

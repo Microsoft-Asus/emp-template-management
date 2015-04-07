@@ -17,8 +17,9 @@ class EmpTemplateManagement
   constructor: ->
     # console.log "constructor"
 
+    atom.project.package_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME)
     if !templates_store_path = atom.project.templates_path
-      atom.project.templates_path = path.join __dirname, '../../', emp.EMP_TEMPLATES_PATH
+      atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
       templates_store_path =atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
