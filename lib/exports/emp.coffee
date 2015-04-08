@@ -11,6 +11,8 @@ module.exports =
   TOOL_THIRD: "3"
   TOOL_FOURTH: "4"
 
+  EMP_ALL_TYPE : "All Type"
+
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'
@@ -59,7 +61,8 @@ module.exports =
   EMP_ZIP_DETAIL: 'pack_detail.json'
 
 
-  EMP_LOGO_DIR:"image"
+  EMP_LOGO_DIR:"logo"
+  EMP_IMG_DIR:"image"
   EMP_HTML_DIR:"xhtml"
   EMP_CSS_DIR:"css"
   EMP_LUA_DIR:"lua"

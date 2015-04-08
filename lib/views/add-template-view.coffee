@@ -6,11 +6,13 @@ remote = require 'remote'
 dialog = remote.require 'dialog'
 emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'
+CbbSrcEleView = require './template_list/cbb-source-ele-view'
 default_select_pack = emp.EMP_DEFAULT_PACKAGE
 
 module.exports =
 class InstalledTemplatePanel extends ScrollView
   # Subscriber.includeInto(this)
+  source_files:{}
 
   @content: ->
     logo_path =  path.join __dirname, '../../images/logo'
@@ -24,8 +26,6 @@ class InstalledTemplatePanel extends ScrollView
           @div class: 'section-heading icon icon-package', =>
             @text 'Add Packages'
             @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
-
-
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
@@ -45,18 +45,27 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'setting-description', "Template Package Name"
                 # @div class: 'editor-container', =>
                 @subview "template_name", new TextEditorView(mini: true,attributes: {id: 'template_name', type: 'string'},  placeholderText: ' Template Name')
-
-          # 包版本号
+          # 描述
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板版本"
-                  @div class: 'setting-description', "默认为0.1, 每次+0.1"
+                  @div class: 'info-label', "描述"
+                  @div class: 'setting-description', "为你的模板添加描述"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
-                # @div class: 'editor-container', =>
-                @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
+                @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
+          # # 包版本号
+          # @div class: 'section-body', =>
+          #   @div class: 'control-group', =>
+          #     @div class: 'controls', =>
+          #       @label class: 'control-label', =>
+          #         @div class: 'info-label', "模板版本"
+          #         @div class: 'setting-description', "默认为0.1, 每次+0.1"
+          #     @div class: 'controls', =>
+          #       # @div class: 'editor-container', =>
+          #       # @div class: 'editor-container', =>
+          #       @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
 
           # 包类型
           @div class: 'section-body', =>
@@ -80,25 +89,6 @@ class InstalledTemplatePanel extends ScrollView
                 # @div class: 'editor-container', =>
                 @select outlet:"type_select", id: "type", class: 'form-control'
 
-          # 包图标
-          @div class: 'section-body', =>
-            @div class: 'control-group', =>
-              @div class: 'controls', =>
-                @label class: 'control-label', =>
-                  @div class: 'setting-title', "Logo"
-                  @div class: 'setting-description', "缩略图"
-
-              @div class: 'controls', =>
-                @div class:'controle-logo', =>
-                  @div class: 'meta-user', =>
-                    @img outlet:"logo_image", class: 'avatar', src:"#{logo_img}"
-                  @div class:'meta-controls', =>
-                    @div class:'btn-group', =>
-                      @select outlet:"logo_select", id: "logo", class: 'form-control', =>
-                        # for option in ["emp", "ebank", "boc", "gdb"]
-                        @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
-                      @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
-
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
@@ -121,41 +111,54 @@ class InstalledTemplatePanel extends ScrollView
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
 
+          # 包图标
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "描述"
-                  @div class: 'setting-description', "为你的模板添加描述"
+                  @div class: 'setting-title', "Logo"
+                  @div class: 'setting-description', "缩略图"
+
               @div class: 'controls', =>
-                # @div class: 'editor-container', =>
-                @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
-                # @textarea "", class: "native-key-bindings editor-colors", rows: 8, outlet: "template_desc", placeholder: "Template Describtion"
+                @div class:'controle-logo', =>
+                  @div class: 'meta-user', =>
+                    @img outlet:"logo_image", class: 'avatar', src:"#{logo_img}"
+                  @div class:'meta-controls', =>
+                    @div class:'btn-group', =>
+                      @select outlet:"logo_select", id: "logo", class: 'form-control', =>
+                        # for option in ["emp", "ebank", "boc", "gdb"]
+                        @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
+                      @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
 
-            # @div class: 'control-group', =>
-            #   @div class: 'controls', =>
-            #     @label class: 'control-label', =>
-            #       @div class: 'setting-title', "Name"
-            #       @div class: 'setting-description', "Root Dir Name"
-            #
-            #     # @subview "template_name_editor", style:"display:none;", new TextEditorView(mini: true, attributes: {id: 'template_name', type: 'string'}, placeholderText: 'Application Name')
-            #     @select outlet:"name_select", id: "tt", class: 'form-control', =>
-            #       for option in ["emp", "ebank", "boc", "gdb"]
-            #         @option value: option, option
-            #       @option value: emp.EMP_NAME_DEFAULT, emp.EMP_NAME_DEFAULT
+          # 实际样式
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'setting-title', "Detail Image"
+                  @div class: 'setting-description', "模板实际效果展示图"
+              @div class: 'controls', =>
+                @div class:'controle-logo', =>
+                  @div class: 'meta-user', =>
+                    @img outlet:"detail_image", class: 'avatar', src:""
+              @div class: 'controls', =>
+                @div class:'btn-box-n', =>
+                  @button class:'btn btn-info', click:'chose_detail',"Chose Detail"
 
-            # @div class: 'control-group', =>
-            #   @div class: 'controls', =>
-            #     @label class: 'control-label', =>
-            #       @div class: 'setting-title', "Version"
-            #       @div class: 'setting-description', "Root Dir Name"
-            #
-            #     # @subview "template_name_editor", style:"display:none;", new TextEditorView(mini: true, attributes: {id: 'template_name', type: 'string'}, placeholderText: 'Application Name')
-            #     @select outlet:"name_select", id: "tt", class: 'form-control', =>
-            #       for option in ["1.1", "1.2", "1.0"]
-            #         @option value: option, option
-            #       @option value: emp.EMP_NAME_DEFAULT, emp.EMP_NAME_DEFAULT
-
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "资源文件"
+                  @div class: 'setting-description', "为你的模板添加资源文件"
+              @div class:'control-ol', =>
+                @table class:'control-tab',outlet:'cbb_tree'
+              @div class: 'controls', =>
+                @subview "source_file", new TextEditorView(mini: true,attributes: {id: 'source_file', type: 'string'},  placeholderText: ' Source Files')
+                @div class:'btn-box-n', =>
+                  @button class:'btn btn-error', click:'remove_all',"Remove All"
+                  @button class:'btn btn-info', click:'select_source',"Chose File/Dir"
+                  @button class:'btn btn-info', click:'add_source',"Add"
 
       @div class: 'footer-div', =>
         @div class: 'footer-detail', =>
@@ -212,7 +215,7 @@ class InstalledTemplatePanel extends ScrollView
 
   select_path: (e, element)->
     tmp_path = @template_path.getText()
-    view_set = {path:@template_path,name:@template_name,ver:@template_ver,logo:@logo_select,html:@template_html,css:@template_css}
+    view_set = {path:@template_path,name:@template_name,logo:@logo_select,html:@template_html,css:@template_css}
     @prompt_for_path(view_set, tmp_path)
 
   prompt_for_path: (view_set, def_path) ->
@@ -234,7 +237,7 @@ class InstalledTemplatePanel extends ScrollView
         console.log "----------------"
         name = path.basename new_path
         view_set.name.setText(name)
-        view_set.ver.setText(emp.EMP_DEFAULT_VER)
+        # view_set.ver.setText(emp.EMP_DEFAULT_VER)
 
         html_path = path.join new_path, emp.EMP_HTML_DIR
         fs.readdir html_path, (err, files) =>
@@ -269,6 +272,9 @@ class InstalledTemplatePanel extends ScrollView
               view_set.logo.append tmp_opt
             # console.log log_view
 
+        src_path =  path.join new_path,emp.EMP_IMG_DIR
+        @add_source(src_path)
+
   # callback function for button
   select_html: (e, element)->
     console.log "select html"
@@ -283,28 +289,30 @@ class InstalledTemplatePanel extends ScrollView
 
   # btn callback for logo
   select_logo: (e, element)->
-    tmp_path = @template_logo.getText()
+    # tmp_path = @template_logo.getText()
     dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (logo_path) =>
       # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
-      path_state = fs.statSync logo_path
-      if path_state?.isDirectory()
-        fs.readdir logo_path, (err, files) =>
-          if err
-            console.log "no exist"
-          else
-            logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-            # console.log logo_images
-            for logo in logo_images
-              tmp_opt = document.createElement 'option'
-              tmp_opt.text = logo
-              tmp_opt.value = path.join logo_path, logo
-              # console.log tmp_opt
-              @logo_select.append tmp_opt
-      else
-        tmp_opt = document.createElement 'option'
-        tmp_opt.text = path.basename logo_path
-        tmp_opt.value = path.join logo_path, logo_path
-        @logo_select.append tmp_opt
+      unless !logo_path
+        tmp_path = logo_path[0]
+        path_state = fs.statSync tmp_path
+        if path_state?.isDirectory()
+          fs.readdir tmp_path, (err, files) =>
+            if err
+              console.log "no exist"
+            else
+              logo_images = files.filter((ele)-> !ele.match(/^\./ig))
+              # console.log logo_images
+              for logo in logo_images
+                tmp_opt = document.createElement 'option'
+                tmp_opt.text = logo
+                tmp_opt.value = path.join tmp_path, logo
+                # console.log tmp_opt
+                @logo_select.append tmp_opt
+        else
+          tmp_opt = document.createElement 'option'
+          tmp_opt.text = path.basename tmp_path
+          tmp_opt.value = logo_path
+          @logo_select.append tmp_opt
 
   prompt_for_file: (file_view, tmp_con) ->
     if tmp_con
@@ -339,8 +347,69 @@ class InstalledTemplatePanel extends ScrollView
     cbb_css = @template_css.getText()?.trim()
     cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
+    cbb_detail_img = @detail_image.attr("src")
+    # @source_file
+    source_list = []
+    for tmp_name, tmp_view of @source_files
+      source_list.push tmp_name
     # console.log cbb_type
-    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack)
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, source_list, cbb_detail_img)
     cbb_obj.set_file cbb_html, emp.EMP_QHTML
     cbb_obj.set_file cbb_css, emp.EMP_QCSS
     cbb_obj
+
+  # 添加资源文件
+  add_source: (tmp_path)->
+    console.log "add source"
+    tmp_path ?= @source_file.getText()
+    console.log tmp_path
+    fs.stat tmp_path, (err, stats) =>
+      if err
+        console.log err
+
+      if stats?.isFile()
+        unless @source_files[tmp_path]
+          tmp_view = new CbbSrcEleView(this, tmp_path)
+          @source_files[tmp_path] = tmp_view
+          @cbb_tree.append tmp_view
+
+      else if stats?.isDirectory()
+        fs.readdir tmp_path, (err, files) =>
+          if err
+            console.log "no exist files"
+          else
+            src_files = files.filter((ele)-> !ele.match(/^\./ig))
+            for tmp_file in src_files
+              tmp_name = path.join tmp_path, tmp_file
+              unless @source_files[tmp_name]
+                tmp_state = fs.statSync tmp_name
+                if tmp_state?.isFile()
+                  tmp_view = new CbbSrcEleView(this, tmp_name)
+                  @source_files[tmp_name] = tmp_view
+                  @cbb_tree.append tmp_view
+
+  # remove  callback
+  remove_td_callback: (name)->
+    delete @source_files[name]
+
+  select_source: ->
+    console.log "select source"
+    dialog.showOpenDialog title: 'Select', properties: ['openFile', "openDirectory"], (src_path) => # 'openDirectory'
+      # console.log logo_path
+      if src_path
+        @source_file.setText src_path[0]
+
+  # 删除所有添加的资源
+  remove_all: ->
+    for tmp_name, tmp_view of @source_files
+      tmp_view.destroy()
+    @source_files ={}
+
+  # 添加资源描述图片
+  chose_detail: ->
+    console.log "select detail"
+    dialog.showOpenDialog title: 'Select', properties: ['openFile'], (img_path) => # 'openDirectory'
+      # console.log logo_path
+      # console.log @detail_image.attr("src")
+      if img_path
+        @detail_image.attr("src", img_path[0])

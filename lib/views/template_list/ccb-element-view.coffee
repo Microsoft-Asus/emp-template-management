@@ -7,13 +7,6 @@ class CcbElementPanel extends View
 
 
   @content: (@fa_view, name, hide_flag)->
-    # @li class: 'list-item out-box' , =>
-    #   @div =>
-    #     @span outlet: 'colName', class: 'text-info icon icon-diff-added', name
-    #     @div class: "#{tmp_css}", =>
-    #       @button class:'btn btn-info', "Edit"
-    #       @button class:'btn btn-error', "Remove"
-
     @tr =>
       @td =>
         @span outlet: 'ele_name', class: 'text-info icon icon-diff-added', name
@@ -24,7 +17,6 @@ class CcbElementPanel extends View
 
   initialize: (@fa_view, @name)->
 
-
   do_edit: ->
     @fa_view.do_edit_callback(@name)
 
@@ -32,7 +24,6 @@ class CcbElementPanel extends View
   over_edit_callback: (@name)->
     # console.log @ele_name
     @ele_name.text @name
-
 
 
   do_remove: ->

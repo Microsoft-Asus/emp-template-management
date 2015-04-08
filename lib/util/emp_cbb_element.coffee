@@ -13,18 +13,19 @@ class EmpCbbEle
   css: null
   lua: null
   available: true
-  detail_image: []
+  detail_image: null
   package_path: null
   element_path: null
   ele_json:null
   lv:emp.EMP_JSON_ELE
 
-  constructor: (@name, @desc, @logo, @type, tmp_pack)->
+  constructor: (@name, @desc, @logo, @type, tmp_pack, @src_list, @detail_image)->
     console.log "constructor a new emp cbb element"
     # if !tmp_pack
     #   @check_cbb_name()
     # else
     @own_package = tmp_pack
+
 
   refresh: ->
     temp_str = JSON.stringify @get_json()
@@ -33,7 +34,7 @@ class EmpCbbEle
   # element information
   get_info: ->
     {name:@name, version:@ver, element_path:@element_path_rel, desc: @desc,
-    type: @type, logo:@logo}
+    type: @type, logo:@logo, detail:@detail_image}
 
   # element json content
   get_json: ->
@@ -41,7 +42,7 @@ class EmpCbbEle
       @ele_json = {name:@name, version:@ver, desc: @desc,
       type: @type, logo:@logo, html:@html, css:@css, lua:@css,
       available:@available, own_package: @own_package,
-      images:@detail_image,
+      source:@src_list_rel,detail:@detail_image,
       element_path:@element_path_rel, level:@lv}
     else
       @ele_json
@@ -84,14 +85,32 @@ class EmpCbbEle
 
   format_template: (to_path) ->
     if @logo
-      @logo = @copy_content_ch(@logo, emp.EMP_LOGO_DIR)
+      @logo = @copy_content_ch @logo
     if @html?.type is emp.EMP_FILE_TYPE
-      @html.body = @copy_content_ch(@html.body, emp.EMP_HTML_DIR)
+      @html.body = @copy_content_ch @html.body
 
     if @css?.type is emp.EMP_FILE_TYPE
-      @css.body = @copy_content_ch(@css.body,  emp.EMP_CSS_DIR)
+      @css.body = @copy_content_ch @css.body
     if @lua?.type is emp.EMP_FILE_TYPE
-      @lua.body = @copy_content_ch(@lua.body, emp.EMP_LUA_DIR)
+      @lua.body = @copy_content_ch @lua.body
+
+    if @detail_image
+      @detail_image = @copy_content_ch @detail_image
+
+    @src_list_rel = []
+    if @src_list
+      for tmp_file in @src_list
+        @src_list_rel.push @copy_content_ch(tmp_file, emp.EMP_IMG_DIR)
+
+    # if @logo
+    #   @logo = @copy_content_ch(@logo, emp.EMP_LOGO_DIR)
+    # if @html?.type is emp.EMP_FILE_TYPE
+    #   @html.body = @copy_content_ch(@html.body, emp.EMP_HTML_DIR)
+    #
+    # if @css?.type is emp.EMP_FILE_TYPE
+    #   @css.body = @copy_content_ch(@css.body,  emp.EMP_CSS_DIR)
+    # if @lua?.type is emp.EMP_FILE_TYPE
+    #   @lua.body = @copy_content_ch(@lua.body, emp.EMP_LUA_DIR)
 
   copy_content_ch: (f_path, add_path="") ->
     # console.log t_path

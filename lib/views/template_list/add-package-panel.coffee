@@ -53,11 +53,6 @@ class AddPackagePanel extends View
                 @div class: 'setting-description', "为你的模板集合添加子类型, 默认存在的子类型为 '组件(componment)', 您可以添加更多类型到该集合中.那么之后您添加模板就可以分类到该子类型下."
             @div class:'control-ol', =>
               @table class:'control-tab',outlet:'ccb_tree'
-
-            # @div class: 'control-ol', =>
-            # # @div class: 'controls', =>
-            #   @ol class:'list-tree', outlet:'ccb_tree'
-
             @div outlet:'ele_add_panel', class: 'controls', =>
               @subview "package_type_add", new TextEditorView(mini: true,attributes: {id: 'package_type_add', type: 'string'},  placeholderText: ' Type Name')
             # @div class:'controls', =>
@@ -200,7 +195,7 @@ class AddPackagePanel extends View
       type_list.push tmp_type
     # console.log type_list
     # console.log @cbb_management.check_exist_cbb()
-    
+
     if !@add_flag
       tmp_obj = @cbb_management.edit_package(@old_name,
         tmp_name, tmp_desc, tmp_logo, type_list,
