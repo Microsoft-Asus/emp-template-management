@@ -11,11 +11,13 @@ class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)
 
   @content: (element) ->
+    console.log element
     logo = element.logo
+    temp_path = atom.project.templates_path
     if !logo
       logo = emp.get_default_logo()
     else
-      logo = path.join(atom.project.templates_path, logo)
+      logo = path.join(temp_path, logo)
 
     # stars, downloads
     # lol wat
@@ -53,6 +55,12 @@ class AvailableTemplatePanel extends View
               # @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
               #   @span class: 'disable-text', 'Disable'
               # @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
+        if detail_img = element.detail
+          @div class: 'meta_detail', =>
+            for tmp_img in detail_img
+              tmp_img_path = path.join temp_path, tmp_img
+              @img outlet: 'logo_img', class: 'avatar', src: "#{tmp_img_path}", click:'image_format'
+
 
   initialize: (@element, @fa_view, @pack, @type) ->
     @cbb_management = atom.project.cbb_management
@@ -100,4 +108,4 @@ class AvailableTemplatePanel extends View
         '否': -> return 3
 
   do_edit: ->
-    console.log "do_edit"
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_CBB_ELE_DETAIL, {back: emp.EMP_CCB_PACK_DETAIL}, {element:@element, pack:@pack})

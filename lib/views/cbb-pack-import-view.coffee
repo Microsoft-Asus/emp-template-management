@@ -21,7 +21,7 @@ class CbbPackImportView extends View
         @div outlet: "loadingElement", class: 'alert alert-info loading-area icon icon-hourglass', "Loading settings"
       @section class: 'section settings-panel', =>
         @div outlet:"section_container", class: 'section-container', =>
-          @div class: "block section-heading icon icon-gear", "Cbb Export"
+          @div class: "block section-heading icon icon-gear", "CBB Export"
           @div class: 'section-body', =>
             @div outlet:'pack_div', class: 'control-group',  =>
               @div class: 'controls', =>

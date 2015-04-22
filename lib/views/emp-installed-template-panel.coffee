@@ -18,7 +18,6 @@ class InstalledTemplatePanel extends View
 
   @content: ->
     @div =>
-
       @section class: 'section', =>
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
@@ -63,6 +62,7 @@ class InstalledTemplatePanel extends View
 
   refresh_detail:() ->
     # console.log "do refresh"
+    @cancel_add_panel()
     @loadTemplates1()
 
   loadTemplates1: ->
@@ -113,7 +113,6 @@ class InstalledTemplatePanel extends View
     @add_package_panel.hide()
 
   success_add_panel: ->
-    @cancel_add_panel()
     @refresh_detail()
 
     # templates = [{name:"emp", description:"this is a test", version:"0.1"},

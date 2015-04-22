@@ -17,23 +17,29 @@ class EmpTemplateManagement
   constructor: ->
     # console.log "constructor"
 
-    atom.project.package_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME)
-    if !templates_store_path = atom.project.templates_path
-      atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
-      templates_store_path =atom.project.templates_path
+    # atom.project.package_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME)
+    # console.log atom.config.get emp.EMP_TEMPLATES_KEY
+    # console.log atom.project.templates_path
+    @do_initial()
+
+  do_initial: ->
+    # if !templates_store_path = atom.project.templates_path
+    atom.project.templates_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
+      # atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
+    templates_store_path = atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     @templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
-
+    @packages = {}
     if fs.existsSync @templates_json
       json_data = fs.readFileSync @templates_json
       @templates_obj = JSON.parse json_data
       @initial_package()
     else
-      @initialize()
+      @initialize_default()
     console.log @templates_obj
 
-  initialize: ->
+  initialize_default: ->
     console.log "initial"
     # console.log "$1"
     @templates_obj = {templates:[], length:0,
@@ -151,6 +157,14 @@ class EmpTemplateManagement
       own_pack.add_element ccb_obj
     else
       @default_package.add_element(ccb_obj)
+
+  edit_element: (ccb_obj, old_obj) ->
+    console.log "add_element"
+    package_name = ccb_obj.own_package
+    if own_pack = @packages[package_name]
+      own_pack.edit_element ccb_obj, old_obj
+    else
+      @default_package.edit_element ccb_obj, old_obj
     # @refresh()
 
   get_pacakge: (name)->

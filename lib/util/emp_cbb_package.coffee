@@ -71,21 +71,6 @@ class EmpCbbPackage
       if fs.existsSync @template_json
         @refresh()
       @cbb_management.refresh_package(this)
-  # 添加子元素
-  add_element: (ccb_obj) ->
-    console.log "add_element"
-    # console.log  @obj_json
-    # console.log ccb_obj
-    # TODO 如果已存在添加提醒
-    if !(@obj_json.type.indexOf(ccb_obj.type)+1)
-      ccb_obj.type = emp.EMP_DEFAULT_TYPE
-    else if !@obj_json[ccb_obj.type]
-      @obj_json[ccb_obj.type] = {}
-
-    ccb_obj.create(@package_path, @name)
-    ccb_info = ccb_obj.get_info()
-    @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
-    @refresh()
 
   edit_detail: (new_obj)->
 
@@ -132,6 +117,34 @@ class EmpCbbPackage
 
     if fs.existsSync @template_json
       @refresh()
+
+  # 添加子元素
+  add_element: (ccb_obj) ->
+    console.log "add_element"
+    # console.log  @obj_json
+    # console.log ccb_obj
+    # TODO 如果已存在添加提醒
+    if !(@obj_json.type.indexOf(ccb_obj.type)+1)
+      ccb_obj.type = emp.EMP_DEFAULT_TYPE
+    else if !@obj_json[ccb_obj.type]
+      @obj_json[ccb_obj.type] = {}
+
+    ccb_obj.create(@package_path, @name)
+    ccb_info = ccb_obj.get_info()
+    @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
+    @refresh()
+
+  # 编辑子元素
+  edit_element: (ccb_obj, old_obj) ->
+    if !(@obj_json.type.indexOf(ccb_obj.type)+1)
+      ccb_obj.type = emp.EMP_DEFAULT_TYPE
+    else if !@obj_json[ccb_obj.type]
+      @obj_json[ccb_obj.type] = {}
+
+    ccb_obj.edit(@package_path, @name, old_obj)
+    ccb_info = ccb_obj.get_info()
+    @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
+    @refresh()
 
   # 删除模板集得相关描述
   delete_element: (name, type)->

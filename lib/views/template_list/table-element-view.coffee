@@ -3,7 +3,7 @@ emp = require '../../exports/emp'
 
 
 module.exports =
-class CcbElementPanel extends View
+class CbbElementPanel extends View
 
 
   @content: (@fa_view, name, hide_flag)->

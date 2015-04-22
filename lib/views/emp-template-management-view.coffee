@@ -9,8 +9,10 @@ GeneralPanel = require './general-panel'
 InstalledTemplateView = require './emp-installed-template-panel'
 AddTemplateView = require './add-template-view'
 PackageDetailView = require './template_list/package-detail-view'
+ElementDetailView = require './template_list/element-detail-view'
 CbbToolSettingPanel = require './cbb-tool-setting-view'
 CbbPackImportView = require './cbb-pack-import-view'
+CbbConfigView = require './cbb-config-view'
 
 module.exports =
 class EmpTmpManagementView extends ScrollView
@@ -59,9 +61,12 @@ class EmpTmpManagementView extends ScrollView
     @addCorePanel emp.EMP_UPLOAD, 'plus', -> new AddTemplateView("3")
     @addCorePanel emp.EMP_Setting, 'keyboard', -> new CbbToolSettingPanel("4")
     @addCorePanel emp.EMP_EXI, 'cloud-download', -> new CbbPackImportView("5")
+    @addCorePanel emp.EMP_CONFIG, 'gear', -> new CbbConfigView("6")
+
     # @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
 
-    @addPackagePanel(emp.EMP_CCB_PACK_DETAIL)
+    @addOtherPanel emp.EMP_CCB_PACK_DETAIL, -> new PackageDetailView()
+    @addOtherPanel emp.EMP_CBB_ELE_DETAIL, -> new ElementDetailView()
     # @cbb_management = atom.project.cbb_management
     # packages = @cbb_management.get_pacakges()
     #
@@ -83,10 +88,12 @@ class EmpTmpManagementView extends ScrollView
     @panelCreateCallbacks[name] = panelCreateCallback
     @showPanel(name) if @panelToShow is name
 
-  addPackagePanel: (name) ->
+  addOtherPanel: (name, panelCreateCallback) ->
     # @panelDetail ? = {}
     @addPanel name, null, =>
-      new PackageDetailView()
+      panelCreateCallback()
+
+
 
   getOrCreatePanel: (name) ->
     panel = @panelsByName?[name]
@@ -117,8 +124,6 @@ class EmpTmpManagementView extends ScrollView
     @sidebar.find("[name='#{name}']").addClass('active')
 
 
-
-
   # Returns an object that can be retrieved when package is activated
   serialize: ->
     deserializer: emp.TEMP_WIZARD_VIEW
@@ -145,7 +150,7 @@ class EmpTmpManagementView extends ScrollView
     @uri
 
   getTitle: ->
-    "Create An Emp App Wizard"
+    "Template Management View"
 
   getIconName: ->
     "tools"
@@ -160,106 +165,3 @@ class EmpTmpManagementView extends ScrollView
 
   remove_loading: ->
     @loadingElement.remove()
-
-  do_cancel: ->
-    # console.log "do_submit "
-    atom.workspace.getActivePane().destroyActiveItem()
-
-  do_submit: ->
-    # console.log "do do_submit"
-    try
-      unless @app_name = @app_name_editor.getEditor().getText().trim()
-        throw("工程名称不能为空！")
-      unless @app_dir = @app_path.getEditor().getText().trim()
-        throw("工程路径不能为空！")
-      atom.config.set(emp.EMP_APP_WIZARD_APP_P, @app_dir)
-      if @ewp_dir = @ewp_path.getEditor().getText().trim()
-        atom.config.set(emp.EMP_APP_WIZARD_EWP_P, @ewp_dir)
-      else
-        @ewp_dir = ""
-      console.log  @app_name
-      atom.config.set(emp.EMP_TMPORARY_APP_NAME, @app_name)
-
-      @mk_app_dir(@app_dir, @app_name)
-      # console.log  "111111"
-      emp.show_info("创建app 完成~")
-      # console.log  "222222"
-      atom.open options =
-        pathsToOpen: [@app_dir]
-        devMode: false
-
-      atom.workspaceView.trigger 'core:close'
-    catch e
-      console.error e
-      emp.show_error(e)
-
-  mk_app_dir:(app_path, app_name) ->
-    base_name = path.basename(app_path)
-    to_path = ''
-    if base_name is app_name
-      emp.mk_dirs_sync(app_path)
-      to_path = app_path
-      @app_dir = to_path
-    else
-      to_path = path.join(app_path, app_name)
-      emp.mk_dirs_sync(to_path)
-      @app_dir = to_path
-
-    # console.log re
-    basic_dir = path.join __dirname, '../../', emp.STATIC_APP_TEMPLATE, @app_version
-    @copy_template(to_path, basic_dir)
-
-  copy_template: (to_path, basic_dir)->
-    # console.log "copy  template`````--------"
-    # console.log to_path
-    # console.log basic_dir
-    files = fs.readdirSync(basic_dir)
-    for template in files
-      f_path = path.join basic_dir, template
-      t_path = path.join to_path, @string_replace(template)
-      if fs.lstatSync(f_path).isDirectory()
-        emp.mkdir_sync(t_path)
-        @copy_template(t_path, f_path)
-      else
-        @copy_content(t_path, f_path)
-
-
-  string_replace: (str) ->
-    map = [{'k':/\$\{app\}/ig,'v':@app_name}, {'k':/\$\{ecl_ewp\}/ig,'v':@ewp_dir}]
-    for o in map
-      str = str.replace(o.k, o.v)
-    str
-
-  copy_content: (t_path, f_path)->
-    f_name = path.basename f_path
-    f_con = fs.readFileSync f_path, 'utf8'
-    nf_con = @string_replace(f_con)
-    fs.writeFileSync(t_path, nf_con, 'utf8')
-    if f_name is 'iewp' or f_name is 'configure'
-      tmp_os = emp.get_emp_os()
-      if tmp_os is emp.OS_DARWIN or tmp_os is emp.OS_LINUX
-        fs.chmodSync(t_path, 493);
-
-#
-# module.exports =
-# class EmpTemplateManagementView
-#   constructor: (serializeState) ->
-#     # Create root element
-#     @element = document.createElement('div')
-#     @element.classList.add('emp-template-management')
-#
-#     # Create message element
-#     message = document.createElement('div')
-#     message.textContent = "The EmpTemplateManagement package is Alive! It's ALIVE!"
-#     message.classList.add('message')
-#     @element.appendChild(message)
-#
-#   # Returns an object that can be retrieved when package is activated
-#   serialize: ->
-#
-#   # Tear down any state and detach
-#   destroy: ->
-#     @element.remove()
-#
-#   getElement: ->
-#     @element

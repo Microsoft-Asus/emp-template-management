@@ -3,7 +3,7 @@ remote = require 'remote'
 dialog = remote.require 'dialog'
 
 emp = require '../../exports/emp'
-CcbEleView = require './ccb-element-view'
+CbbEleView = require './table-element-view'
 # EmpCbbPackage = require '../../util/emp_ccb_package'
 
 module.exports =
@@ -109,12 +109,12 @@ class AddPackagePanel extends View
     @ccb_tree.empty()
 
     # 默认类型
-    def_view = new CcbEleView(this, emp.EMP_DEFAULT_TYPE, true)
+    def_view = new CbbEleView(this, emp.EMP_DEFAULT_TYPE, true)
     @type_view[emp.EMP_DEFAULT_TYPE]= def_view
     @ccb_tree.append def_view
 
     for tmp_name in def_type
-      tmp_view = new CcbEleView(this, tmp_name)
+      tmp_view = new CbbEleView(this, tmp_name)
       @type_view[tmp_name]= tmp_view
       @ccb_tree.append tmp_view
 
@@ -144,7 +144,7 @@ class AddPackagePanel extends View
 
     @set_add_flag(false)
     @package_name.setText(tmp_obj.name)
-    @package_desc.setText(tmp_obj.desc)
+    @package_desc.setText(tmp_obj.desc) unless !tmp_obj.desc
     @old_name = tmp_obj.name
 
     if tmp_obj.logo
@@ -161,7 +161,7 @@ class AddPackagePanel extends View
 
     for tmp_type in type_list
       unless tmp_type is emp.EMP_DEFAULT_TYPE
-        tmp_view = new CcbEleView(this, tmp_type)
+        tmp_view = new CbbEleView(this, tmp_type)
         @type_view[tmp_type]= tmp_view
         @ccb_tree.append tmp_view
 
@@ -261,7 +261,7 @@ class AddPackagePanel extends View
       emp.show_warnning emp.EMP_NO_EMPTY
       return
     if !@type_view[tmp_text]
-      tmp_view = new CcbEleView(this, tmp_text)
+      tmp_view = new CbbEleView(this, tmp_text)
       @type_view[tmp_text]= tmp_view
       @ccb_tree.append tmp_view
       if @delete_type.filter((tmp_type) -> tmp_type is tmp_text)

@@ -1,12 +1,13 @@
 {$$, TextEditorView, View} = require 'atom-space-pen-views'
 emp = require '../../exports/emp'
 
+global_callback = null
 
 module.exports =
 class CbbSourceElementPanel extends View
 
 
-  @content: (@fa_view, name, show_name)->
+  @content: (@fa_view, name)->
     @tr =>
       @td =>
         @span outlet: 'ele_name', class: 'text-info icon icon-diff-added', name
@@ -14,21 +15,15 @@ class CbbSourceElementPanel extends View
         # @button class:'btn btn-info',click:'do_edit',"Edit"
         @button class:'btn btn-error',click:'do_remove',"Remove"
 
-  initialize: (@fa_view, @name)->
-
-
-  # do_edit: ->
-  #   @fa_view.do_edit_callback(@name)
-  #
-  # # 在父级编辑完成编辑后回调
-  # over_edit_callback: (@name)->
-  #   # console.log @ele_name
-  #   @ele_name.text @name
-
+  initialize: (@fa_view, @name, @type)->
 
 
   do_remove: ->
-    @fa_view.remove_td_callback(@name)
+    if @type is emp.EMP_DETAIL_ELE_VIEW
+      # global_callback(@name)
+      @fa_view.remove_detail_callback(@name)
+    else
+      @fa_view.remove_td_callback(@name)
     @destroy()
 
   # Tear down any state and detach

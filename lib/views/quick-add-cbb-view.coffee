@@ -329,7 +329,10 @@ class QuickAddCbbView extends View
   new_template_obj: (cbb_name)->
     cbb_desc = @cbb_desc.getText()?.trim()
     cbb_logo = @cbb_logo.getText()?.trim()
-    cbb_img_detail = @img_detail.getText()?.trim()
+    cbb_img_detail = null
+    unless !(cbb_img_detail = @cbb_img_detail.getText()?.trim())
+      cbb_img_detail = [cbb_img_detail]
+    console.log cbb_img_detail
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_con = @snippet?.val()
     cbb_css = @snippet_css?.val()
@@ -343,6 +346,7 @@ class QuickAddCbbView extends View
   refresh_panl: ->
     @initial_select()
 
+    @cbb_name.setText ""
     @cbb_desc.setText ""
     @cbb_logo.setText ""
     # cbb_name = @cbb_name.getText()?.trim()

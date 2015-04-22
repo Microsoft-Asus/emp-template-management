@@ -33,6 +33,8 @@ module.exports =
   EMP_EXP_SUCCESS: "导出成功!"
   EMP_NO_EMPTY_PATH: "输入地址项不能为空!"
 
+  EMP_SRC_ELE_VIEW:"1"
+  EMP_DETAIL_ELE_VIEW:"2"
 
   ENTERKEY:13
   ESCAPEKEY:27
@@ -50,8 +52,10 @@ module.exports =
   EMP_DOWNLOAD:'Download'
   EMP_Setting:'Cbb Tool Setting'
   EMP_EXI:'Export/Inport'
+  EMP_CONFIG:'Config'
 
-  EMP_CCB_PACK_DETAIL:'Ccb_pack_detail'
+  EMP_CCB_PACK_DETAIL:'Cbb_pack_detail'
+  EMP_CBB_ELE_DETAIL:'Cbb_ele_detail'
 
   EMP_NAME_DEFAULT: 'default'
   EMP_DEFAULT_VER: '0.1'
@@ -59,6 +63,8 @@ module.exports =
   EMP_TEMPLATES_JSON: 'templates.json'
   EMP_TEMPLATE_JSON: 'template.json'
   EMP_ZIP_DETAIL: 'pack_detail.json'
+  EMP_TEMPLATES_DEFAULT_KEY: 'emp-template-management.defaultStorePath'
+  # EMP_TEMPLATES_USER_KEY: 'emp-template-management.userStorePath'
 
 
   EMP_LOGO_DIR:"logo"
@@ -112,6 +118,8 @@ module.exports =
   get_default_logo: ->
     path.join __dirname,'../../',@EMP_DEFAULT_LOGO
 
+  get_default_path: () ->
+    path.join atom.packages.resolvePackagePath(PACKAGE_NAME), EMP_TEMPLATES_PATH
 
 
 
@@ -229,6 +237,7 @@ mk_dirs_sync = (p, made) ->
 valid_ip = (ip_add)->
     # console.log ip_add
     ip_add.match(///^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$///ig)
+
 
 module.exports.mk_dirs_sync = mk_dirs_sync
 module.exports.valid_ip = valid_ip
