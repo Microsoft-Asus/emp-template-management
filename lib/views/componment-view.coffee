@@ -42,10 +42,10 @@ class EmpDebugAdpPackageView extends View
   load_default_componment: (tab_index)->
     @list.empty()
 
-    console.log tab_index
+    # console.log tab_index
     tool_setting = @cbb_management.get_tool_detail()
     tab_setting = tool_setting[tab_index]
-    console.log tab_setting
+    # console.log tab_setting
     if tab_setting
       pack = @cbb_management.get_pacakge tab_setting.pack_name
       # console.log pack
@@ -71,7 +71,7 @@ class EmpDebugAdpPackageView extends View
     if @isVisible()
       @detach()
     else
-      console.log "---- show ----"
+      # console.log "---- show ----"
       @show()
 
   show: ->

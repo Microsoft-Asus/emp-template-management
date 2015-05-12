@@ -37,7 +37,7 @@ class EmpTemplateManagement
       @initial_package()
     else
       @initialize_default()
-    console.log @templates_obj
+    # console.log @templates_obj
 
   initialize_default: ->
     console.log "initial"
@@ -52,7 +52,7 @@ class EmpTemplateManagement
   initial_package: ->
     console.log "initialize packages"
     package_list = @get_pacakges_list()
-    console.log package_list
+    # console.log package_list
     # @default_package = @templates_obj[emp.EMP_DEFAULT_PACKAGE]
     @default_package = new CbbPackage(templates_store_path, @templates_obj[emp.EMP_DEFAULT_PACKAGE])
     @packages[emp.EMP_DEFAULT_PACKAGE] = @default_package
@@ -87,8 +87,8 @@ class EmpTemplateManagement
 
   # 创建新的 package 集
   create_new_package: (name, desc, logo, type) ->
-    console.log name
-    console.log @packages
+    # console.log name
+    # console.log @packages
     if !@packages[name]
       tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo, type:type})
       @store_package(tmp_package)
@@ -97,7 +97,7 @@ class EmpTemplateManagement
       return false
 
   edit_package: (old_name, name, desc, logo, type, add_type, edit_type, del_type) ->
-    console.log @packages
+    # console.log @packages
     tmp_package = @packages[old_name]
     delete @packages[old_name]
     @templates_obj.templates = @templates_obj.templates.filter (tmp_pack) -> tmp_pack isnt old_name
@@ -124,7 +124,7 @@ class EmpTemplateManagement
 
   # 删除模板集得相关描述
   delete_package: (name)->
-    console.log name
+    # console.log name
     @templates_obj.templates = @templates_obj.templates.filter (ele) -> ele isnt name
     delete @packages[name]
     delete @templates_obj[name]
@@ -151,7 +151,7 @@ class EmpTemplateManagement
 
 
   add_element: (ccb_obj) ->
-    console.log "add_element"
+    # console.log "add_element"
     package_name = ccb_obj.own_package
     if own_pack = @packages[package_name]
       own_pack.add_element ccb_obj
@@ -159,7 +159,7 @@ class EmpTemplateManagement
       @default_package.add_element(ccb_obj)
 
   edit_element: (ccb_obj, old_obj) ->
-    console.log "add_element"
+    # console.log "add_element"
     package_name = ccb_obj.own_package
     if own_pack = @packages[package_name]
       own_pack.edit_element ccb_obj, old_obj
@@ -199,7 +199,7 @@ class EmpTemplateManagement
     tmp_obj ?= @create_new_package(tmp_pack_name, null, null, null)
     tmp_type_list = tmp_obj.add_type(tmp_obj.type)
     for name, obj of tmp_entries
-      console.log name
+      # console.log name
       tmp_data = obj.getData().toString('utf8')
       tmp_file_path = path.join templates_store_path,tmp_pack_name, name
       fs.writeFile tmp_file_path, tmp_data, (err) ->

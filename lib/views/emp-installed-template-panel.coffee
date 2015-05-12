@@ -76,7 +76,7 @@ class InstalledTemplatePanel extends View
     #   packageViews.push(packView) # used for search filterin'
     #   packageRow.append(packView)
     packages = @cbb_management.get_pacakges()
-    console.log packages
+    # console.log packages
     for ccb_name,ccb_obj of packages
       # tmp_obj = @cbb_management.get_package_obj(ccb_name)
       tempRow = $$ -> @div class: 'row'
