@@ -71,11 +71,13 @@ class CbbPackImportView extends View
     @packs = @cbb_management.get_pacakges()
     @cbb_tools = @cbb_management.get_tool_detail()
     project_path = atom.project.getPath()
-    tmp_export_store_path = path.join project_path,"tmp"
+    if project_path
+      tmp_export_store_path = path.join project_path,"tmp"
+      console.log tmp_export_store_path
+      emp.mkdir_sync_safe tmp_export_store_path
     # 模板路径
     templates_store_path =atom.project.templates_path
-    console.log tmp_export_store_path
-    emp.mkdir_sync_safe tmp_export_store_path
+
 
     console.log @cbb_tools
     @do_initial()
@@ -190,6 +192,10 @@ class CbbPackImportView extends View
     exp_type = @type_select.val()
     if !export_store_path = @export_path.getText()?.trim()
       export_store_path = tmp_export_store_path
+      unless export_store_path
+        emp.show_error("导出地址不能为空!")
+        return
+
     if exp_pack is default_select_pack
       zip_detail = {level:emp.EMP_JSON_ALL, pack:@cbb_management.get_pacakges_list()}
       @do_export_dir(export_store_path, templates_store_path, zip_detail)
