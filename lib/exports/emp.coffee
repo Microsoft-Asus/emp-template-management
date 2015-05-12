@@ -119,7 +119,7 @@ module.exports =
     path.join __dirname,'../../',@EMP_DEFAULT_LOGO
 
   get_default_path: () ->
-    path.join atom.packages.resolvePackagePath(PACKAGE_NAME), EMP_TEMPLATES_PATH
+    path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME), this.EMP_TEMPLATES_PATH
 
 
 
