@@ -1,5 +1,5 @@
 {View} = require 'atom'
-{$$, TextEditorView} = require 'atom-space-pen-views'
+{$, $$, TextEditorView} = require 'atom-space-pen-views'
 # fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
@@ -56,13 +56,20 @@ class QuickAddCbbView extends View
           @button "Add", class:"btn", click:"select_logo"
         @subview "cbb_logo", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
         @img outlet: 'logo_img', class: 'avatar', src: "", style:"display:none;", click:'image_format'
-
+      @div class:'div_logo', =>
+        @div class:'div_box', =>
+          @label class:'lab',"模板详情图片:"
+          # @span "", class: "input-group-btn", =>
+          @button "Add", class:"btn", click:"select_detail"
+        @subview "cbb_img_detail", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
+        @img outlet: 'img_detail', class: 'avatar', src: "", style:"display:none;", click:'image_format2'
       #
       # @div "", class: "input-group snippetScopeGroup", =>
       #   @subview "cbb_logo", new TextEditorView(mini:true, placeholderText: 'Snippet scope selector (ex: `.source.js`)')
       #   @span "", class: "input-group-btn", =>
       #     @button "?", class:"btn", outlet:"sourceHelp"
       @button "Done", class: "createSnippetButton btn btn-primary", click:'create_snippet'
+      @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
       @button "Refresh", class: "createSnippetButton btn btn-primary", click:'refresh_panl'
 
   initialize: (@emp_temp_management) ->
@@ -74,6 +81,9 @@ class QuickAddCbbView extends View
     # pack_select
     @cbb_management = atom.project.cbb_management
     @initial_select()
+
+    @snippet_css.hide()
+    @snippet.show()
     # console.log @packs
 
 
@@ -235,8 +245,18 @@ class QuickAddCbbView extends View
           @logo_img.attr "src", logo_path[0]
           @logo_img.show()
 
+  select_detail: (e, element)->
+    dialog.showOpenDialog title: 'Select', properties: ['openFile'], (logo_path) => # 'openDirectory'
+      # console.log logo_path
+      if logo_path
+        path_state = fs.statSync logo_path[0]
+        if path_state?.isFile()
+          @cbb_img_detail.setText logo_path[0]
+          @img_detail.attr "src", logo_path[0]
+          @img_detail.show()
+
   # 点击后改变图片尺寸,方便查看
-  image_format: ->
+  image_format: (e, element)->
     # console.log 'image_format'
     # console.log @logo_img.css('height')
     if @logo_img.css('height') is emp.LOGO_IMAGE_SIZE
@@ -245,7 +265,15 @@ class QuickAddCbbView extends View
     else
       @logo_img.css('height', emp.LOGO_IMAGE_SIZE)
       @logo_img.css('width', emp.LOGO_IMAGE_SIZE)
-  #
+
+  image_format2: (e, element)->
+    tmp_view = $(element).view()
+    if @img_detail.css('height') is emp.LOGO_IMAGE_SIZE
+      @img_detail.css('height', emp.LOGO_IMAGE_BIG_SIZE)
+      @img_detail.css('width', emp.LOGO_IMAGE_BIG_SIZE)
+    else
+      @img_detail.css('height', emp.LOGO_IMAGE_SIZE)
+      @img_detail.css('width', emp.LOGO_IMAGE_SIZE)
   # # 生成 cbb 模板
   # create_snippet1: ->
   #   console.log "button down"
@@ -301,12 +329,16 @@ class QuickAddCbbView extends View
   new_template_obj: (cbb_name)->
     cbb_desc = @cbb_desc.getText()?.trim()
     cbb_logo = @cbb_logo.getText()?.trim()
+    cbb_img_detail = null
+    unless !(cbb_img_detail = @cbb_img_detail.getText()?.trim())
+      cbb_img_detail = [cbb_img_detail]
+    console.log cbb_img_detail
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_con = @snippet?.val()
     cbb_css = @snippet_css?.val()
     cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
-    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack)
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, cbb_img_detail)
     cbb_obj.set_con cbb_con, emp.EMP_QHTML
     cbb_obj.set_con cbb_css, emp.EMP_QCSS
     cbb_obj
@@ -314,6 +346,7 @@ class QuickAddCbbView extends View
   refresh_panl: ->
     @initial_select()
 
+    @cbb_name.setText ""
     @cbb_desc.setText ""
     @cbb_logo.setText ""
     # cbb_name = @cbb_name.getText()?.trim()
@@ -321,3 +354,6 @@ class QuickAddCbbView extends View
     @snippet_css?.val("")
     # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
     # type: cbb_type, logo:cbb_logo, html:{type:emp.EMP_CON_TYPE, body:ccb_con}, css:null, lua:null, available:true}
+
+  do_cancel: ->
+    @toggle()

@@ -187,6 +187,44 @@
       }
     }
 
+    .meta_detail {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      width: 100%;
+      margin-top:5px;
+      padding-top:10px;
+      border-top: solid 1px @background-color-info;
+
+      a.linked-octicon {
+        text-decoration: none;
+
+        &:hover {
+          .octicon {
+            color: $greenDark;
+          }
+
+          .value {
+            color: $greenDark;
+          }
+        }
+      }
+
+      .action {
+        border-radius: 3px;
+        padding: 3px 6px;
+
+        &:hover {
+          background-color: #eaeaea;
+        }
+      }
+
+      .value {
+        color: #999;
+        font-size: 13px;
+      }
+    }
+
     .meta-user {
       flex: 1 0 auto;
       margin-top: @component-padding;
@@ -252,4 +290,8 @@
 
 @-webkit-keyframes available-package-is-installing {
   100% { background-position: -10px 0px; }
+}
+
+.example {
+  > * { width: 100%; }
 }

@@ -32,6 +32,9 @@ module.exports =
     showOnRightSide:
       type: 'boolean'
       default: true
+    defaultStorePath:
+      type:'string'
+      default: path.join(atom.packages.resolvePackagePath(emp.PACKAGE_NAME), emp.EMP_TEMPLATES_PATH)
   #   cbb_type:
   #     title: '控件类型'
   #     description: '模板类型, 默认为控件, 可以自定义类型,在此处添加,重启管理器即可.'

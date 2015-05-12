@@ -1,42 +1,33 @@
-{$, $$, ScrollView} = require 'atom'
-{TextEditorView} = require 'atom-space-pen-views'
-path = require 'path'
-fs = require 'fs'
+{$$, TextEditorView, View} = require 'atom-space-pen-views'
+_ = require 'underscore-plus'
+ExampleView = require '../example/example_view'
+
+emp = require '../../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
-emp = require '../exports/emp'
-CbbEle = require '../util/emp_cbb_element'
-CbbSrcEleView = require './template_list/cbb-source-ele-view'
-default_select_pack = emp.EMP_DEFAULT_PACKAGE
+CbbEle = require '../../util/emp_cbb_element'
+AvailableTypePanel = require './available-type-panel'
+# CbbEle = require '../util/emp_cbb_element'
+CbbSrcEleView = require './cbb-source-ele-view'
 
 module.exports =
-class InstalledTemplatePanel extends ScrollView
-  # Subscriber.includeInto(this)
+class ElementDetailPanel extends View
   source_files:{}
   image_detail:{}
 
   @content: ->
-    logo_path =  path.join __dirname, '../../images/logo'
-    logo_imgs = fs.readdirSync(logo_path).filter((ele)-> !ele.match(/^\./ig))
-    index = Math.round Math.random()*(logo_imgs.length-1)
-    logo_img = path.join logo_path,logo_imgs[index]
-
     @div =>
+      @ol outlet: 'breadcrumbContainer', class: 'native-key-bindings breadcrumb', tabindex: -1, =>
+        @li =>
+          @a outlet: 'breadcrumb'
+
+        @li class: 'active', =>
+          @a outlet: 'title'
       @section class: 'section', =>
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
-            @text 'Add Packages'
+            @text 'Edit Snippet'
             @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
-          @div class: 'section-body', =>
-            @div class: 'control-group', =>
-              @div class: 'controls', =>
-                @label class: 'control-label', =>
-                  @div class: 'info-label', "模板路径"
-                  @div class: 'setting-description', "Root Dir Name"
-                # @div class: 'editor-container', =>
-                @subview "template_path", new TextEditorView(mini: true,attributes: {id: 'template_path', type: 'string'},  placeholderText: ' Template Path')
-                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                @button class: 'control-btn btn btn-info', click:'select_path',' Chose Path '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -56,17 +47,6 @@ class InstalledTemplatePanel extends ScrollView
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
-          # # 包版本号
-          # @div class: 'section-body', =>
-          #   @div class: 'control-group', =>
-          #     @div class: 'controls', =>
-          #       @label class: 'control-label', =>
-          #         @div class: 'info-label', "模板版本"
-          #         @div class: 'setting-description', "默认为0.1, 每次+0.1"
-          #     @div class: 'controls', =>
-          #       # @div class: 'editor-container', =>
-          #       # @div class: 'editor-container', =>
-          #       @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
 
           # 包类型
           @div class: 'section-body', =>
@@ -93,13 +73,16 @@ class InstalledTemplatePanel extends ScrollView
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
-                @label class: 'control-label', =>
+                @label outlet:'html_body_label', class: 'control-label', =>
                   @div class: 'info-label', "模板报文"
                   @div class: 'setting-description', "模板插入的报文实体"
                 # @div class: 'editor-container', =>
-                @subview "template_html", new TextEditorView(mini: true,attributes: {id: 'template_html', type: 'string'},  placeholderText: ' Template Html Content')
-                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                @button class: 'control-btn btn btn-info', click:'select_html',' Chose File '
+              @div outlet: 'html_body', class:'controls'
+                # @subview "template_html", new TextEditorView(mini: true,attributes: {id: 'template_html', type: 'string'},  placeholderText: ' Template Html Content')
+                # # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+              @button class: 'control-btn btn btn-info', click:'edit_html',' Edit'
+
+                # @exampleHtml '''<div> </div>'''
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -108,9 +91,11 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'info-label', "模板样式"
                   @div class: 'setting-description', "模板插入的样式实体"
                 # @div class: 'editor-container', =>
-                @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
-                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+              @div outlet: 'css_body', class:'controls'
+                # @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
+                # # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+                # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+              @button class: 'control-btn btn btn-info', click:'edit_css',' Edit'
 
           # 包图标
           @div class: 'section-body', =>
@@ -123,15 +108,15 @@ class InstalledTemplatePanel extends ScrollView
               @div class: 'controls', =>
                 @div class:'controle-logo', =>
                   @div class: 'meta-user', =>
-                    @img outlet:"logo_image", class: 'avatar', src:"#{logo_img}"
+                    @img outlet:"logo_image", class: 'avatar', src:""
                   @div class:'meta-controls', =>
                     @div class:'btn-group', =>
-                      @select outlet:"logo_select", id: "logo", class: 'form-control', =>
+                      @select outlet:"logo_select", id: "logo", class: 'form-control'
                         # for option in ["emp", "ebank", "boc", "gdb"]
-                        @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
+                        # @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
                       @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
 
-          # 实际样式
+          # 实际样式图片
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
@@ -145,9 +130,6 @@ class InstalledTemplatePanel extends ScrollView
                 @div class:'controle-logo', =>
                   @div class: 'meta-user', =>
                     @img outlet:"detail_image", class: 'avatar', src:""
-              @div class: 'controls', =>
-                @div class:'btn-box-n', =>
-                  @button class:'btn btn-info', click:'chose_detail',"Chose Detail"
               @div class: 'controls', =>
                 @subview "detail_img_text", new TextEditorView(mini: true,attributes: {id: 'detail_img_text', type: 'string'},  placeholderText: ' detail img')
                 @div class:'btn-box-n', =>
@@ -172,23 +154,108 @@ class InstalledTemplatePanel extends ScrollView
 
       @div class: 'footer-div', =>
         @div class: 'footer-detail', =>
-          # @button class: 'footer-btn btn btn-info inline-block-tight', click:'do_cancel','  Cancel  '
-          @button class: 'footer-btn btn btn-info inline-block-tight', click:'create_snippet',' Ok '
+          @button class: 'footer-btn btn btn-info inline-block-tight', click:'do_cancel','  Cancel  '
+          @button class: 'footer-btn btn btn-info inline-block-tight', click:'save_snippet',' Ok '
+
 
   initialize: () ->
-    super
     @packageViews = []
     @cbb_management = atom.project.cbb_management
-    @packs = @cbb_management.get_pacakges()
 
-    # @cbb_management = atom.project.cbb_management
-    # console.log templates_json
-
+    @template_path = atom.project.templates_path
     @logo_select.change (event) =>
       @logo_image.attr("src", @logo_select.val())
-    @do_initial()
 
-  do_initial: ()->
+
+  refresh_detail:({@element, @pack}) ->
+    # console.log "do refresh"
+
+    @title.text("#{_.undasherize(_.uncamelcase(@element.name))} Detail")
+    # console.log @element
+    @templates_path = atom.project.templates_path
+    @ele_path = @element.element_path
+    @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
+    ele_json_data = fs.readFileSync @ele_json, 'utf-8'
+    @snippet_obj = JSON.parse ele_json_data
+    console.log @snippet_obj
+
+    @template_name.setText(@element.name)
+    @template_desc.setText(@element.desc)
+    @initial_logo()
+    @do_initial_select(@pack.name, @element.type)
+    @initial_source_list(@snippet_obj.source)
+    @initial_detail_list(@snippet_obj.detail)
+    @initial_html()
+    @initial_css()
+
+  initial_html: ->
+    tmp_obj = @snippet_obj.html
+    tmp_body = ""
+    if tmp_obj.type is emp.EMP_CON_TYPE
+       tmp_body = tmp_obj.body
+    else
+      # TODO 改为文件显示
+      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_body = fs.readFileSync tmp_path, 'utf-8'
+
+    @html_body.empty()
+    re_body = new ExampleView(tmp_body)
+
+    # console.log re_body
+    @html_body.append re_body
+
+  initial_css: ->
+    tmp_obj = @snippet_obj.css
+    tmp_body = ""
+    if tmp_obj.type is emp.EMP_CON_TYPE
+       tmp_body = tmp_obj.body
+    else
+      # TODO 改为文件显示
+      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_body = fs.readFileSync tmp_path, 'utf-8'
+
+    @css_body.empty()
+    re_body = new ExampleView(tmp_body)
+
+    # console.log re_body
+    @css_body.append re_body
+
+
+  # 初始化 logo
+  initial_logo: ->
+    @logo_select.empty()
+    @logo_image.attr("src", "")
+
+    if tmp_logo = @snippet_obj.logo
+      text = path.basename tmp_logo
+      value = path.join @templates_path, tmp_logo
+    else
+      value = emp.get_default_logo()
+      text = path.basename value
+    @logo_select.append @new_selec_option(text, value)
+    @logo_image.attr("src", value)
+
+
+  # 初始化 资源文件列表
+  initial_source_list: (src_files=[])->
+    @cbb_tree.empty()
+    for tmp_file in src_files
+      tmp_name = path.join @templates_path, tmp_file
+      tmp_view = new CbbSrcEleView(this, tmp_name)
+      @source_files[tmp_name] = tmp_view
+      @cbb_tree.append tmp_view
+
+  # 初始化 描述图片列表
+  initial_detail_list: (detail_list=[]) ->
+    @image_detail_tree.empty()
+    for tmp_file in detail_list
+      tmp_name = path.join @templates_path, tmp_file
+      tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW )
+      @image_detail[tmp_name] = tmp_view
+      @image_detail_tree.append tmp_view
+
+  do_initial_select: (default_pack, default_type)->
+    @packs = @cbb_management.get_pacakges()
     @pack_select.change (event) =>
       tmp_name = @pack_select.val()
       tmp_obj = @packs[tmp_name]
@@ -199,103 +266,44 @@ class InstalledTemplatePanel extends ScrollView
 
     @pack_select.empty()
     for name, obj of @packs
-      if name is default_select_pack
+      if name is default_pack
         @pack_select.append @new_selec_option(name)
       else
         @pack_select.append @new_option(name)
     # console.log @packs
-    tmp_pack = @packs[default_select_pack]
+    tmp_pack = @packs[default_pack]
     # console.log tmp_pack
     type_list = tmp_pack.get_type()
     @type_select.empty()
     for tmp_type in type_list
-      @type_select.append @new_option(tmp_type)
+      if tmp_type is default_type
+        @type_select.append @new_selec_option(tmp_type)
+      else
+        @type_select.append @new_option(tmp_type)
 
-  new_option: (name)->
+  new_option: (name, value=name)->
     $$ ->
-      @option value: name, name
+      @option value: value, name
 
-  new_selec_option: (name) ->
+  new_selec_option: (name, value=name) ->
     $$ ->
-      @option selected:'select', value: name, name
+      @option selected:'select', value: value, name
+
 
   detached: ->
     # @unsubscribe()
-    console.log "----"
 
-  select_path: (e, element)->
-    tmp_path = @template_path.getText()
-    view_set = {path:@template_path,name:@template_name,logo:@logo_select,html:@template_html,css:@template_css}
-    @prompt_for_path(view_set, tmp_path)
-
-  prompt_for_path: (view_set, def_path) ->
-    if def_path
-      dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
-        @refresh_path( paths_to_open, view_set)
+  beforeShow: (@opts) ->
+    console.log @opts
+    if @opts?.back
+      @breadcrumb.text(@pack.name).on 'click', () =>
+        @parents('.emp-template-management').view()?.showPanel(@opts.back, {back: emp.EMP_TEMPLATE}, @pack)
     else
-      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
-        @refresh_path( paths_to_open, view_set)
+      @breadcrumbContainer.hide()
 
-  refresh_path: (new_paths, view_set)->
-    if new_paths
-      console.log new_paths
-      new_path = new_paths[0]
-      view_set.path.setText(new_path)
-      path_state = fs.statSync new_path
+  do_cancel: ->
+    @parents('.emp-template-management').view()?.showPanel(@opts.back, {back: emp.EMP_TEMPLATE}, @pack)
 
-      if path_state?.isDirectory()
-        console.log "----------------"
-        name = path.basename new_path
-        view_set.name.setText(name)
-        # view_set.ver.setText(emp.EMP_DEFAULT_VER)
-
-        html_path = path.join new_path, emp.EMP_HTML_DIR
-        fs.readdir html_path, (err, files) =>
-          if err
-            console.log "no exist html files"
-          else
-            html_files = files.filter((ele)-> !ele.match(/^\./ig))
-            if html_files?.length
-              view_set.html.setText(path.join html_path,html_files[0])
-
-        css_path = path.join new_path, emp.EMP_CSS_DIR
-        fs.readdir css_path, (err, files) =>
-          if err
-            console.log "no exist css file"
-          else
-            css_files = files.filter((ele)-> !ele.match(/^\./ig))
-            if css_files?.length
-              view_set.css.setText(path.join css_path, css_files[0])
-
-        logo_path =  path.join new_path,emp.EMP_LOGO_DIR
-        fs.readdir logo_path, (err, files) =>
-          if err
-            console.log "no exist"
-          else
-            logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-            # console.log logo_images
-            for logo in logo_images
-              tmp_opt = document.createElement 'option'
-              tmp_opt.text = logo
-              tmp_opt.value = path.join logo_path, logo
-              # console.log tmp_opt
-              view_set.logo.append tmp_opt
-            # console.log log_view
-
-        src_path =  path.join new_path,emp.EMP_IMG_DIR
-        @add_source(src_path)
-
-  # callback function for button
-  select_html: (e, element)->
-    console.log "select html"
-    tmp_con = @template_html.getText()
-    @prompt_for_file(@template_html, tmp_con)
-
-  select_css: (e, element)->
-    console.log "select css"
-    # console.log element
-    tmp_con = @template_css.getText()
-    @prompt_for_file(@template_css, tmp_con)
 
   # btn callback for logo
   select_logo: (e, element)->
@@ -318,63 +326,16 @@ class InstalledTemplatePanel extends ScrollView
                 tmp_opt.value = path.join tmp_path, logo
                 # console.log tmp_opt
                 @logo_select.append tmp_opt
+                # tmp_opt.selected = "selected"
         else
           tmp_opt = document.createElement 'option'
           tmp_opt.text = path.basename tmp_path
           tmp_opt.value = logo_path
+          tmp_opt.selected = "selected"
           @logo_select.append tmp_opt
 
-  prompt_for_file: (file_view, tmp_con) ->
-    if tmp_con
-      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openDirectory', 'openFile'], (paths_to_open) =>
-        # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
-        @refresh_editor(file_view, paths_to_open)
-    else
-      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (paths_to_open) =>
-        # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
-        @refresh_editor(file_view, paths_to_open)
+          @logo_image.attr("src", logo_path)
 
-  refresh_editor: (file_view, new_paths) ->
-    if new_paths
-      console.log new_paths
-      new_path = new_paths[0]
-      file_view.setText(new_path)
-
-  create_snippet: ->
-    console.log "button down"
-    if !@template_name.getText()
-      emp.show_error "模板名称不能为空"
-      return
-
-    cbb_name = @template_name.getText()?.trim()
-    cbb_obj = @new_template_obj(cbb_name)
-    # console.log cbb_obj
-    @cbb_management.add_element(cbb_obj)
-    emp.show_info("添加模板 完成~")
-    # @destroy()
-
-  new_template_obj: (cbb_name)->
-    cbb_desc = @template_desc.getText()?.trim()
-    cbb_logo = @logo_select.val()
-    # cbb_name = @cbb_name.getText()?.trim()
-    cbb_html = @template_html.getText()?.trim()
-    cbb_css = @template_css.getText()?.trim()
-    cbb_pack = @pack_select.val()
-    cbb_type = @type_select.val()
-    # cbb_detail_img = @detail_image.attr("src")
-    # @source_file
-    source_list = []
-    for tmp_name, tmp_view of @source_files
-      source_list.push tmp_name
-
-    tmp_img_list = []
-    for tmp_name, tmp_view of @image_detail
-      tmp_img_list.push tmp_name
-    # console.log cbb_type
-    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
-    cbb_obj.set_file cbb_html, emp.EMP_QHTML
-    cbb_obj.set_file cbb_css, emp.EMP_QCSS
-    cbb_obj
 
   # 添加资源文件
   add_source_btn: () ->
@@ -382,8 +343,9 @@ class InstalledTemplatePanel extends ScrollView
 
   add_source: (tmp_path)->
     console.log "add source"
+    # tmp_path ?= @source_file.getText()
+    # console.log tmp_path
     if tmp_path ?= @source_file.getText()
-      console.log tmp_path
       fs.stat tmp_path, (err, stats) =>
         if err
           console.log err
@@ -427,7 +389,7 @@ class InstalledTemplatePanel extends ScrollView
       tmp_view.destroy()
     @source_files ={}
 
-  #
+  #添加 描述图片
   add_image_detail_btn:() ->
     @add_image_detail()
 
@@ -476,3 +438,141 @@ class InstalledTemplatePanel extends ScrollView
 
   remove_detail_callback: (name)->
     delete @image_detail[name]
+
+  # 编辑模板
+  edit_html: ->
+    console.log 'edit_html'
+    tmp_obj = @snippet_obj.html
+    tmp_editor = null
+    if tmp_obj.type is emp.EMP_CON_TYPE
+      tmp_body = tmp_obj.body
+      # tmp_editor = atom.workspace.openSync()
+      # @store_info(tmp_editor, tmp_body)
+      tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+      tmp_editor.onDidSave (event) =>
+        console.log event
+        tmp_body = tmp_editor.getText()
+        @snippet_obj.html.body = tmp_body
+        @html_body.empty()
+        re_body = new ExampleView(tmp_body)
+        @html_body.append re_body
+    else
+      # TODO 改为文件显示
+      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_editor = @create_editor(tmp_path)
+      tmp_editor.onDidSave (event) =>
+        console.log event
+        tmp_body = tmp_editor.getText()
+        @html_body.empty()
+        re_body = new ExampleView(tmp_body)
+        @html_body.append re_body
+
+  # 编辑样式模板
+  edit_css: ->
+    console.log "edit_css"
+    tmp_obj = @snippet_obj.css
+    tmp_editor = null
+    if tmp_obj.type is emp.EMP_CON_TYPE
+      tmp_body = tmp_obj.body
+      # tmp_editor = atom.workspace.openSync()
+
+      tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+      # @store_info(tmp_editor, tmp_body)
+      tmp_editor.onDidSave (event) =>
+        console.log event
+        tmp_body = fs.readFileSync event.path, 'utf-8'
+        @snippet_obj.css.body = tmp_body
+        @css_body.empty()
+        re_body = new ExampleView(tmp_body)
+        @css_body.append re_body
+    else
+      # TODO 改为文件显示
+      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_editor = @create_editor(tmp_path)
+
+    tmp_editor.onDidSave (e) ->
+      console.log e
+
+
+  create_editor:(tmp_file_path, content) ->
+    changeFocus = true
+    tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
+    gramers = @getGrammars()
+
+    tmp_editor.setText(content) unless !content
+    tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+    return tmp_editor
+
+  store_info: (tmp_editor, content)->
+    tmp_editor.setText(content)
+    gramers = @getGrammars()
+    tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+
+  # set the opened editor grammar, default is HTML
+  getGrammars: ->
+    grammars = atom.syntax.getGrammars().filter (grammar) ->
+      (grammar isnt atom.syntax.nullGrammar) and
+      grammar.name is 'HTML'
+    grammars
+
+  save_snippet: ->
+    console.log "do save"
+    if !@template_name.getText()
+      emp.show_error "模板名称不能为空"
+      return
+
+    cbb_name = @template_name.getText()?.trim()
+
+    old_pack = @pack.name
+    old_type = @snippet_obj.type
+    old_name = @snippet_obj.name
+
+    cbb_pack = @pack_select.val()
+    cbb_type = @type_select.val()
+
+    if (cbb_pack isnt old_pack) or (cbb_type isnt old_type) or (cbb_name isnt old_name)
+      console.log "do_con"
+      cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
+      # console.log cbb_obj
+      @cbb_management.add_element(cbb_obj)
+      @pack.delete_element_detail(old_type, @snippet_obj.name)
+    else
+      cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
+      # console.log cbb_obj
+      @cbb_management.add_element(cbb_obj)
+    emp.show_info("修改模板 完成~")
+    @parents('.emp-template-management').view()?.showPanel(@opts.back, {back: emp.EMP_TEMPLATE}, @pack)
+    # @destroy()
+
+  new_template_obj: (cbb_name, cbb_pack, cbb_type)->
+    cbb_desc = @template_desc.getText()?.trim()
+    cbb_logo = @logo_select.val()
+    # cbb_name = @cbb_name.getText()?.trim()
+    cbb_html = @snippet_obj.html.body
+    cbb_css = @snippet_obj.css.body
+    # @source_file
+    source_list = []
+    for tmp_name, tmp_view of @source_files
+      source_list.push tmp_name
+
+    tmp_img_list = []
+    for tmp_name, tmp_view of @image_detail
+      tmp_img_list.push tmp_name
+    # console.log cbb_type
+    cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
+
+    tmp_html_type = @snippet_obj.html.type
+    if tmp_html_type is emp.EMP_FILE_TYPE
+      cbb_obj.set_file path.join(@template_path, cbb_html), emp.EMP_QHTML
+    else
+      cbb_obj.set_con cbb_html, emp.EMP_QHTML
+
+    tmp_css_type = @snippet_obj.css.type
+    if tmp_css_type is emp.EMP_FILE_TYPE
+      cbb_obj.set_file path.join(@template_path, cbb_css), emp.EMP_QCSS
+    else
+      cbb_obj.set_con cbb_css, emp.EMP_QCSS
+    cbb_obj
+
+get_tmp_file =() ->
+  path.join __dirname, "../../../tmp.txt"

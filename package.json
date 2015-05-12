@@ -31,6 +31,9 @@
     "moxie-zip": "*",
     "adm-zip": "*",
     "css": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "js-beautify": "^1.4.0",
+    "coffee-script": "~1.8.0",
+    "highlights": "*"
   }
 }

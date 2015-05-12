@@ -11,11 +11,13 @@ class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)
 
   @content: (element) ->
+    console.log element
     logo = element.logo
+    temp_path = atom.project.templates_path
     if !logo
       logo = emp.get_default_logo()
     else
-      logo = path.join(atom.project.templates_path, logo)
+      logo = path.join(temp_path, logo)
 
     # stars, downloads
     # lol wat
@@ -50,9 +52,18 @@ class AvailableTemplatePanel extends View
             @div outlet: 'buttons', class: 'btn-group', =>
               @button type: 'button', class: 'btn icon icon-gear',           outlet: 'edit_button', click:'do_edit', 'Edit'
               @button type: 'button', class: 'btn icon icon-trashcan',       outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
+            if detail_img = element.detail
+              @button type: 'button', class: 'btn icon icon-file-media',       outlet: 'show_detail_button', click:'do_show_detail', 'Show Detail'
+              @button type: 'button', class: 'btn icon icon-file-media',       outlet: 'hide_detail_button', click:'do_hide_detail', style:"display:none;", 'Hide Detail'
               # @button type: 'button', class: 'btn icon icon-playback-pause', outlet: 'enablement_utton', =>
               #   @span class: 'disable-text', 'Disable'
               # @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
+        if detail_img = element.detail
+          @div outlet:'detail_div', style:"display:none;", class: 'meta_detail', =>
+            for tmp_img in detail_img
+              tmp_img_path = path.join temp_path, tmp_img
+              @img outlet: 'logo_img', class: 'avatar', src: "#{tmp_img_path}", click:'image_format'
+
 
   initialize: (@element, @fa_view, @pack, @type) ->
     @cbb_management = atom.project.cbb_management
@@ -68,8 +79,6 @@ class AvailableTemplatePanel extends View
     else
       @logo_img.css('height', emp.LOGO_IMAGE_SIZE)
       @logo_img.css('width', emp.LOGO_IMAGE_SIZE)
-
-
 
   detached: ->
     # @unsubscribe()
@@ -100,4 +109,15 @@ class AvailableTemplatePanel extends View
         '否': -> return 3
 
   do_edit: ->
-    console.log "do_edit"
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_CBB_ELE_DETAIL, {back: emp.EMP_CCB_PACK_DETAIL}, {element:@element, pack:@pack})
+
+  do_show_detail: ->
+    if @detail_div
+      @detail_div.show()
+      @show_detail_button.hide()
+      @hide_detail_button.show()
+
+  do_hide_detail: ->
+    @detail_div.hide()
+    @hide_detail_button.hide()
+    @show_detail_button.show()
