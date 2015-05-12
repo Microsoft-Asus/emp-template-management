@@ -23,9 +23,9 @@
     'label': 'Emp'
     'submenu': [
         {type: 'separator'}
-        { 'label': 'Template Management1', 'command': 'emp-template-management:temp-management' }
+        { 'label': 'Template Management', 'command': 'emp-template-management:temp-management' }
         {type: 'separator'}
-        {'label': 'cbb Panel', 'command': 'emp-template-management:cbb-panel'}
+        {'label': 'CBB Panel', 'command': 'emp-template-management:cbb-panel'}
     ]
   }
 ]

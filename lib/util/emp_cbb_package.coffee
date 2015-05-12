@@ -44,6 +44,8 @@ class EmpCbbPackage
   refresh: ->
     # console.log @get_json()
     temp_str = JSON.stringify @get_json()
+    # console.log temp_str
+    # console.log @template_json
     fs.writeFileSync @template_json, temp_str
 
   # 包信息
@@ -132,6 +134,7 @@ class EmpCbbPackage
     ccb_obj.create(@package_path, @name)
     ccb_info = ccb_obj.get_info()
     @obj_json[ccb_obj.type][ccb_info.name] = ccb_info
+
     @refresh()
 
   # 编辑子元素

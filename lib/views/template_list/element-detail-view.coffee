@@ -231,7 +231,7 @@ class ElementDetailPanel extends View
       value = path.join @templates_path, tmp_logo
     else
       value = emp.get_default_logo()
-      text = path.basename tmp_logo
+      text = path.basename value
     @logo_select.append @new_selec_option(text, value)
     @logo_image.attr("src", value)
 
@@ -326,11 +326,15 @@ class ElementDetailPanel extends View
                 tmp_opt.value = path.join tmp_path, logo
                 # console.log tmp_opt
                 @logo_select.append tmp_opt
+                # tmp_opt.selected = "selected"
         else
           tmp_opt = document.createElement 'option'
           tmp_opt.text = path.basename tmp_path
           tmp_opt.value = logo_path
+          tmp_opt.selected = "selected"
           @logo_select.append tmp_opt
+
+          @logo_image.attr("src", logo_path)
 
 
   # 添加资源文件
@@ -339,32 +343,33 @@ class ElementDetailPanel extends View
 
   add_source: (tmp_path)->
     console.log "add source"
-    tmp_path ?= @source_file.getText()
-    console.log tmp_path
-    fs.stat tmp_path, (err, stats) =>
-      if err
-        console.log err
+    # tmp_path ?= @source_file.getText()
+    # console.log tmp_path
+    if tmp_path ?= @source_file.getText()
+      fs.stat tmp_path, (err, stats) =>
+        if err
+          console.log err
 
-      if stats?.isFile()
-        unless @source_files[tmp_path]
-          tmp_view = new CbbSrcEleView(this, tmp_path)
-          @source_files[tmp_path] = tmp_view
-          @cbb_tree.append tmp_view
+        if stats?.isFile()
+          unless @source_files[tmp_path]
+            tmp_view = new CbbSrcEleView(this, tmp_path)
+            @source_files[tmp_path] = tmp_view
+            @cbb_tree.append tmp_view
 
-      else if stats?.isDirectory()
-        fs.readdir tmp_path, (err, files) =>
-          if err
-            console.log "no exist files"
-          else
-            src_files = files.filter((ele)-> !ele.match(/^\./ig))
-            for tmp_file in src_files
-              tmp_name = path.join tmp_path, tmp_file
-              unless @source_files[tmp_name]
-                tmp_state = fs.statSync tmp_name
-                if tmp_state?.isFile()
-                  tmp_view = new CbbSrcEleView(this, tmp_name)
-                  @source_files[tmp_name] = tmp_view
-                  @cbb_tree.append tmp_view
+        else if stats?.isDirectory()
+          fs.readdir tmp_path, (err, files) =>
+            if err
+              console.log "no exist files"
+            else
+              src_files = files.filter((ele)-> !ele.match(/^\./ig))
+              for tmp_file in src_files
+                tmp_name = path.join tmp_path, tmp_file
+                unless @source_files[tmp_name]
+                  tmp_state = fs.statSync tmp_name
+                  if tmp_state?.isFile()
+                    tmp_view = new CbbSrcEleView(this, tmp_name)
+                    @source_files[tmp_name] = tmp_view
+                    @cbb_tree.append tmp_view
 
   # remove  callback
   remove_td_callback: (name)->
@@ -390,31 +395,31 @@ class ElementDetailPanel extends View
 
   add_image_detail: ()->
     console.log "add image detail"
-    tmp_path = @detail_img_text.getText()
-    fs.stat tmp_path, (err, stats) =>
-      if err
-        console.log err
+    if tmp_path = @detail_img_text.getText()
+      fs.stat tmp_path, (err, stats) =>
+        if err
+          console.log err
 
-      if stats?.isFile()
-        unless @image_detail[tmp_path]
-          tmp_view = new CbbSrcEleView(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
-          @image_detail[tmp_path] = tmp_view
-          @image_detail_tree.append tmp_view
+        if stats?.isFile()
+          unless @image_detail[tmp_path]
+            tmp_view = new CbbSrcEleView(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
+            @image_detail[tmp_path] = tmp_view
+            @image_detail_tree.append tmp_view
 
-      else if stats?.isDirectory()
-        fs.readdir tmp_path, (err, files) =>
-          if err
-            console.log "no exist files"
-          else
-            src_files = files.filter((ele)-> !ele.match(/^\./ig))
-            for tmp_file in src_files
-              tmp_name = path.join tmp_path, tmp_file
-              unless @image_detail[tmp_name]
-                tmp_state = fs.statSync tmp_name
-                if tmp_state?.isFile()
-                  tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
-                  @image_detail[tmp_name] = tmp_view
-                  @image_detail_tree.append tmp_view
+        else if stats?.isDirectory()
+          fs.readdir tmp_path, (err, files) =>
+            if err
+              console.log "no exist files"
+            else
+              src_files = files.filter((ele)-> !ele.match(/^\./ig))
+              for tmp_file in src_files
+                tmp_name = path.join tmp_path, tmp_file
+                unless @image_detail[tmp_name]
+                  tmp_state = fs.statSync tmp_name
+                  if tmp_state?.isFile()
+                    tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
+                    @image_detail[tmp_name] = tmp_view
+                    @image_detail_tree.append tmp_view
 
   # 添加资源描述图片
   chose_detail: ->
@@ -527,12 +532,12 @@ class ElementDetailPanel extends View
 
     if (cbb_pack isnt old_pack) or (cbb_type isnt old_type) or (cbb_name isnt old_name)
       console.log "do_con"
-      cbb_obj = @new_template_obj(cbb_name)
+      cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
       @cbb_management.add_element(cbb_obj)
       @pack.delete_element_detail(old_type, @snippet_obj.name)
     else
-      cbb_obj = @new_template_obj(cbb_name)
+      cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
       @cbb_management.add_element(cbb_obj)
     emp.show_info("修改模板 完成~")

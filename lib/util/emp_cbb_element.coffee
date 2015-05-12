@@ -20,14 +20,14 @@ class EmpCbbEle
   lv:emp.EMP_JSON_ELE
 
   constructor: (@name, @desc, @logo, @type, tmp_pack, @detail_image, @src_list)->
-    console.log @name
-    console.log @desc
-    console.log @logo
-    console.log @type
-    console.log tmp_pack
-    console.log @detail_image
-    console.log @src_list
-    console.log "constructor a new emp cbb element"
+    # console.log @name
+    # console.log @desc
+    # console.log @logo
+    # console.log @type
+    # console.log tmp_pack
+    # console.log @detail_image
+    # console.log @src_list
+    # console.log "constructor a new emp cbb element"
     # if !tmp_pack
     #   @check_cbb_name()
     # else

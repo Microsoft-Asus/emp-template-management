@@ -4,14 +4,14 @@ path = require 'path'
 fs = require 'fs'
 crypto = require 'crypto'
 emp = require '../exports/emp'
-ComponmentElementView = require './componment-view-element'
+ComponmentElementView = require './tool_bar/componment-view-element'
 
 module.exports =
 class EmpDebugAdpPackageView extends View
   active_panel: null
 
   @content: ->
-    @div class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
+    @div oulet:'cbb_tool_view', class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
       @div class:'cbb-view-scroller', =>
         @div class: 'gen_panel', =>
           @ul class:'cbb-head-bar list-inline', tabindex: -1,=>
@@ -27,7 +27,7 @@ class EmpDebugAdpPackageView extends View
 
       # @div class:'cbb-view-scroller', =>
               @ol class: 'list-group cbb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
-      @div class:'cbb-view-resize-handle'
+      @div class:'cbb-view-resize-handle', mousedown: 'resizeStarted'
 
 
   initialize: ->
@@ -114,3 +114,23 @@ class EmpDebugAdpPackageView extends View
     @active_panel=@tab4
     @active_panel.addClass('active')
     @load_default_componment(emp.TOOL_FOURTH)
+
+
+  #日志界面高度计算处理
+  resizeStarted: ->
+    $(document).on('mousemove', @resizeTreeView)
+    $(document).on('mouseup', @resizeStopped)
+
+  resizeStopped: ->
+    $(document).off('mousemove', @resizeTreeView)
+    $(document).off('mouseup', @resizeStopped)
+
+  resizeTreeView: (e) =>
+    # console.log e
+    {pageX, which} = e
+    return @resizeStopped() unless which is 1
+    tmp_width = $(document.body).width()-pageX
+
+    return if tmp_width < 200
+    @width(tmp_width)
+    # @cbb_tool_view.css("max-width", tmp_width)

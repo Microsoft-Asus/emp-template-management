@@ -382,32 +382,32 @@ class InstalledTemplatePanel extends ScrollView
 
   add_source: (tmp_path)->
     console.log "add source"
-    tmp_path ?= @source_file.getText()
-    console.log tmp_path
-    fs.stat tmp_path, (err, stats) =>
-      if err
-        console.log err
+    if tmp_path ?= @source_file.getText()
+      console.log tmp_path
+      fs.stat tmp_path, (err, stats) =>
+        if err
+          console.log err
 
-      if stats?.isFile()
-        unless @source_files[tmp_path]
-          tmp_view = new CbbSrcEleView(this, tmp_path)
-          @source_files[tmp_path] = tmp_view
-          @cbb_tree.append tmp_view
+        if stats?.isFile()
+          unless @source_files[tmp_path]
+            tmp_view = new CbbSrcEleView(this, tmp_path)
+            @source_files[tmp_path] = tmp_view
+            @cbb_tree.append tmp_view
 
-      else if stats?.isDirectory()
-        fs.readdir tmp_path, (err, files) =>
-          if err
-            console.log "no exist files"
-          else
-            src_files = files.filter((ele)-> !ele.match(/^\./ig))
-            for tmp_file in src_files
-              tmp_name = path.join tmp_path, tmp_file
-              unless @source_files[tmp_name]
-                tmp_state = fs.statSync tmp_name
-                if tmp_state?.isFile()
-                  tmp_view = new CbbSrcEleView(this, tmp_name)
-                  @source_files[tmp_name] = tmp_view
-                  @cbb_tree.append tmp_view
+        else if stats?.isDirectory()
+          fs.readdir tmp_path, (err, files) =>
+            if err
+              console.log "no exist files"
+            else
+              src_files = files.filter((ele)-> !ele.match(/^\./ig))
+              for tmp_file in src_files
+                tmp_name = path.join tmp_path, tmp_file
+                unless @source_files[tmp_name]
+                  tmp_state = fs.statSync tmp_name
+                  if tmp_state?.isFile()
+                    tmp_view = new CbbSrcEleView(this, tmp_name)
+                    @source_files[tmp_name] = tmp_view
+                    @cbb_tree.append tmp_view
 
   # remove  callback
   remove_td_callback: (name)->
@@ -433,31 +433,31 @@ class InstalledTemplatePanel extends ScrollView
 
   add_image_detail: ()->
     console.log "add image detail"
-    tmp_path = @detail_img_text.getText()
-    fs.stat tmp_path, (err, stats) =>
-      if err
-        console.log err
+    if tmp_path = @detail_img_text.getText()
+      fs.stat tmp_path, (err, stats) =>
+        if err
+          console.log err
 
-      if stats?.isFile()
-        unless @image_detail[tmp_path]
-          tmp_view = new CbbSrcEleView(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
-          @image_detail[tmp_path] = tmp_view
-          @image_detail_tree.append tmp_view
+        if stats?.isFile()
+          unless @image_detail[tmp_path]
+            tmp_view = new CbbSrcEleView(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
+            @image_detail[tmp_path] = tmp_view
+            @image_detail_tree.append tmp_view
 
-      else if stats?.isDirectory()
-        fs.readdir tmp_path, (err, files) =>
-          if err
-            console.log "no exist files"
-          else
-            src_files = files.filter((ele)-> !ele.match(/^\./ig))
-            for tmp_file in src_files
-              tmp_name = path.join tmp_path, tmp_file
-              unless @image_detail[tmp_name]
-                tmp_state = fs.statSync tmp_name
-                if tmp_state?.isFile()
-                  tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
-                  @image_detail[tmp_name] = tmp_view
-                  @image_detail_tree.append tmp_view
+        else if stats?.isDirectory()
+          fs.readdir tmp_path, (err, files) =>
+            if err
+              console.log "no exist files"
+            else
+              src_files = files.filter((ele)-> !ele.match(/^\./ig))
+              for tmp_file in src_files
+                tmp_name = path.join tmp_path, tmp_file
+                unless @image_detail[tmp_name]
+                  tmp_state = fs.statSync tmp_name
+                  if tmp_state?.isFile()
+                    tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
+                    @image_detail[tmp_name] = tmp_view
+                    @image_detail_tree.append tmp_view
 
   # 添加资源描述图片
   chose_detail: ->
