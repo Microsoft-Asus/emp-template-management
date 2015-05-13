@@ -54,7 +54,7 @@ class EmpDebugAdpPackageView extends View
       # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
 
       for name, obj of ele_list
-        tempView = new ComponmentElementView(obj)
+        tempView = new ComponmentElementView(obj, this)
         @list.append tempView
     else
         tempView = $$ ->
@@ -134,3 +134,10 @@ class EmpDebugAdpPackageView extends View
     return if tmp_width < 200
     @width(tmp_width)
     # @cbb_tool_view.css("max-width", tmp_width)
+
+  # store_ele_detail: (@store_detail)=>
+
+  store_ele_detail: (new_detail_view)=>
+    unless !@store_detail
+      @store_detail.destroy()
+    @store_detail = new_detail_view

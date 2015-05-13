@@ -2,7 +2,7 @@ _ = require 'underscore-plus'
 {$, $$, $$$, View} = require 'atom-space-pen-views'
 coffee = require 'coffee-script'
 beautifyHtml = require('js-beautify').html
-Highlights = require 'highlights'
+# Highlights = require 'highlights'
 ExampleSelectListView = require './example-select-list-view'
 
 highlighter = null
@@ -52,17 +52,18 @@ _.extend View,
     if !code
       code = html
     # console.log code
-    highlighter ?= new Highlights(registry: atom.grammars)
-    highlightedHtml = highlighter.highlightSync
-      fileContents: code
-      scopeName: grammarScopeName
-
-    # console.log highlightedHtml
-    highlightedBlock = $(highlightedHtml)
-    # The `editor` class messes things up as `.editor` has absolutely positioned lines
-    highlightedBlock.removeClass('editor')
-    highlightedBlock.addClass(cssClass)
-    # console.log highlightedBlock
-    if fontFamily = atom.config.get('editor.fontFamily')
-      highlightedBlock.css('font-family', fontFamily)
-    @subview '__', highlightedBlock
+    code
+    # highlighter ?= new Highlights(registry: atom.grammars)
+    # highlightedHtml = highlighter.highlightSync
+    #   fileContents: code
+    #   scopeName: grammarScopeName
+    #
+    # # console.log highlightedHtml
+    # highlightedBlock = $(highlightedHtml)
+    # # The `editor` class messes things up as `.editor` has absolutely positioned lines
+    # highlightedBlock.removeClass('editor')
+    # highlightedBlock.addClass(cssClass)
+    # # console.log highlightedBlock
+    # if fontFamily = atom.config.get('editor.fontFamily')
+    #   highlightedBlock.css('font-family', fontFamily)
+    @subview '__', code

@@ -30,13 +30,13 @@ class ComponmentEleView extends View
 # click: 'do_click',
 
 
-  initialize: (@com) ->
+  initialize: (@com, @fa_view) ->
     @templates_path = atom.project.templates_path
     @ele_path = @com.element_path
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
-    @logo_img.on 'dblclick', -> console.log "db click ------------"
-    @temp_div.on 'click', -> console.log "click -----"
-    @temp_div.on 'dbclick', -> console.log "div db click -----"
+    # @logo_img.on 'dblclick', -> console.log "db click ------------"
+    # @temp_div.on 'click', -> console.log "click -----"
+    # @temp_div.on 'dbclick', -> console.log "div db click -----"
 
     # It might be useful to either wrap @pack in a class that has a ::validate
     # method, or add a method here. At the moment I think all cases of malformed
@@ -201,6 +201,7 @@ class ComponmentEleView extends View
       return null
 
   do_click_panel: ->
-    console.log @com
+    # console.log @com
     @detail_view = new CbbDetailView(@com)
     @detail_view.show()
+    @fa_view.store_ele_detail(@detail_view)
