@@ -30,8 +30,7 @@
     "fs-plus": "*",
     "moxie-zip": "*",
     "adm-zip": "*",
-    "css": "*",
-    "cheerio": "*",
+
     "js-beautify": "^1.4.0",
     "coffee-script": "~1.8.0"
 

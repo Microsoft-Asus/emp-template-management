@@ -6,8 +6,8 @@ CbbDetailView = require './componment-detail-view'
 # cheer = require 'cheerio'
 # clean_css = require 'clean-css'
 # {Subscriber} = require 'emissary'
-css = require 'css'
-cheerio = require 'cheerio'
+# css = require 'css'
+# cheerio = require 'cheerio'
 
 
 module.exports =
@@ -58,118 +58,118 @@ class ComponmentEleView extends View
   detached: ->
     # @unsubscribe()
 
-  do_click: ->
-    console.log @com
-    editor = atom.workspace.getActiveEditor()
-    if editor
-      if !@html_snippet
-        ele_json_data = fs.readFileSync @ele_json, 'utf-8'
-        @snippet_obj = JSON.parse ele_json_data
-
-        html_obj = @snippet_obj.html
-        css_obj = @snippet_obj.css
-
-        @html_snippet = @set_con(html_obj) unless @html_snippet
-        @css_snippet = @set_con(css_obj) unless @css_snippet
-      console.log @snippets
-
-      # console.log body_parser.parse file_con
-      # snippetBody = '<${1:div}> asd $2 asd \n</${1:div}>$0'
-      # tmpr = require atom.packages.activePackages.snippets.mainModulePath
-      try
-        if @css_snippet
-          # console.log "has css"
-          edit_text = editor.getText()
-
-          html_obj = cheerio.load edit_text
-          re_css = html_obj('style').text()
-          # console.log re_css
-
-          # re_style = $(edit_text).find 'style'
-          # console.log $(edit_text).find 'style'
-          # if re_style.length >0
-          #   console.log
-          #   re_css = re_style.get(0).innerHTML
-          #   console.log re_css
-          if re_css
-            snippet_ast = css.parse @css_snippet
-            snippet_rule_list = snippet_ast.stylesheet.rules
-            snippet_arr = []
-            for tmp_rule in snippet_rule_list
-              # console.log
-              snippet_arr.push tmp_rule.selectors.toString()
-
-
-            re_ast = css.parse re_css
-            console.log re_ast
-            # console.log re_ast.stylesheet
-
-            rule_list = re_ast.stylesheet.rules
-            tmp_arr = []
-            for tmp_rule in rule_list
-              # console.log
-              tmp_arr.push tmp_rule.selectors.toString()
-            # console.log tmp_arr
-
-            add_ast = {"type": "stylesheet", "sty  ele_json:null
-              lv:emp.EMP_JSON_ELElesheet": {"rules": []}}
-            add_arr = []
-            for tmp_rule in snippet_rule_list
-              # console.log tmp_rule
-              if !(tmp_arr.indexOf(tmp_rule.selectors.toString())+1)
-                # re_ast.stylesheet.rules.push tmp_rule
-                add_arr.push tmp_rule
-
-            if add_arr.length >0
-              add_ast = {"type": "stylesheet", "stylesheet": {"rules": add_arr}}
-
-              # console.log re_ast
-              # console.log re_ast.stylesheet
-              # console.log tmp_arr
-              result = css.stringify(add_ast, { sourcemap: true })
-              # console.log re_ast
-              # console.log result.code
-              # console.log line_count = editor.getLineCount()
-              comment_flag = false
-              for i in [0..line_count-1]
-                line_con = editor.lineTextForBufferRow(i)
-                console.log line_con
-                console.log "--------#{i}"
-                if match_re = line_con.match('<style>|<!-.*-->|<!--|-->')
-                  if !comment_flag
-                    if match_re[0] is "<style>"
-                      # console.log "---------------------"
-                      tmp_range = new Range([i+1, 0], [i+1, 0])
-                      editor.setTextInBufferRange(tmp_range, "\n    "+result.code+"\n")
-                      break
-                    else if match_re[0] is '<!--'
-                      comment_flag = true
-                      # console.log "------------comment---------"
-                      continue
-                    else if match_re[0] is '-->'
-                      comment_flag = false
-
-                  else if match_re[0] is '-->'
-                    comment_flag = false
-
-
-          # console.log editor.lineTextForBufferRow(0)
-
-          # if result.code isnt re_css
-          #   html_obj('style').text("\n"+result.code+"\n")
-          #   # console.log html_obj.html()
-          #   editor.setText(html_obj.html())
-
-
-      catch err
-        console.error "insert snippets error "
-        console.error err
-
-        # console.log editor.getText()
-        # console.log $.parseHTML edit_text
-
-      atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet
-        # console.log escape edit_text
+  # do_click: ->
+  #   console.log @com
+  #   editor = atom.workspace.getActiveEditor()
+  #   if editor
+  #     if !@html_snippet
+  #       ele_json_data = fs.readFileSync @ele_json, 'utf-8'
+  #       @snippet_obj = JSON.parse ele_json_data
+  #
+  #       html_obj = @snippet_obj.html
+  #       css_obj = @snippet_obj.css
+  #
+  #       @html_snippet = @set_con(html_obj) unless @html_snippet
+  #       @css_snippet = @set_con(css_obj) unless @css_snippet
+  #     console.log @snippets
+  #
+  #     # console.log body_parser.parse file_con
+  #     # snippetBody = '<${1:div}> asd $2 asd \n</${1:div}>$0'
+  #     # tmpr = require atom.packages.activePackages.snippets.mainModulePath
+  #     try
+  #       if @css_snippet
+  #         # console.log "has css"
+  #         edit_text = editor.getText()
+  #
+  #         html_obj = cheerio.load edit_text
+  #         re_css = html_obj('style').text()
+  #         # console.log re_css
+  #
+  #         # re_style = $(edit_text).find 'style'
+  #         # console.log $(edit_text).find 'style'
+  #         # if re_style.length >0
+  #         #   console.log
+  #         #   re_css = re_style.get(0).innerHTML
+  #         #   console.log re_css
+  #         if re_css
+  #           snippet_ast = css.parse @css_snippet
+  #           snippet_rule_list = snippet_ast.stylesheet.rules
+  #           snippet_arr = []
+  #           for tmp_rule in snippet_rule_list
+  #             # console.log
+  #             snippet_arr.push tmp_rule.selectors.toString()
+  #
+  #
+  #           re_ast = css.parse re_css
+  #           console.log re_ast
+  #           # console.log re_ast.stylesheet
+  #
+  #           rule_list = re_ast.stylesheet.rules
+  #           tmp_arr = []
+  #           for tmp_rule in rule_list
+  #             # console.log
+  #             tmp_arr.push tmp_rule.selectors.toString()
+  #           # console.log tmp_arr
+  #
+  #           add_ast = {"type": "stylesheet", "sty  ele_json:null
+  #             lv:emp.EMP_JSON_ELElesheet": {"rules": []}}
+  #           add_arr = []
+  #           for tmp_rule in snippet_rule_list
+  #             # console.log tmp_rule
+  #             if !(tmp_arr.indexOf(tmp_rule.selectors.toString())+1)
+  #               # re_ast.stylesheet.rules.push tmp_rule
+  #               add_arr.push tmp_rule
+  #
+  #           if add_arr.length >0
+  #             add_ast = {"type": "stylesheet", "stylesheet": {"rules": add_arr}}
+  #
+  #             # console.log re_ast
+  #             # console.log re_ast.stylesheet
+  #             # console.log tmp_arr
+  #             result = css.stringify(add_ast, { sourcemap: true })
+  #             # console.log re_ast
+  #             # console.log result.code
+  #             # console.log line_count = editor.getLineCount()
+  #             comment_flag = false
+  #             for i in [0..line_count-1]
+  #               line_con = editor.lineTextForBufferRow(i)
+  #               console.log line_con
+  #               console.log "--------#{i}"
+  #               if match_re = line_con.match('<style>|<!-.*-->|<!--|-->')
+  #                 if !comment_flag
+  #                   if match_re[0] is "<style>"
+  #                     # console.log "---------------------"
+  #                     tmp_range = new Range([i+1, 0], [i+1, 0])
+  #                     editor.setTextInBufferRange(tmp_range, "\n    "+result.code+"\n")
+  #                     break
+  #                   else if match_re[0] is '<!--'
+  #                     comment_flag = true
+  #                     # console.log "------------comment---------"
+  #                     continue
+  #                   else if match_re[0] is '-->'
+  #                     comment_flag = false
+  #
+  #                 else if match_re[0] is '-->'
+  #                   comment_flag = false
+  #
+  #
+  #         # console.log editor.lineTextForBufferRow(0)
+  #
+  #         # if result.code isnt re_css
+  #         #   html_obj('style').text("\n"+result.code+"\n")
+  #         #   # console.log html_obj.html()
+  #         #   editor.setText(html_obj.html())
+  #
+  #
+  #     catch err
+  #       console.error "insert snippets error "
+  #       console.error err
+  #
+  #       # console.log editor.getText()
+  #       # console.log $.parseHTML edit_text
+  #
+  #     atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet
+  #       # console.log escape edit_text
 
     # if editor
     #   editor.insertText file_con, select:true,autoIndentNewline:true

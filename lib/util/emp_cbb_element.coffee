@@ -47,7 +47,7 @@ class EmpCbbEle
   get_json: ->
     if !@ele_json
       @ele_json = {name:@name, version:@ver, desc: @desc,
-      type: @type, logo:@logo, html:@html, css:@css, lua:@css,
+      type: @type, logo:@logo, html:@html, css:@css, lua:@lua,
       available:@available, own_package: @own_package,
       source:@src_list_rel,detail:@img_list_rel,
       element_path:@element_path_rel, level:@lv}
