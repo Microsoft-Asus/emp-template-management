@@ -30,7 +30,7 @@ class PackageDetailPanel extends View
 
   refresh_detail:(@pack) ->
     console.log "do refresh"
-    console.log @pack
+    # console.log @pack
     @title.text("#{_.undasherize(_.uncamelcase(@pack.name))}")
     @loadTemplates()
 
@@ -38,9 +38,9 @@ class PackageDetailPanel extends View
     # console.log "loadTemplates1"
     @section_container.empty()
     packages = @cbb_management.get_pacakges()
-    console.log @pack
+    # console.log @pack
     type_list = @pack.type_list
-    console.log type_list
+    # console.log type_list
     for tmp_type in @pack.type_list
       tmp_type_panel = new AvailableTypePanel(tmp_type, @pack)
       @section_container.append tmp_type_panel

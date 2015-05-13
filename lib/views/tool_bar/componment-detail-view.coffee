@@ -5,73 +5,76 @@ remote = require 'remote'
 dialog = remote.require 'dialog'
 
 emp = require '../../exports/emp'
-CbbEle = require '../../util/emp_cbb_element'
+SniEle = require './snippet-ele-view'
 css = require 'css'
 cheerio = require 'cheerio'
 # templates_store_path = null
 
 module.exports =
 class CbbDetailView extends View
+  insert_src_view: {}
 
   @content: (@ele_obj)->
     temp_path = atom.project.templates_path
 
     @div outlet:'cbb_detail_div', class:'cbb-detail-view  overlay from-top', =>
-      @div class:'panel', =>
+      @div class:'cbb_detail_panel panel', =>
         @h1 "Insert Cbb Templates", class: 'panel-heading'
 
-      @div class:'div_box_r', =>
-        @label class:'lab text-highlight',"模板名称:#{@ele_obj.name}"
+      @div class: 'cbb_detail_info', =>
 
-      @div class:'div_box_bor', =>
-        @label class:'text-highlight', "模板描述:"
-        @label class:'', "#{@ele_obj.desc}"
+        @div class:'div_box_r', =>
+          @label class:'lab text-highlight',"模板名称:#{@ele_obj.name}"
 
-
-      @div class: 'div_box_check',  =>
-        @div class: 'checkbox_ucolumn', =>
-          @input outlet:'insert_html', type: 'checkbox', checked:'true'
-          @text "Insert Html"
-        @div class:'control-ol', =>
-          @table class:'control-tab',outlet:'html_tree'
+        @div class:'div_box_bor', =>
+          @label class:'text-highlight', "模板描述:"
+          @label class:'', "#{@ele_obj.desc}"
 
 
-        @div outlet:'snippet_html', =>
-          @button "Show Html Snippet Detail", class:"btn", click:"show_html_detail"
-
-      @div class: 'div_box_check',  =>
-        @div class: 'checkbox_ucolumn', =>
-          @input outlet:'insert_css', type: 'checkbox', checked:'true'
-          @text "Insert Css"
-        @div class:'control-ol', =>
-          @table class:'control-tab',outlet:'css_tree'
-
-        @div outlet:'snippet_html', =>
-          @button "Show Css Snippet Detail", class:"btn", click:"show_css_detail"
-
-      @div class: 'div_box_check',  =>
-        @div class: 'checkbox_ucolumn', =>
-          @input outlet:'insert_source', type: 'checkbox', checked:'true'
-          @text "Insert Src"
-        @div class:'control-ol', =>
-          @table class:'control-tab',outlet:'src_tree'
+        @div class: 'div_box_check',  =>
+          @div class: 'checkbox_ucolumn', =>
+            @input outlet:'insert_html', type: 'checkbox', checked:'true'
+            @text "Insert Html"
+          @div class:'control-ol', =>
+            @table class:'control-tab',outlet:'html_tree'
 
 
-        @div outlet:'snippet_html', =>
-          @button "Show Source Snippet Detail", class:"btn", click:"show_source_detail"
+          @div outlet:'snippet_html', =>
+            @button "Show Html Snippet Detail", class:"btn", click:"show_html_detail"
+
+        @div class: 'div_box_check',  =>
+          @div class: 'checkbox_ucolumn', =>
+            @input outlet:'insert_css', type: 'checkbox', checked:'true'
+            @text "Insert Css"
+          @div class:'control-ol', =>
+            @table class:'control-tab',outlet:'css_tree'
+
+          @div outlet:'snippet_html', =>
+            @button "Show Css Snippet Detail", class:"btn", click:"show_css_detail"
+
+        @div class: 'div_box_check',  =>
+          @div class: 'checkbox_ucolumn', =>
+            @input outlet:'insert_source', type: 'checkbox', checked:'true'
+            @text "Insert Src"
+          @div class:'control-ol', =>
+            @table class:'control-tab',outlet:'src_tree'
+
+          # @div outlet:'snippet_html', =>
+          #   @button "Show Source Snippet Detail", class:"btn", click:"show_source_detail"
 
 
-      @div class:'div_logo', =>
-        @div class:'div_box', =>
-          @label class:'lab',"模板示例:"
-          # @span "", class: "input-group-btn", =>
-      for tmp_detail_img in @ele_obj.detail
-        tmp_img_path = path.join temp_path, tmp_detail_img
-        @img outlet: 'logo_img', class: 'avatar_detail', src: "#{tmp_img_path}"
+        @div class:'div_logo', =>
+          @div class:'div_box', =>
+            @label class:'lab',"模板示例:"
+            # @span "", class: "input-group-btn", =>
+        for tmp_detail_img in @ele_obj.detail
+          tmp_img_path = path.join temp_path, tmp_detail_img
+          @img outlet: 'logo_img', class: 'avatar_detail', src: "#{tmp_img_path}"
 
       @div class:'div_box_bor'
-      @button "Done", class: "createSnippetButton btn btn-primary", click:'do_input'
-      @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
+      @div class:'cbb_detail_foot', =>
+        @button "Done", class: "createSnippetButton btn btn-primary", click:'do_input'
+        @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
 
   initialize: (@com) ->
     # @handle_event()
@@ -80,6 +83,26 @@ class CbbDetailView extends View
     @templates_path = atom.project.templates_path
     @ele_path = @com.element_path
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
+
+    ele_json_data = fs.readFileSync @ele_json, 'utf-8'
+    @snippet_obj = JSON.parse ele_json_data
+
+    html_obj = @snippet_obj.html
+    css_obj = @snippet_obj.css
+
+    @html_snippet = @set_con(html_obj)
+    @css_snippet = @set_con(css_obj)
+
+    console.log @snippet_obj
+
+    # SniEle
+    src_arr = @snippet_obj.source
+    for tmp_src in src_arr
+      tmp_view = new SniEle(this, tmp_src)
+      tmp_name = path.basename tmp_view
+
+      @insert_src_view[tmp_name]= tmp_view
+      @src_tree.append tmp_view
 
     @on 'keydown', (e) =>
       console.log "key down"
@@ -99,6 +122,17 @@ class CbbDetailView extends View
     # @snippet_css.hide()
     # @snippet.show()
     # console.log @packs
+
+    # @insert_source.on 'click', =>
+    #   console.log "------lll------"
+    #   if !@insert_source.prop('checked')
+    #     # @src_tree.disable()
+    #     # @src_tree.attr('disabled', 'disabled')
+    #     for tmp_name, tmp_obj of @insert_src_view
+    #       tmp_obj.disable()
+    #
+    #   else
+    #     @src_tree.enable()
 
   new_option: (name)->
     $$ ->
@@ -241,7 +275,6 @@ class CbbDetailView extends View
 
   refresh_panl: ->
     @initial_select()
-
     @cbb_name.setText ""
     @cbb_desc.setText ""
     @cbb_logo.setText ""
@@ -269,21 +302,17 @@ class CbbDetailView extends View
     editor = atom.workspace.getActiveEditor()
 
     if editor
-
-      if !@html_snippet
-        ele_json_data = fs.readFileSync @ele_json, 'utf-8'
-        @snippet_obj = JSON.parse ele_json_data
-
-        html_obj = @snippet_obj.html
-        css_obj = @snippet_obj.css
-
-        @html_snippet = @set_con(html_obj) unless @html_snippet
-        @css_snippet = @set_con(css_obj) unless @css_snippet
-      console.log @snippets
-
-      # console.log body_parser.parse file_con
-      # snippetBody = '<${1:div}> asd $2 asd \n</${1:div}>$0'
-      # tmpr = require atom.packages.activePackages.snippets.mainModulePath
+      #
+      # if !@html_snippet
+      #   ele_json_data = fs.readFileSync @ele_json, 'utf-8'
+      #   @snippet_obj = JSON.parse ele_json_data
+      #
+      #   html_obj = @snippet_obj.html
+      #   css_obj = @snippet_obj.css
+      #
+      #   @html_snippet = @set_con(html_obj) unless @html_snippet
+      #   @css_snippet = @set_con(css_obj) unless @css_snippet
+      # console.log @snippets
       try
         unless !@insert_css.prop('checked')
           if @css_snippet

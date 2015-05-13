@@ -21,56 +21,58 @@ class QuickAddCbbView extends View
 
   @content: ->
     @div class:'quick-add overlay from-top', =>
-      @div class:'panel', =>
+      @div class:'quick_add_panel panel', =>
         @h1 "快速创建公共模板", class: 'panel-heading'
-      @div  class:'div_snippet', =>
-        @ul class:'list-tree has-collapsable-children', click:'collapsable_text', =>
-          @li outlet:'root_li', class:'list-nested-item', =>
-            @div class:'list-item', =>
-              @label outlet:'snippet_label', label_show
-        @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "模板内容"
-      @div  class:'div_snippet', =>
-        @ul class:'list-tree has-collapsable-children', click:'collapsable_css', =>
-          @li outlet:'root_li_css', class:'list-nested-item', =>
-            @div class:'list-item', =>
-              @label outlet:'css_label', css_label_show
-        @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet_css", placeholder: "模板样式内容"
-      @div class:'div_box_r', =>
-        @label class:'lab',"模板名称:"
-        @subview "cbb_name", new TextEditorView(mini:true, placeholderText: 'Snippet name')
+      @div class: 'quick_add_info', =>
+        @div  class:'div_snippet', =>
+          @ul class:'list-tree has-collapsable-children', click:'collapsable_text', =>
+            @li outlet:'root_li', class:'list-nested-item', =>
+              @div class:'list-item', =>
+                @label outlet:'snippet_label', label_show
+          @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet", placeholder: "模板内容"
+        @div  class:'div_snippet', =>
+          @ul class:'list-tree has-collapsable-children', click:'collapsable_css', =>
+            @li outlet:'root_li_css', class:'list-nested-item', =>
+              @div class:'list-item', =>
+                @label outlet:'css_label', css_label_show
+          @textarea "", class: "snippet native-key-bindings editor-colors", rows: 8, outlet: "snippet_css", placeholder: "模板样式内容"
+        @div class:'div_box_r', =>
+          @label class:'lab',"模板名称:"
+          @subview "cbb_name", new TextEditorView(mini:true, placeholderText: 'Snippet name')
 
-      @div class:'div_box_r', =>
-        @label class:'lab', "模板描述:"
-        @subview "cbb_desc", new TextEditorView(mini:true, placeholderText: 'Snippet desc')
+        @div class:'div_box_r', =>
+          @label class:'lab', "模板描述:"
+          @subview "cbb_desc", new TextEditorView(mini:true, placeholderText: 'Snippet desc')
 
-      @div class:'div_box', =>
-        @label class:'lab', "模板包:"
-        @select outlet:"pack_select", id: "type", class: 'form-control snippet_select'
-      @div class:'div_box', =>
-        @label class:'lab', "模板类型:"
-        @select outlet:"type_select", id: "type", class: 'form-control snippet_select'
-      @div class:'div_logo', =>
         @div class:'div_box', =>
-          @label class:'lab',"模板图标:"
-          # @span "", class: "input-group-btn", =>
-          @button "Add", class:"btn", click:"select_logo"
-        @subview "cbb_logo", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
-        @img outlet: 'logo_img', class: 'avatar', src: "", style:"display:none;", click:'image_format'
-      @div class:'div_logo', =>
+          @label class:'lab', "模板包:"
+          @select outlet:"pack_select", id: "type", class: 'form-control snippet_select'
         @div class:'div_box', =>
-          @label class:'lab',"模板详情图片:"
-          # @span "", class: "input-group-btn", =>
-          @button "Add", class:"btn", click:"select_detail"
-        @subview "cbb_img_detail", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
-        @img outlet: 'img_detail', class: 'avatar', src: "", style:"display:none;", click:'image_format2'
+          @label class:'lab', "模板类型:"
+          @select outlet:"type_select", id: "type", class: 'form-control snippet_select'
+        @div class:'div_logo', =>
+          @div class:'div_box', =>
+            @label class:'lab',"模板图标:"
+            # @span "", class: "input-group-btn", =>
+            @button "Add", class:"btn", click:"select_logo"
+          @subview "cbb_logo", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
+          @img outlet: 'logo_img', class: 'avatar', src: "", style:"display:none;", click:'image_format'
+        @div class:'div_logo', =>
+          @div class:'div_box', =>
+            @label class:'lab',"模板详情图片:"
+            # @span "", class: "input-group-btn", =>
+            @button "Add", class:"btn", click:"select_detail"
+          @subview "cbb_img_detail", new TextEditorView(mini:true, placeholderText: 'Snippet Logo')
+          @img outlet: 'img_detail', class: 'avatar', src: "", style:"display:none;", click:'image_format2'
       #
       # @div "", class: "input-group snippetScopeGroup", =>
       #   @subview "cbb_logo", new TextEditorView(mini:true, placeholderText: 'Snippet scope selector (ex: `.source.js`)')
       #   @span "", class: "input-group-btn", =>
       #     @button "?", class:"btn", outlet:"sourceHelp"
-      @button "Done", class: "createSnippetButton btn btn-primary", click:'create_snippet'
-      @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
-      @button "Refresh", class: "createSnippetButton btn btn-primary", click:'refresh_panl'
+      @div class:'quick_add_foot', =>
+        @button "Done", class: "createSnippetButton btn btn-primary", click:'create_snippet'
+        @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
+        @button "Refresh", class: "createSnippetButton btn btn-primary", click:'refresh_panl'
 
   initialize: (@emp_temp_management) ->
     @handle_event()

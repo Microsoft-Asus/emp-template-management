@@ -10,10 +10,12 @@ class CbbSnippetElementPanel extends View
   @content: (@fa_view, name)->
     @tr =>
       @td =>
+        @input outlet:'insert_src', type: 'checkbox', checked:'true'
+      @td =>
         @span outlet: 'ele_name', class: 'text-info icon icon-diff-added', name
-      @td class:'btn-td', align:"right", =>
-        # @button class:'btn btn-info',click:'do_edit',"Edit"
-        @button class:'btn btn-error',click:'do_remove',"Remove"
+      # @td class:'btn-td', align:"right", =>
+      #   # @button class:'btn btn-info',click:'do_edit',"Edit"
+      #   @button class:'btn btn-error',click:'do_remove',"Remove"
 
   initialize: (@fa_view, @name, @type)->
 
@@ -29,3 +31,12 @@ class CbbSnippetElementPanel extends View
   # Tear down any state and detach
   destroy: ->
     @detach()
+
+  disable: ->
+    @insert_src.disable()
+
+  enable: ->
+    @insert_src.enable()
+
+  get_check: ->
+    @insert_src.prop('checked')

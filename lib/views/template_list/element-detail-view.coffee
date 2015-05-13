@@ -177,7 +177,7 @@ class ElementDetailPanel extends View
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
     ele_json_data = fs.readFileSync @ele_json, 'utf-8'
     @snippet_obj = JSON.parse ele_json_data
-    console.log @snippet_obj
+    # console.log @snippet_obj
 
     @template_name.setText(@element.name)
     @template_desc.setText(@element.desc)
@@ -294,7 +294,7 @@ class ElementDetailPanel extends View
     # @unsubscribe()
 
   beforeShow: (@opts) ->
-    console.log @opts
+    # console.log @opts
     if @opts?.back
       @breadcrumb.text(@pack.name).on 'click', () =>
         @parents('.emp-template-management').view()?.showPanel(@opts.back, {back: emp.EMP_TEMPLATE}, @pack)
@@ -499,7 +499,7 @@ class ElementDetailPanel extends View
     tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
     gramers = @getGrammars()
 
-    tmp_editor.setText(content) unless !content
+    tmp_editor.setText(content) #unless !content
     tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
     return tmp_editor
 

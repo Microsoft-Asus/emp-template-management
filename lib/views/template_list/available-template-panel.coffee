@@ -11,7 +11,7 @@ class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)
 
   @content: (element) ->
-    console.log element
+    # console.log element
     logo = element.logo
     temp_path = atom.project.templates_path
     if !logo
@@ -70,7 +70,7 @@ class AvailableTemplatePanel extends View
 
   image_format: ->
     console.log 'image_format'
-    console.log @logo_img.css('height')
+    # console.log @logo_img.css('height')
     if @logo_img.css('height') is emp.LOGO_IMAGE_SIZE
       # @logo_img.css('height', logo_image_big_size)
       # @logo_img.css('width', logo_image_big_size)

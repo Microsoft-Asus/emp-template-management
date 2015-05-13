@@ -78,10 +78,8 @@ class CbbPackImportView extends View
     # 模板路径
     templates_store_path =atom.project.templates_path
 
-
     console.log @cbb_tools
     @do_initial()
-
 
   do_initial: ()->
     @cbb_management = atom.project.cbb_management
