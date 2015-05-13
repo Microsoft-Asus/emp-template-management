@@ -112,6 +112,17 @@ class InstalledTemplatePanel extends ScrollView
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
 
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板脚本"
+                  @div class: 'setting-description', "模板插入的脚本"
+                # @div class: 'editor-container', =>
+                @subview "template_lua", new TextEditorView(mini: true,attributes: {id: 'template_lua', type: 'string'},  placeholderText: ' Template Lua Script')
+                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+                @button class: 'control-btn btn btn-info', click:'select_lua',' Chose File '
+
           # 包图标
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -225,7 +236,7 @@ class InstalledTemplatePanel extends ScrollView
 
   select_path: (e, element)->
     tmp_path = @template_path.getText()
-    view_set = {path:@template_path,name:@template_name,logo:@logo_select,html:@template_html,css:@template_css}
+    view_set = {path:@template_path,name:@template_name,logo:@logo_select,html:@template_html,css:@template_css, lua:@template_lua}
     @prompt_for_path(view_set, tmp_path)
 
   prompt_for_path: (view_set, def_path) ->
@@ -267,6 +278,15 @@ class InstalledTemplatePanel extends ScrollView
             if css_files?.length
               view_set.css.setText(path.join css_path, css_files[0])
 
+        lua_path = path.join new_path, emp.EMP_LUA_DIR
+        fs.readdir lua_path, (err, files) =>
+          if err
+            console.log "no exist lua file"
+          else
+            lua_files = files.filter((ele)-> !ele.match(/^\./ig))
+            if lua_files?.length
+              view_set.lua.setText(path.join lua_path, lua_files[0])
+
         logo_path =  path.join new_path,emp.EMP_LOGO_DIR
         fs.readdir logo_path, (err, files) =>
           if err
@@ -283,6 +303,8 @@ class InstalledTemplatePanel extends ScrollView
             # console.log log_view
 
         src_path =  path.join new_path,emp.EMP_IMG_DIR
+        @cbb_tree.empty()
+        @source_files = {}
         @add_source(src_path)
 
   # callback function for button
@@ -296,6 +318,10 @@ class InstalledTemplatePanel extends ScrollView
     # console.log element
     tmp_con = @template_css.getText()
     @prompt_for_file(@template_css, tmp_con)
+
+  select_lua: (e, element) ->
+    tmp_con = @template_lua.getText()
+    @prompt_for_file(@template_lua, tmp_con)
 
   # btn callback for logo
   select_logo: (e, element)->
@@ -359,6 +385,7 @@ class InstalledTemplatePanel extends ScrollView
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_html = @template_html.getText()?.trim()
     cbb_css = @template_css.getText()?.trim()
+    cbb_lua = @template_lua.getText()?.trim()
     cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
     # cbb_detail_img = @detail_image.attr("src")
@@ -374,6 +401,7 @@ class InstalledTemplatePanel extends ScrollView
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
     cbb_obj.set_file cbb_html, emp.EMP_QHTML
     cbb_obj.set_file cbb_css, emp.EMP_QCSS
+    cbb_obj.set_file cbb_lua, emp.EMP_QLUA
     cbb_obj
 
   # 添加资源文件
@@ -399,7 +427,9 @@ class InstalledTemplatePanel extends ScrollView
             if err
               console.log "no exist files"
             else
+              console.log files
               src_files = files.filter((ele)-> !ele.match(/^\./ig))
+              console.log src_files
               for tmp_file in src_files
                 tmp_name = path.join tmp_path, tmp_file
                 unless @source_files[tmp_name]
