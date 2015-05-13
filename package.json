@@ -1,7 +1,7 @@
 {
   "name": "emp-template-management",
   "main": "./lib/main",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Emp 模板管理工具",
   "maintainers": [
     {
@@ -34,6 +34,5 @@
     "cheerio": "*",
     "js-beautify": "^1.4.0",
     "coffee-script": "~1.8.0"
-
   }
 }
