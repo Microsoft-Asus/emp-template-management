@@ -44,7 +44,7 @@ class CbbDetailView extends View
           @div outlet:'snippet_html', =>
             @button "Show Html Snippet Detail", class:"btn", click:"show_html_detail"
 
-        @div class: 'div_box_check',  =>
+        @div outlet:'css_div',class: 'div_box_check',  =>
           @div class: 'checkbox_ucolumn', =>
             @input outlet:'insert_css', type: 'checkbox', checked:'true'
             @text "Insert Css"
@@ -56,7 +56,7 @@ class CbbDetailView extends View
             @button "Chose Css Insert Path", class:"btn", click:"chose_css_path"
           #   @button "Show Css Snippet Detail", class:"btn", click:"show_css_detail"
 
-        @div class: 'div_box_check',  =>
+        @div outlet:'lua_div',class: 'div_box_check',  =>
           @div class: 'checkbox_ucolumn', =>
             @input outlet:'insert_lua', type: 'checkbox', checked:'true'
             @text "Insert Lua"
@@ -67,7 +67,7 @@ class CbbDetailView extends View
             @subview "insert_lua_path", new TextEditorView(mini: true,attributes: {id: 'insert_lua_path', type: 'string'},  placeholderText: ' Insert Lua Path')
             @button "Chose Lua Insert Path", class:"btn", click:"chose_lua_path"
 
-        @div class: 'div_box_check',  =>
+        @div outlet:'src_div',class: 'div_box_check',  =>
           @div class: 'checkbox_ucolumn', =>
             @input outlet:'insert_source', type: 'checkbox', checked:'true'
             @text "Insert Src"
@@ -110,35 +110,54 @@ class CbbDetailView extends View
 
 
     @html_snippet = @set_con(@html_obj)
-    @css_snippet = @set_con(@css_obj)
-    @lua_snippet = @set_con(@lua_obj)
+
+
 
     console.log @snippet_obj
 
-    if @css_obj.type isnt emp.EMP_CON_TYPE
+    @css_insert_flag = true
+    if !@css_obj
+      @css_div.hide()
+      @css_insert_flag=false
+    else
+      @css_snippet = @set_con(@css_obj)
+      if @css_obj.type isnt emp.EMP_CON_TYPE
       # @css_obj.body
       # for tmp_src in src_arr
-      tmp_view = new SniEle(this, @css_obj.body)
-      tmp_name = path.basename tmp_view
+        tmp_view = new SniEle(this, @css_obj.body)
+        tmp_name = path.basename tmp_view
 
-      @insert_css_view[tmp_name]= tmp_view
-      @css_tree.append tmp_view
+        @insert_css_view[tmp_name]= tmp_view
+        @css_tree.append tmp_view
 
-    if @lua_obj.type isnt emp.EMP_CON_TYPE
-      tmp_view = new SniEle(this, @lua_obj.body)
-      tmp_name = path.basename tmp_view
+    @lua_insert_flag = true
+    if !@lua_obj
+      @lua_div.hide()
+      @lua_insert_flag = false
+    else
 
-      @insert_lua_view[tmp_name]= tmp_view
-      @lua_tree.append tmp_view
+      @lua_snippet = @set_con(@lua_obj)
+      if @lua_obj.type isnt emp.EMP_CON_TYPE
+        tmp_view = new SniEle(this, @lua_obj.body)
+        tmp_name = path.basename tmp_view
+
+        @insert_lua_view[tmp_name]= tmp_view
+        @lua_tree.append tmp_view
 
     # SniEle
-    src_arr = @snippet_obj.source
-    for tmp_src in src_arr
-      tmp_view = new SniEle(this, tmp_src)
-      tmp_name = path.basename tmp_view
+    @src_obj = @snippet_obj.source
+    @src_insert_flag = true
 
-      @insert_src_view[tmp_name]= tmp_view
-      @src_tree.append tmp_view
+    if !@src_obj
+      @src_div.hide()
+      @src_insert_flag = false
+    else
+      for tmp_src in @src_obj
+        tmp_view = new SniEle(this, tmp_src)
+        tmp_name = path.basename tmp_view
+
+        @insert_src_view[tmp_name]= tmp_view
+        @src_tree.append tmp_view
 
     @on 'keydown', (e) =>
       console.log "key down"
@@ -150,49 +169,28 @@ class CbbDetailView extends View
 
     editor = atom.workspace.getActiveEditor()
     if editor
-      html_path = editor.getPath()
-      root_path = path.dirname path.dirname html_path
-      css_path = path.join root_path, emp.EMP_CSS_DIR
-      fs.stat css_path, (err, stat) =>
-        if !err
-          if stat?.isDirectory()
-            @insert_css_path.setText css_path
+      if html_path = editor.getPath?()
 
-      lua_path = path.join root_path, emp.EMP_LUA_DIR
-      fs.stat lua_path, (err, stat) =>
-        if !err
-          if stat?.isDirectory()
-            @insert_lua_path.setText lua_path
+        root_path = path.dirname path.dirname html_path
+        css_path = path.join root_path, emp.EMP_CSS_DIR
+        fs.stat css_path, (err, stat) =>
+          if !err
+            if stat?.isDirectory()
+              @insert_css_path.setText css_path
 
-      src_path = path.join root_path, emp.EMP_IMG_DIR
-      fs.stat src_path, (err, stat) =>
-        if !err
-          if stat?.isDirectory()
-            @insert_src_path.setText css_path
+        lua_path = path.join root_path, emp.EMP_LUA_DIR
+        fs.stat lua_path, (err, stat) =>
+          if !err
+            if stat?.isDirectory()
+              @insert_lua_path.setText lua_path
 
-    console.log editor.getPath()
-    # @on 'focus': (event) =>
-    #   # @editorView.focus()
-    #   console.log "focus-----"
-    # @on 'unfocus': (e) =>
-    #   console.log "f out"
+        src_path = path.join root_path, emp.EMP_IMGS_DIR
+        fs.stat src_path, (err, stat) =>
+          if !err
+            if stat?.isDirectory()
+              @insert_src_path.setText src_path
 
-    # @initial_select()
-    #
-    # @snippet_css.hide()
-    # @snippet.show()
-    # console.log @packs
 
-    # @insert_source.on 'click', =>
-    #   console.log "------lll------"
-    #   if !@insert_source.prop('checked')
-    #     # @src_tree.disable()
-    #     # @src_tree.attr('disabled', 'disabled')
-    #     for tmp_name, tmp_obj of @insert_src_view
-    #       tmp_obj.disable()
-    #
-    #   else
-    #     @src_tree.enable()
 
   chose_src_path: ->
     tmp_conf_path = @insert_src_path.getText()
@@ -243,21 +241,6 @@ class CbbDetailView extends View
     @on 'keydown', (e) =>
       if e.which is emp.ESCAPEKEY
         @detach()
-    # fields = [ @snippet, @cbb_name, @cbb_desc, @snippet_css]
-    # # @cbb_name, @cbb_desc, @cbb_else,
-    # for field in fields
-    #   field.on 'core:confirm', (event) =>
-    #     @create_snippet()
-    #   field.on 'keyup', =>
-    #     @validate_fields()
-    # # @sourceHelp.click =>
-    # #   @sourceHelpView.toggle()
-
-
-
-  set_textarea_hight: ->
-    # console.log "set textarea"
-    @snippet.css "max-height", (window.innerHeight * 0.8 ) + "px"
 
   toggle: (type)->
     if @isVisible()
@@ -296,8 +279,8 @@ class CbbDetailView extends View
     @toggle()
 
   do_input: ->
-    console.log atom.workspace.getActivePaneItem()
-    console.log atom.workspace.getActivePane()
+    # console.log atom.workspace.getActivePaneItem()
+    # console.log atom.workspace.getActivePane()
     # console.log @insert_html.val()
     # console.log @insert_html.prop('checked')
     console.log @com
@@ -322,9 +305,9 @@ class CbbDetailView extends View
       #   @css_snippet = @set_con(css_obj) unless @css_snippet
       # console.log @snippets
       try
-        unless !@insert_css.prop('checked')
-          if @css_snippet
-            # console.log "has css"
+        if @css_insert_flag
+          unless !@insert_css.prop('checked')
+              # console.log "has css"
             tmp_path = @insert_css_path.getText()
             if !tmp_path
               emp.show_error "插入样式地址不能为空!"
@@ -332,35 +315,36 @@ class CbbDetailView extends View
 
             tmp_ext =  path.extname tmp_path
             if path.extname tmp_path
-              if css_obj
-                if tmp_obj.type is emp.EMP_CON_TYPE
-                  fs.appendFileSync tmp_path,"\n"+tmp_obj.body
-                else
-                  temp_path = path.join @templates_path, tmp_obj.body
-                  tmp_body =  fs.readFileSync temp_path, 'utf-8'
-                  fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+
+              if tmp_obj.type is emp.EMP_CON_TYPE
+                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+              else
+                temp_path = path.join @templates_path, tmp_obj.body
+                tmp_body =  fs.readFileSync temp_path, 'utf-8'
+                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
             else
               emp.mkdir_sync_safe tmp_path
               css_obj = @snippet_obj.css
 
-              if css_obj
-                if css_obj.type is emp.EMP_CON_TYPE
-                  return css_obj.body
+              if css_obj.type is emp.EMP_CON_TYPE
+                return css_obj.body
+              else
+                temp_path = path.join @templates_path, css_obj.body
+                tmp_body =  fs.readFileSync temp_path, 'utf-8'
+                tmp_name = path.basename temp_path
+                tmp_re_file = path.join tmp_path, tmp_name
+                console.log tmp_re_file
+                console.log tmp_body
+                if fs.existsSync tmp_re_file
+                  fs.appendFileSync tmp_re_file,"\n"+tmp_body
                 else
-                  temp_path = path.join @templates_path, css_obj.body
-                  tmp_body =  fs.readFileSync temp_path, 'utf-8'
-                  tmp_name = path.basename temp_path
-                  tmp_re_file = path.join tmp_path, tmp_name
-                  console.log tmp_re_file
-                  console.log tmp_body
-                  if fs.existsSync tmp_re_file
-                    fs.appendFileSync tmp_re_file,"\n"+tmp_body
-                  else
-                    fs.writeFileSync tmp_re_file, tmp_body
+                  fs.writeFileSync tmp_re_file, tmp_body
 
 
-        unless !@insert_lua.prop('checked')
-          if @lua_snippet
+
+        if @lua_insert_flag
+          unless !@insert_lua.prop('checked')
+
             # console.log "has css"
             tmp_path = @insert_lua_path.getText()
             if !tmp_path
@@ -369,31 +353,43 @@ class CbbDetailView extends View
 
             tmp_ext = path.extname tmp_path
             if path.extname tmp_path
-              if lua_obj
-                if tmp_obj.type is emp.EMP_CON_TYPE
-                  fs.appendFileSync tmp_path,"\n"+tmp_obj.body
-                else
-                  temp_path = path.join @templates_path, tmp_obj.body
-                  tmp_body =  fs.readFileSync temp_path, 'utf-8'
-                  fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+
+              if tmp_obj.type is emp.EMP_CON_TYPE
+                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+              else
+                temp_path = path.join @templates_path, tmp_obj.body
+                tmp_body =  fs.readFileSync temp_path, 'utf-8'
+                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
             else
               emp.mkdir_sync_safe tmp_path
-              lua_obj = @snippet_obj.lua
-
-              if @lua_obj
-                if @lua_obj.type is emp.EMP_CON_TYPE
-                  return @lua_obj.body
+              # lua_obj = @snippet_obj.lua
+              if @lua_obj.type is emp.EMP_CON_TYPE
+                return @lua_obj.body
+              else
+                temp_path = path.join @templates_path, @lua_obj.body
+                tmp_body =  fs.readFileSync temp_path, 'utf-8'
+                tmp_name = path.basename temp_path
+                tmp_re_file = path.join tmp_path, tmp_name
+                console.log tmp_re_file
+                console.log tmp_body
+                if fs.existsSync tmp_re_file
+                  fs.appendFileSync tmp_re_file,"\n"+tmp_body
                 else
-                  temp_path = path.join @templates_path, @lua_obj.body
-                  tmp_body =  fs.readFileSync temp_path, 'utf-8'
-                  tmp_name = path.basename temp_path
-                  tmp_re_file = path.join tmp_path, tmp_name
-                  console.log tmp_re_file
-                  console.log tmp_body
-                  if fs.existsSync tmp_re_file
-                    fs.appendFileSync tmp_re_file,"\n"+tmp_body
-                  else
-                    fs.writeFileSync tmp_re_file, tmp_body
+                  fs.writeFileSync tmp_re_file, tmp_body
+
+        if @src_insert_flag
+          unless !@insert_source.prop('checked')
+            tmp_path = @insert_src_path.getText()
+            console.log tmp_path
+            console.log @src_obj
+            for tmp_src in @src_obj
+              temp_path = path.join @templates_path, tmp_src
+              f_con = fs.readFileSync temp_path
+              tmp_name = path.basename tmp_src
+              tmp_re_file = path.join tmp_path, tmp_name
+              # force copy
+              fs.writeFileSync tmp_re_file, f_con
+
             # edit_text = editor.getText()
             #
             # html_obj = cheerio.load edit_text

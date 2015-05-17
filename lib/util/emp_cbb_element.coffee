@@ -168,11 +168,12 @@ class EmpCbbEle
       when emp.EMP_QLUA then @lua = tmp_obj
 
   set_file: (tmp_file, ctype) ->
-    tmp_obj = @new_file_obj(tmp_file)
-    switch ctype
-      when emp.EMP_QHTML then @html = tmp_obj
-      when emp.EMP_QCSS then @css = tmp_obj
-      when emp.EMP_QLUA then @lua = tmp_obj
+    unless !tmp_file
+      tmp_obj = @new_file_obj(tmp_file)
+      switch ctype
+        when emp.EMP_QHTML then @html = tmp_obj
+        when emp.EMP_QCSS then @css = tmp_obj
+        when emp.EMP_QLUA then @lua = tmp_obj
 
   set_edit_con: (tmp_con, ctype, def_type) ->
     if def_type is emp.EMP_CON_TYPE
