@@ -156,9 +156,9 @@ class InstalledTemplatePanel extends ScrollView
                 @div class:'controle-logo', =>
                   @div class: 'meta-user', =>
                     @img outlet:"detail_image", class: 'avatar', src:""
-              @div class: 'controls', =>
-                @div class:'btn-box-n', =>
-                  @button class:'btn btn-info', click:'chose_detail',"Chose Detail"
+              # @div class: 'controls', =>
+              #   @div class:'btn-box-n', =>
+              #     @button class:'btn btn-info', click:'chose_detail',"Chose Detail"
               @div class: 'controls', =>
                 @subview "detail_img_text", new TextEditorView(mini: true,attributes: {id: 'detail_img_text', type: 'string'},  placeholderText: ' detail img')
                 @div class:'btn-box-n', =>
@@ -208,6 +208,23 @@ class InstalledTemplatePanel extends ScrollView
       for tmp_type in type_list
         @type_select.append @new_option(tmp_type)
 
+    @pack_select.empty()
+    for name, obj of @packs
+      if name is default_select_pack
+        @pack_select.append @new_selec_option(name)
+      else
+        @pack_select.append @new_option(name)
+    # console.log @packs
+    tmp_pack = @packs[default_select_pack]
+    # console.log tmp_pack
+    type_list = tmp_pack.get_type()
+    @type_select.empty()
+    for tmp_type in type_list
+      @type_select.append @new_option(tmp_type)
+
+  refresh_detail: ->
+    console.log 'refresh_detail'
+    @packs = @cbb_management.get_pacakges()
     @pack_select.empty()
     for name, obj of @packs
       if name is default_select_pack
@@ -326,7 +343,7 @@ class InstalledTemplatePanel extends ScrollView
   # btn callback for logo
   select_logo: (e, element)->
     # tmp_path = @template_logo.getText()
-    dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (logo_path) =>
+    dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (logo_path) =>
       # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
       unless !logo_path
         tmp_path = logo_path[0]
@@ -352,11 +369,11 @@ class InstalledTemplatePanel extends ScrollView
 
   prompt_for_file: (file_view, tmp_con) ->
     if tmp_con
-      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openDirectory', 'openFile'], (paths_to_open) =>
+      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openFile', 'openDirectory'], (paths_to_open) =>
         # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
         @refresh_editor(file_view, paths_to_open)
     else
-      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (paths_to_open) =>
+      dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (paths_to_open) =>
         # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
         @refresh_editor(file_view, paths_to_open)
 

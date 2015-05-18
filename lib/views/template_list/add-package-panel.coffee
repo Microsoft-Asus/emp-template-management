@@ -1,6 +1,8 @@
 {$$, TextEditorView, View} = require 'atom-space-pen-views'
 remote = require 'remote'
 dialog = remote.require 'dialog'
+fs = require 'fs'
+path = require 'path'
 
 emp = require '../../exports/emp'
 CbbEleView = require './table-element-view'

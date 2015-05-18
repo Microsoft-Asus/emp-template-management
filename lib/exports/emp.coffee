@@ -72,6 +72,7 @@ module.exports =
   EMP_HTML_DIR:"xhtml"
   EMP_CSS_DIR:"css"
   EMP_LUA_DIR:"lua"
+  EMP_IMGS_DIR:"images"
 
   # 存储类型
   EMP_CON_TYPE: '0'

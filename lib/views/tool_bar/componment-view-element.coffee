@@ -2,6 +2,9 @@
 {Range} = require 'atom'
 emp = require '../../exports/emp'
 CbbDetailView = require './componment-detail-view'
+fs = require 'fs'
+path = require 'path'
+
 # jsdom = require 'jsdom'
 # cheer = require 'cheerio'
 # clean_css = require 'clean-css'

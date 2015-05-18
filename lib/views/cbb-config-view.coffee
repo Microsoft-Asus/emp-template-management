@@ -4,6 +4,8 @@ fs_plus = require 'fs-plus'
 emp = require '../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class CbbConfigView extends View

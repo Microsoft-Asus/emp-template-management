@@ -4,6 +4,8 @@
 emp = require '../exports/emp'
 fs_plus = require 'fs-plus'
 CbbPackage = require '../util/emp_cbb_package'
+fs = require 'fs'
+path = require 'path'
 
 templates_store_path = null
 

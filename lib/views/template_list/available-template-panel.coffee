@@ -5,6 +5,8 @@ emp = require '../../exports/emp'
 # shell = require 'shell'
 logo_image_size = '48px'
 logo_image_big_size = '156px'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class AvailableTemplatePanel extends View

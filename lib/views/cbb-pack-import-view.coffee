@@ -12,6 +12,8 @@ project_path = null
 tmp_export_store_path = null
 templates_store_path = null
 ext = ".zip"
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class CbbPackImportView extends View

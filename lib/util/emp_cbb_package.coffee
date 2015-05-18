@@ -1,5 +1,7 @@
 emp = require '../exports/emp'
 fs_plus = require 'fs-plus'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class EmpCbbPackage
@@ -123,10 +125,10 @@ class EmpCbbPackage
   # 添加子元素
   add_element: (ccb_obj) ->
     console.log "add_element"
-    # console.log  @obj_json
+    console.log  @obj_json
     # console.log ccb_obj
     # TODO 如果已存在添加提醒
-    if !(@obj_json.type.indexOf(ccb_obj.type)+1)
+    if !(@obj_json?.type?.indexOf(ccb_obj.type)+1)
       ccb_obj.type = emp.EMP_DEFAULT_TYPE
     else if !@obj_json[ccb_obj.type]
       @obj_json[ccb_obj.type] = {}
