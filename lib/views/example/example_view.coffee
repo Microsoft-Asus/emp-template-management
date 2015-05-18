@@ -8,4 +8,4 @@ class ExampleView  extends View
       @exampleHtml html
 
   initialize: (html)->
-    console.log html
+    # console.log html

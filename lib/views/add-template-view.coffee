@@ -163,7 +163,8 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "detail_img_text", new TextEditorView(mini: true,attributes: {id: 'detail_img_text', type: 'string'},  placeholderText: ' detail img')
                 @div class:'btn-box-n', =>
                   @button class:'btn btn-error', click:'remove_all_detail',"Remove All"
-                  @button class:'btn btn-info', click:'chose_detail',"Chose File/Dir"
+                  @button class:'btn btn-info', click:'chose_detail_f',"Chose File"
+                  @button class:'btn btn-info', click:'chose_detail_d',"Chose Dir"
                   @button class:'btn btn-info', click:'add_image_detail_btn',"Add"
 
           @div class: 'section-body', =>
@@ -178,7 +179,8 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "source_file", new TextEditorView(mini: true,attributes: {id: 'source_file', type: 'string'},  placeholderText: ' Source Files')
                 @div class:'btn-box-n', =>
                   @button class:'btn btn-error', click:'remove_all',"Remove All"
-                  @button class:'btn btn-info', click:'select_source',"Chose File/Dir"
+                  @button class:'btn btn-info', click:'select_source_f',"Chose File"
+                  @button class:'btn btn-info', click:'select_source_d',"Chose Dir"
                   @button class:'btn btn-info', click:'add_source_btn',"Add"
 
       @div class: 'footer-div', =>
@@ -343,37 +345,38 @@ class InstalledTemplatePanel extends ScrollView
   # btn callback for logo
   select_logo: (e, element)->
     # tmp_path = @template_logo.getText()
-    dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (logo_path) =>
+    dialog.showOpenDialog title: 'Select', properties: ['openFile'], (logo_path) =>
       # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
+      console.log logo_path
       unless !logo_path
         tmp_path = logo_path[0]
         path_state = fs.statSync tmp_path
-        if path_state?.isDirectory()
-          fs.readdir tmp_path, (err, files) =>
-            if err
-              console.log "no exist"
-            else
-              logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-              # console.log logo_images
-              for logo in logo_images
-                tmp_opt = document.createElement 'option'
-                tmp_opt.text = logo
-                tmp_opt.value = path.join tmp_path, logo
-                # console.log tmp_opt
-                @logo_select.append tmp_opt
-        else
-          tmp_opt = document.createElement 'option'
-          tmp_opt.text = path.basename tmp_path
-          tmp_opt.value = logo_path
-          @logo_select.append tmp_opt
+        # if path_state?.isDirectory()
+        #   fs.readdir tmp_path, (err, files) =>
+        #     if err
+        #       console.log "no exist"
+        #     else
+        #       logo_images = files.filter((ele)-> !ele.match(/^\./ig))
+        #       # console.log logo_images
+        #       for logo in logo_images
+        #         tmp_opt = document.createElement 'option'
+        #         tmp_opt.text = logo
+        #         tmp_opt.value = path.join tmp_path, logo
+        #         # console.log tmp_opt
+        #         @logo_select.append tmp_opt
+        # else
+        tmp_opt = document.createElement 'option'
+        tmp_opt.text = path.basename tmp_path
+        tmp_opt.value = logo_path
+        @logo_select.append tmp_opt
 
   prompt_for_file: (file_view, tmp_con) ->
     if tmp_con
-      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openFile', 'openDirectory'], (paths_to_open) =>
+      dialog.showOpenDialog title: 'Select', defaultPath:tmp_con, properties: ['openFile'], (paths_to_open) =>
         # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
         @refresh_editor(file_view, paths_to_open)
     else
-      dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (paths_to_open) =>
+      dialog.showOpenDialog title: 'Select', properties: ['openFile'], (paths_to_open) =>
         # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
         @refresh_editor(file_view, paths_to_open)
 
@@ -460,9 +463,15 @@ class InstalledTemplatePanel extends ScrollView
   remove_td_callback: (name)->
     delete @source_files[name]
 
-  select_source: ->
+  select_source_f: ->
+    @select_source(['openFile'])
+
+  select_source_d: ->
+    @select_source(['openFile', "openDirectory"])
+
+  select_source: (opts=['openFile', "openDirectory"])->
     console.log "select source"
-    dialog.showOpenDialog title: 'Select', properties: ['openFile', "openDirectory"], (src_path) => # 'openDirectory'
+    dialog.showOpenDialog title: 'Select', properties: opts, (src_path) => # 'openDirectory'
       # console.log logo_path
       if src_path
         @source_file.setText src_path[0]
@@ -507,9 +516,15 @@ class InstalledTemplatePanel extends ScrollView
                     @image_detail_tree.append tmp_view
 
   # 添加资源描述图片
-  chose_detail: ->
+  chose_detail_f: ->
+    @chose_detail(['openFile'])
+
+  chose_detail_d: ->
+    @chose_detail(['openFile', 'openDirectory'])
+
+  chose_detail: (opts=['openFile', "openDirectory"])->
     console.log "select detail"
-    dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (img_path) => # 'openDirectory'
+    dialog.showOpenDialog title: 'Select', properties: opts, (img_path) => # 'openDirectory'
       # console.log logo_path
       # console.log @detail_image.attr("src")
       if img_path
