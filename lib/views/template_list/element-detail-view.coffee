@@ -99,6 +99,18 @@ class ElementDetailPanel extends View
                 # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
               @button class: 'control-btn btn btn-info', click:'edit_css',' Edit'
 
+          @div class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板脚本"
+                  @div class: 'setting-description', "模板插入的脚本"
+              @div outlet: 'lua_body', class:'controls'
+                # @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
+                # # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+                # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+              @button class: 'control-btn btn btn-info', click:'edit_lua',' Edit'
+
           # 包图标
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -136,7 +148,9 @@ class ElementDetailPanel extends View
                 @subview "detail_img_text", new TextEditorView(mini: true,attributes: {id: 'detail_img_text', type: 'string'},  placeholderText: ' detail img')
                 @div class:'btn-box-n', =>
                   @button class:'btn btn-error', click:'remove_all_detail',"Remove All"
-                  @button class:'btn btn-info', click:'chose_detail',"Chose File/Dir"
+                  @button class:'btn btn-info', click:'chose_detail_f',"Chose File"
+                  @button class:'btn btn-info', click:'chose_detail_d',"Chose Dir"
+
                   @button class:'btn btn-info', click:'add_image_detail_btn',"Add"
 
           @div class: 'section-body', =>
@@ -151,7 +165,8 @@ class ElementDetailPanel extends View
                 @subview "source_file", new TextEditorView(mini: true,attributes: {id: 'source_file', type: 'string'},  placeholderText: ' Source Files')
                 @div class:'btn-box-n', =>
                   @button class:'btn btn-error', click:'remove_all',"Remove All"
-                  @button class:'btn btn-info', click:'select_source',"Chose File/Dir"
+                  @button class:'btn btn-info', click:'select_source_f',"Chose File"
+                  @button class:'btn btn-info', click:'select_source_d',"Chose Dir"
                   @button class:'btn btn-info', click:'add_source_btn',"Add"
 
       @div class: 'footer-div', =>
@@ -209,6 +224,23 @@ class ElementDetailPanel extends View
   initial_css: ->
     tmp_obj = @snippet_obj.css
     tmp_body = ""
+    unless !tmp_obj
+      if tmp_obj.type is emp.EMP_CON_TYPE
+         tmp_body = tmp_obj.body
+      else
+        # TODO 改为文件显示
+        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_body = fs.readFileSync tmp_path, 'utf-8'
+
+      @css_body.empty()
+      re_body = new ExampleView(tmp_body)
+
+      # console.log re_body
+      @css_body.append re_body
+
+  initial_lua: ->
+    tmp_obj = @snippet_obj.lua
+    tmp_body = ""
     if tmp_obj.type is emp.EMP_CON_TYPE
        tmp_body = tmp_obj.body
     else
@@ -216,12 +248,11 @@ class ElementDetailPanel extends View
       tmp_path = path.join @templates_path, tmp_obj.body
       tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
-    @css_body.empty()
+    @lua_body.empty()
     re_body = new ExampleView(tmp_body)
 
     # console.log re_body
-    @css_body.append re_body
-
+    @lua_body.append re_body
 
   # 初始化 logo
   initial_logo: ->
@@ -310,33 +341,33 @@ class ElementDetailPanel extends View
   # btn callback for logo
   select_logo: (e, element)->
     # tmp_path = @template_logo.getText()
-    dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'openFile'], (logo_path) =>
+    dialog.showOpenDialog title: 'Select', properties: ['openFile'], (logo_path) =>
       # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
       unless !logo_path
         tmp_path = logo_path[0]
         path_state = fs.statSync tmp_path
-        if path_state?.isDirectory()
-          fs.readdir tmp_path, (err, files) =>
-            if err
-              console.log "no exist"
-            else
-              logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-              # console.log logo_images
-              for logo in logo_images
-                tmp_opt = document.createElement 'option'
-                tmp_opt.text = logo
-                tmp_opt.value = path.join tmp_path, logo
-                # console.log tmp_opt
-                @logo_select.append tmp_opt
-                # tmp_opt.selected = "selected"
-        else
-          tmp_opt = document.createElement 'option'
-          tmp_opt.text = path.basename tmp_path
-          tmp_opt.value = logo_path
-          tmp_opt.selected = "selected"
-          @logo_select.append tmp_opt
+        # if path_state?.isDirectory()
+        #   fs.readdir tmp_path, (err, files) =>
+        #     if err
+        #       console.log "no exist"
+        #     else
+        #       logo_images = files.filter((ele)-> !ele.match(/^\./ig))
+        #       # console.log logo_images
+        #       for logo in logo_images
+        #         tmp_opt = document.createElement 'option'
+        #         tmp_opt.text = logo
+        #         tmp_opt.value = path.join tmp_path, logo
+        #         # console.log tmp_opt
+        #         @logo_select.append tmp_opt
+        #         # tmp_opt.selected = "selected"
+        # else
+        tmp_opt = document.createElement 'option'
+        tmp_opt.text = path.basename tmp_path
+        tmp_opt.value = logo_path
+        tmp_opt.selected = "selected"
+        @logo_select.append tmp_opt
 
-          @logo_image.attr("src", logo_path)
+        @logo_image.attr("src", logo_path)
 
 
   # 添加资源文件
@@ -377,9 +408,15 @@ class ElementDetailPanel extends View
   remove_td_callback: (name)->
     delete @source_files[name]
 
-  select_source: ->
+  select_source_f: ->
+    @select_source(['openFile'])
+
+  select_source_d: ->
+    @select_source(['openFile', "openDirectory"])
+
+  select_source: (opts=['openFile', "openDirectory"])->
     console.log "select source"
-    dialog.showOpenDialog title: 'Select', properties: ['openFile', "openDirectory"], (src_path) => # 'openDirectory'
+    dialog.showOpenDialog title: 'Select', properties: opts, (src_path) => # 'openDirectory'
       # console.log logo_path
       if src_path
         @source_file.setText src_path[0]
@@ -424,9 +461,15 @@ class ElementDetailPanel extends View
                     @image_detail_tree.append tmp_view
 
   # 添加资源描述图片
-  chose_detail: ->
+  chose_detail_f: ->
+    @chose_detail(['openFile'])
+
+  chose_detail_d: ->
+    @chose_detail(['openFile', 'openDirectory'])
+
+  chose_detail: (opts=['openFile', "openDirectory"])->
     console.log "select detail"
-    dialog.showOpenDialog title: 'Select', properties: ['openFile', 'openDirectory'], (img_path) => # 'openDirectory'
+    dialog.showOpenDialog title: 'Select', properties: opts, (img_path) => # 'openDirectory'
       # console.log logo_path
       # console.log @detail_image.attr("src")
       if img_path
@@ -446,54 +489,86 @@ class ElementDetailPanel extends View
     console.log 'edit_html'
     tmp_obj = @snippet_obj.html
     tmp_editor = null
-    if tmp_obj.type is emp.EMP_CON_TYPE
-      tmp_body = tmp_obj.body
-      # tmp_editor = atom.workspace.openSync()
-      # @store_info(tmp_editor, tmp_body)
-      tmp_editor = @create_editor(get_tmp_file(), tmp_body)
-      tmp_editor.onDidSave (event) =>
-        console.log event
-        tmp_body = tmp_editor.getText()
-        @snippet_obj.html.body = tmp_body
-        @html_body.empty()
-        re_body = new ExampleView(tmp_body)
-        @html_body.append re_body
-    else
-      # TODO 改为文件显示
-      tmp_path = path.join @templates_path, tmp_obj.body
-      tmp_editor = @create_editor(tmp_path)
-      tmp_editor.onDidSave (event) =>
-        console.log event
-        tmp_body = tmp_editor.getText()
-        @html_body.empty()
-        re_body = new ExampleView(tmp_body)
-        @html_body.append re_body
+    unless !tmp_obj
+      if tmp_obj.type is emp.EMP_CON_TYPE
+        tmp_body = tmp_obj.body
+        # tmp_editor = atom.workspace.openSync()
+        # @store_info(tmp_editor, tmp_body)
+        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+        tmp_editor.onDidSave (event) =>
+          console.log event
+          tmp_body = tmp_editor.getText()
+          @snippet_obj.html.body = tmp_body
+          @html_body.empty()
+          re_body = new ExampleView(tmp_body)
+          @html_body.append re_body
+      else
+        # TODO 改为文件显示
+        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_editor = @create_editor(tmp_path)
+        tmp_editor.onDidSave (event) =>
+          console.log event
+          tmp_body = tmp_editor.getText()
+          @html_body.empty()
+          re_body = new ExampleView(tmp_body)
+          @html_body.append re_body
 
   # 编辑样式模板
   edit_css: ->
     console.log "edit_css"
     tmp_obj = @snippet_obj.css
     tmp_editor = null
-    if tmp_obj.type is emp.EMP_CON_TYPE
-      tmp_body = tmp_obj.body
-      # tmp_editor = atom.workspace.openSync()
+    if tmp_obj
+      if tmp_obj.type is emp.EMP_CON_TYPE
+        tmp_body = tmp_obj.body
+        # tmp_editor = atom.workspace.openSync()
+        console.log tmp_body
+        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+        # @store_info(tmp_editor, tmp_body)
+        tmp_editor.onDidSave (event) =>
+          console.log event
+          tmp_body = fs.readFileSync event.path, 'utf-8'
+          @snippet_obj.css.body = tmp_body
+          @css_body.empty()
+          re_body = new ExampleView(tmp_body)
+          @css_body.append re_body
+      else
+        # TODO 改为文件显示
+        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_editor = @create_editor(tmp_path)
 
-      tmp_editor = @create_editor(get_tmp_file(), tmp_body)
-      # @store_info(tmp_editor, tmp_body)
-      tmp_editor.onDidSave (event) =>
-        console.log event
-        tmp_body = fs.readFileSync event.path, 'utf-8'
-        @snippet_obj.css.body = tmp_body
-        @css_body.empty()
-        re_body = new ExampleView(tmp_body)
-        @css_body.append re_body
+        tmp_editor.onDidSave (e) ->
+          console.log e
+          tmp_body = tmp_editor.getText()
+          @css_body.empty()
+          re_body = new ExampleView(tmp_body)
+          @css_body.append re_body
     else
-      # TODO 改为文件显示
-      tmp_path = path.join @templates_path, tmp_obj.body
-      tmp_editor = @create_editor(tmp_path)
+      emp.show_error 'no css style file!'
 
-    tmp_editor.onDidSave (e) ->
-      console.log e
+  # 编辑样式模板
+  edit_lua: ->
+    console.log "edit_lua"
+    tmp_obj = @snippet_obj.lua
+    tmp_editor = null
+    if tmp_obj
+      if tmp_obj.type is emp.EMP_CON_TYPE
+        tmp_body = tmp_obj.body
+        # tmp_editor = atom.workspace.openSync()
+
+        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+        # @store_info(tmp_editor, tmp_body)
+        tmp_editor.onDidSave (event) =>
+          console.log event
+          tmp_body = fs.readFileSync event.path, 'utf-8'
+          @snippet_obj.lua.body = tmp_body
+
+      else
+        # TODO 改为文件显示
+        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_editor = @create_editor(tmp_path)
+    else
+      emp.show_error 'no lua script!'
 
 
   create_editor:(tmp_file_path, content) ->
@@ -550,8 +625,7 @@ class ElementDetailPanel extends View
     cbb_desc = @template_desc.getText()?.trim()
     cbb_logo = @logo_select.val()
     # cbb_name = @cbb_name.getText()?.trim()
-    cbb_html = @snippet_obj.html.body
-    cbb_css = @snippet_obj.css.body
+
     # @source_file
     source_list = []
     for tmp_name, tmp_view of @source_files
@@ -561,20 +635,33 @@ class ElementDetailPanel extends View
     for tmp_name, tmp_view of @image_detail
       tmp_img_list.push tmp_name
     # console.log cbb_type
+
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
 
+    cbb_html = @snippet_obj.html.body
     tmp_html_type = @snippet_obj.html.type
     if tmp_html_type is emp.EMP_FILE_TYPE
       cbb_obj.set_file path.join(@template_path, cbb_html), emp.EMP_QHTML
     else
       cbb_obj.set_con cbb_html, emp.EMP_QHTML
 
-    tmp_css_type = @snippet_obj.css.type
-    if tmp_css_type is emp.EMP_FILE_TYPE
-      cbb_obj.set_file path.join(@template_path, cbb_css), emp.EMP_QCSS
-    else
-      cbb_obj.set_con cbb_css, emp.EMP_QCSS
-    cbb_obj
+    unless !@snippet_obj.css
+      cbb_css = @snippet_obj.css.body
+      tmp_css_type = @snippet_obj.css.type
+      if tmp_css_type is emp.EMP_FILE_TYPE
+        cbb_obj.set_file path.join(@template_path, cbb_css), emp.EMP_QCSS
+      else
+        cbb_obj.set_con cbb_css, emp.EMP_QCSS
+      cbb_obj
+
+    unless !@snippet_obj.lua
+      cbb_lua = @snippet_obj.lua.body
+      tmp_lua_type = @snippet_obj.lua.type
+      if tmp_lua_type is emp.EMP_FILE_TYPE
+        cbb_obj.set_file path.join(@template_path, cbb_lua), emp.EMP_QLUA
+      else
+        cbb_obj.set_con cbb_lua, emp.EMP_QLUA
+      cbb_obj
 
 get_tmp_file =() ->
   path.join __dirname, "../../../tmp.txt"
