@@ -6,6 +6,8 @@ dialog = remote.require 'dialog'
 
 emp = require '../../exports/emp'
 SniEle = require './snippet-ele-view'
+fs = require 'fs'
+path = require 'path'
 # css = require 'css'
 # cheerio = require 'cheerio'
 # templates_store_path = null

@@ -9,6 +9,8 @@ CbbEle = require '../../util/emp_cbb_element'
 AvailableTypePanel = require './available-type-panel'
 # CbbEle = require '../util/emp_cbb_element'
 CbbSrcEleView = require './cbb-source-ele-view'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class ElementDetailPanel extends View

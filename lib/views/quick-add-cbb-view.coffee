@@ -3,6 +3,8 @@
 # fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
+fs = require 'fs'
+path = require 'path'
 
 emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'

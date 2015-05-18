@@ -1,5 +1,7 @@
 emp = require '../exports/emp'
 fs_plus = require 'fs-plus'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class EmpCbbPackage

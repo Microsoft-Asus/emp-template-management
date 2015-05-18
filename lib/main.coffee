@@ -5,7 +5,8 @@ QuickAddCbbView = require './views/quick-add-cbb-view'
 
 empTmpManagementView = null
 emp = require './exports/emp'
-
+fs = require 'fs'
+path = require 'path'
 
 # -------------------use for template management -------------------------
 create_tmp_management = (params) ->

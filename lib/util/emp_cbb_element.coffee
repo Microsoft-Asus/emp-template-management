@@ -1,4 +1,6 @@
 emp = require '../exports/emp'
+fs = require 'fs'
+path = require 'path'
 
 module.exports =
 class EmpCbbEle
