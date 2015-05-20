@@ -108,6 +108,7 @@ class AddPackagePanel extends View
     # def_type.push "test1"
     # def_type.push "test2"
     # def_type.push emp.EMP_DEFAULT_TYPE
+    @type_view = {}
     @ccb_tree.empty()
 
     # 默认类型

@@ -322,18 +322,22 @@ class InstalledTemplatePanel extends ScrollView
             # console.log log_view
 
         src_path =  path.join new_path,emp.EMP_IMG_DIR
+        @image_detail = {}
         @cbb_tree.empty()
+
+        @image_detail_tree.empty()
         @source_files = {}
+        @image_detail = {}
         @add_source(src_path)
 
   # callback function for button
   select_html: (e, element)->
-    console.log "select html"
+    # console.log "select html"
     tmp_con = @template_html.getText()
     @prompt_for_file(@template_html, tmp_con)
 
   select_css: (e, element)->
-    console.log "select css"
+    # console.log "select css"
     # console.log element
     tmp_con = @template_css.getText()
     @prompt_for_file(@template_css, tmp_con)
@@ -347,7 +351,7 @@ class InstalledTemplatePanel extends ScrollView
     # tmp_path = @template_logo.getText()
     dialog.showOpenDialog title: 'Select', properties: ['openFile'], (logo_path) =>
       # @refresh_path( paths_to_open, path_view, name_view, ver_view, logo_view)
-      console.log logo_path
+      # console.log logo_path
       unless !logo_path
         tmp_path = logo_path[0]
         path_state = fs.statSync tmp_path
@@ -382,12 +386,12 @@ class InstalledTemplatePanel extends ScrollView
 
   refresh_editor: (file_view, new_paths) ->
     if new_paths
-      console.log new_paths
+      # console.log new_paths
       new_path = new_paths[0]
       file_view.setText(new_path)
 
   create_snippet: ->
-    console.log "button down"
+    # console.log "button down"
     if !@template_name.getText()
       emp.show_error "模板名称不能为空"
       return
@@ -429,9 +433,9 @@ class InstalledTemplatePanel extends ScrollView
     @add_source()
 
   add_source: (tmp_path)->
-    console.log "add source"
+    # console.log "add source"
     if tmp_path ?= @source_file.getText()
-      console.log tmp_path
+      # console.log tmp_path
       fs.stat tmp_path, (err, stats) =>
         if err
           console.log err
@@ -447,9 +451,9 @@ class InstalledTemplatePanel extends ScrollView
             if err
               console.log "no exist files"
             else
-              console.log files
+              # console.log files
               src_files = files.filter((ele)-> !ele.match(/^\./ig))
-              console.log src_files
+              # console.log src_files
               for tmp_file in src_files
                 tmp_name = path.join tmp_path, tmp_file
                 unless @source_files[tmp_name]
@@ -470,7 +474,7 @@ class InstalledTemplatePanel extends ScrollView
     @select_source(['openFile', "openDirectory"])
 
   select_source: (opts=['openFile', "openDirectory"])->
-    console.log "select source"
+    # console.log "select source"
     dialog.showOpenDialog title: 'Select', properties: opts, (src_path) => # 'openDirectory'
       # console.log logo_path
       if src_path
@@ -488,7 +492,7 @@ class InstalledTemplatePanel extends ScrollView
     @add_image_detail()
 
   add_image_detail: ()->
-    console.log "add image detail"
+    # console.log "add image detail"
     if tmp_path = @detail_img_text.getText()
       fs.stat tmp_path, (err, stats) =>
         if err
@@ -523,7 +527,7 @@ class InstalledTemplatePanel extends ScrollView
     @chose_detail(['openFile', 'openDirectory'])
 
   chose_detail: (opts=['openFile', "openDirectory"])->
-    console.log "select detail"
+    # console.log "select detail"
     dialog.showOpenDialog title: 'Select', properties: opts, (img_path) => # 'openDirectory'
       # console.log logo_path
       # console.log @detail_image.attr("src")
