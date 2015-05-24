@@ -27,7 +27,6 @@ temp_deserializer =
 atom.deserializers.add(temp_deserializer)
 
 
-
 module.exports =
   config:
     showOnRightSide:

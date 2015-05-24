@@ -48,8 +48,12 @@ class CbbDetailView extends View
 
         @div outlet:'css_div',class: 'div_box_check',  =>
           @div class: 'checkbox_ucolumn', =>
-            @input outlet:'insert_css', type: 'checkbox', checked:'true'
-            @text "Insert Css"
+
+              @input outlet:'insert_css', type: 'checkbox', checked:'true'
+              @text "Insert Css"
+
+              @input outlet:'insert_css_store', type: 'checkbox', checked:'true'
+              @text " Remember my choice"
           @div class:'control-ol', =>
             @table class:'control-tab',outlet:'css_tree'
 
@@ -81,14 +85,15 @@ class CbbDetailView extends View
           # @div outlet:'snippet_html', =>
           #   @button "Show Source Snippet Detail", class:"btn", click:"show_source_detail"
 
-
-        @div class:'div_logo', =>
+# div_logo
+        @div class:'div_box_check', =>
           @div class:'div_box', =>
             @label class:'lab',"模板示例:"
             # @span "", class: "input-group-btn", =>
-        for tmp_detail_img in @ele_obj.detail
-          tmp_img_path = path.join temp_path, tmp_detail_img
-          @img outlet: 'logo_img', class: 'avatar_detail', src: "#{tmp_img_path}"
+          @div class:'div_box', =>
+            for tmp_detail_img in @ele_obj.detail
+              tmp_img_path = path.join temp_path, tmp_detail_img
+              @img outlet: 'logo_img', class: 'avatar_detail', src: "#{tmp_img_path}"
 
       @div class:'div_box_bor'
       @div class:'cbb_detail_foot', =>
@@ -295,41 +300,34 @@ class CbbDetailView extends View
     editor = atom.workspace.getActiveEditor()
 
     if editor
-      #
-      # if !@html_snippet
-      #   ele_json_data = fs.readFileSync @ele_json, 'utf-8'
-      #   @snippet_obj = JSON.parse ele_json_data
-      #
-      #   html_obj = @snippet_obj.html
-      #   css_obj = @snippet_obj.css
-      #
-      #   @html_snippet = @set_con(html_obj) unless @html_snippet
-      #   @css_snippet = @set_con(css_obj) unless @css_snippet
-      # console.log @snippets
       try
         if @css_insert_flag
           unless !@insert_css.prop('checked')
               # console.log "has css"
             tmp_path = @insert_css_path.getText()
             if !tmp_path
-              emp.show_error "插入样式地址不能为空!"
+              emp.show_error "插入Css地址不能为空!"
               return
 
             tmp_ext =  path.extname tmp_path
             if path.extname tmp_path
 
               if tmp_obj.type is emp.EMP_CON_TYPE
-                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+                tmp_body = tmp_obj.body
               else
                 temp_path = path.join @templates_path, tmp_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
+              if fs.existsSync temp_path
                 fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+              else
+                fs.writeFileSync tmp_path,"\n"+tmp_obj.body
             else
               emp.mkdir_sync_safe tmp_path
               css_obj = @snippet_obj.css
 
               if css_obj.type is emp.EMP_CON_TYPE
-                return css_obj.body
+                emp.show_error "请指定需要插入的Css文件!"
+                return
               else
                 temp_path = path.join @templates_path, css_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
@@ -338,11 +336,16 @@ class CbbDetailView extends View
                 console.log tmp_re_file
                 console.log tmp_body
                 if fs.existsSync tmp_re_file
-                  fs.appendFileSync tmp_re_file,"\n"+tmp_body
+                  tmp_flag = @show_alert("指定的 css 文件已经存在,请指定后续操作.")
+                  switch tmp_flag
+                    when 1
+                      fs.appendFileSync tmp_re_file,"\n"+tmp_body
+                    when 2
+                      fs.writeFileSync tmp_re_file, tmp_body
+                    else
+                      return
                 else
                   fs.writeFileSync tmp_re_file, tmp_body
-
-
 
         if @lua_insert_flag
           unless !@insert_lua.prop('checked')
@@ -350,23 +353,27 @@ class CbbDetailView extends View
             # console.log "has css"
             tmp_path = @insert_lua_path.getText()
             if !tmp_path
-              emp.show_error "插入脚本呢能为空!"
+              emp.show_error "插入Lua 地址不能为空!"
               return
 
             tmp_ext = path.extname tmp_path
             if path.extname tmp_path
 
               if tmp_obj.type is emp.EMP_CON_TYPE
-                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+                tmp_body = stmp_obj.body
               else
                 temp_path = path.join @templates_path, tmp_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
+              if fs.existsSync temp_path
                 fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+              else
+                fs.writeFileSync tmp_path,"\n"+tmp_obj.body
             else
               emp.mkdir_sync_safe tmp_path
               # lua_obj = @snippet_obj.lua
               if @lua_obj.type is emp.EMP_CON_TYPE
-                return @lua_obj.body
+                emp.show_error "请指定需要插入的Lua文件!"
+                return
               else
                 temp_path = path.join @templates_path, @lua_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
@@ -375,7 +382,13 @@ class CbbDetailView extends View
                 console.log tmp_re_file
                 console.log tmp_body
                 if fs.existsSync tmp_re_file
-                  fs.appendFileSync tmp_re_file,"\n"+tmp_body
+                  tmp_flag = @show_alert("指定的 lua 文件已经存在,请指定后续操作.")
+                  switch tmp_flag
+                    when 1
+                      fs.appendFileSync tmp_re_file,"\n"+tmp_body
+                    when 2
+                      fs.writeFileSync tmp_re_file, tmp_body
+                    else return
                 else
                   fs.writeFileSync tmp_re_file, tmp_body
 
@@ -496,6 +509,17 @@ class CbbDetailView extends View
 
   show_source_detail: ->
     console.log "show_source_detail"
+
+
+  show_alert: (msg) ->
+    atom.confirm
+      message: '警告'
+      detailedMessage:msg
+      buttons:
+        '取消': -> return 3
+        '替换': -> return 2
+        '合并': -> return 1
+
 
 
 #
