@@ -120,7 +120,7 @@ class CbbDetailView extends View
 
 
 
-    console.log @snippet_obj
+    # console.log @snippet_obj
 
     @css_insert_flag = true
     if !@css_obj
@@ -167,7 +167,7 @@ class CbbDetailView extends View
         @src_tree.append tmp_view
 
     @on 'keydown', (e) =>
-      console.log "key down"
+      # console.log "key down"
       if e.which is emp.ESCAPEKEY
         @detach()
 
@@ -301,6 +301,7 @@ class CbbDetailView extends View
 
     if editor
       try
+        # console.log "css----"
         if @css_insert_flag
           unless !@insert_css.prop('checked')
               # console.log "has css"
@@ -312,15 +313,16 @@ class CbbDetailView extends View
             tmp_ext =  path.extname tmp_path
             if path.extname tmp_path
 
-              if tmp_obj.type is emp.EMP_CON_TYPE
-                tmp_body = tmp_obj.body
+              if @css_obj.type is emp.EMP_CON_TYPE
+                tmp_body = @css_obj.body
               else
-                temp_path = path.join @templates_path, tmp_obj.body
+                temp_path = path.join @templates_path, @css_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
-              if fs.existsSync temp_path
-                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+              # console.log
+              if fs.existsSync tmp_path
+                fs.appendFileSync tmp_path,"\n"+tmp_body
               else
-                fs.writeFileSync tmp_path,"\n"+tmp_obj.body
+                fs.writeFileSync tmp_path,"\n"+tmp_body
             else
               emp.mkdir_sync_safe tmp_path
               css_obj = @snippet_obj.css
@@ -333,8 +335,8 @@ class CbbDetailView extends View
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
                 tmp_name = path.basename temp_path
                 tmp_re_file = path.join tmp_path, tmp_name
-                console.log tmp_re_file
-                console.log tmp_body
+                # console.log tmp_re_file
+                # console.log tmp_body
                 if fs.existsSync tmp_re_file
                   tmp_flag = @show_alert("指定的 css 文件已经存在,请指定后续操作.")
                   switch tmp_flag
@@ -346,7 +348,7 @@ class CbbDetailView extends View
                       return
                 else
                   fs.writeFileSync tmp_re_file, tmp_body
-
+        # console.log "lua----"
         if @lua_insert_flag
           unless !@insert_lua.prop('checked')
 
@@ -359,15 +361,15 @@ class CbbDetailView extends View
             tmp_ext = path.extname tmp_path
             if path.extname tmp_path
 
-              if tmp_obj.type is emp.EMP_CON_TYPE
-                tmp_body = stmp_obj.body
+              if @lua_obj.type is emp.EMP_CON_TYPE
+                tmp_body = @lua_obj.body
               else
-                temp_path = path.join @templates_path, tmp_obj.body
+                temp_path = path.join @templates_path, @lua_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
               if fs.existsSync temp_path
-                fs.appendFileSync tmp_path,"\n"+tmp_obj.body
+                fs.appendFileSync tmp_path,"\n"+tmp_body
               else
-                fs.writeFileSync tmp_path,"\n"+tmp_obj.body
+                fs.writeFileSync tmp_path,"\n"+tmp_body
             else
               emp.mkdir_sync_safe tmp_path
               # lua_obj = @snippet_obj.lua
@@ -379,8 +381,8 @@ class CbbDetailView extends View
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
                 tmp_name = path.basename temp_path
                 tmp_re_file = path.join tmp_path, tmp_name
-                console.log tmp_re_file
-                console.log tmp_body
+                # console.log tmp_re_file
+                # console.log tmp_body
                 if fs.existsSync tmp_re_file
                   tmp_flag = @show_alert("指定的 lua 文件已经存在,请指定后续操作.")
                   switch tmp_flag
@@ -391,12 +393,12 @@ class CbbDetailView extends View
                     else return
                 else
                   fs.writeFileSync tmp_re_file, tmp_body
-
+        # console.log "src----"
         if @src_insert_flag
           unless !@insert_source.prop('checked')
             tmp_path = @insert_src_path.getText()
-            console.log tmp_path
-            console.log @src_obj
+            # console.log tmp_path
+            # console.log @src_obj
             for tmp_src in @src_obj
               temp_path = path.join @templates_path, tmp_src
               f_con = fs.readFileSync temp_path
