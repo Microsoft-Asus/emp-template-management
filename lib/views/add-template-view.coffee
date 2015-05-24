@@ -31,7 +31,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板路径"
+                  @div class: 'info-label', "模板路径(Template Path)"
                   @div class: 'setting-description', "Root Dir Name"
                 # @div class: 'editor-container', =>
                 @subview "template_path", new TextEditorView(mini: true,attributes: {id: 'template_path', type: 'string'},  placeholderText: ' Template Path')
@@ -42,7 +42,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板名称"
+                  @div class: 'info-label', "模板名称(Template Name)"
                   @div class: 'setting-description', "Template Package Name"
                 # @div class: 'editor-container', =>
                 @subview "template_name", new TextEditorView(mini: true,attributes: {id: 'template_name', type: 'string'},  placeholderText: ' Template Name')
@@ -51,8 +51,8 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "描述"
-                  @div class: 'setting-description', "为你的模板添加描述"
+                  @div class: 'info-label', "描述(Template Descripton)"
+                  @div class: 'setting-description', "为你的模板添加描述(Add description for your Templates.)"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
@@ -73,8 +73,8 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板所属包"
-                  @div class: 'setting-description', "插件包所属选择"
+                  @div class: 'info-label', "模板所属包(Template Package)"
+                  @div class: 'setting-description', "插件包所属选择(Root Level)"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @select outlet:"pack_select", id: "pack", class: 'form-control'
@@ -84,8 +84,8 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板类型"
-                  @div class: 'setting-description', "目前分为控件"
+                  @div class: 'info-label', "模板类型(Template Package Type)"
+                  @div class: 'setting-description', "目前分为控件(Node Level)"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @select outlet:"type_select", id: "type", class: 'form-control'
@@ -94,7 +94,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板报文"
+                  @div class: 'info-label', "模板报文(Template Html)"
                   @div class: 'setting-description', "模板插入的报文实体"
                 # @div class: 'editor-container', =>
                 @subview "template_html", new TextEditorView(mini: true,attributes: {id: 'template_html', type: 'string'},  placeholderText: ' Template Html Content')
@@ -105,7 +105,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板样式"
+                  @div class: 'info-label', "模板样式(Template Css)"
                   @div class: 'setting-description', "模板插入的样式实体"
                 # @div class: 'editor-container', =>
                 @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
@@ -116,7 +116,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "模板脚本"
+                  @div class: 'info-label', "模板脚本(Template Lua)"
                   @div class: 'setting-description', "模板插入的脚本"
                 # @div class: 'editor-container', =>
                 @subview "template_lua", new TextEditorView(mini: true,attributes: {id: 'template_lua', type: 'string'},  placeholderText: ' Template Lua Script')
@@ -171,7 +171,7 @@ class InstalledTemplatePanel extends ScrollView
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'info-label', "资源文件"
+                  @div class: 'info-label', "资源文件(Image Resource)"
                   @div class: 'setting-description', "为你的模板添加资源文件"
               @div class:'control-ol', =>
                 @table class:'control-tab',outlet:'cbb_tree'
