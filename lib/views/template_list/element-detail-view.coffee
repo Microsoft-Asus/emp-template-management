@@ -575,8 +575,8 @@ class ElementDetailPanel extends View
     changeFocus = true
     tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
     gramers = @getGrammars()
-
-    tmp_editor.setText(content) #unless !content
+    unless content is undefined
+      tmp_editor.setText(content) #unless !content
     tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
     return tmp_editor
 
@@ -612,7 +612,7 @@ class ElementDetailPanel extends View
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
       @cbb_management.add_element(cbb_obj)
-      @pack.delete_element_detail(old_type, @snippet_obj.name)
+      @pack.delete_element_detail(@snippet_obj.name, old_type)
     else
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj

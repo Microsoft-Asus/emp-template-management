@@ -56,17 +56,6 @@ class InstalledTemplatePanel extends ScrollView
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @subview "template_desc", new TextEditorView(mini: true,attributes: {id: 'template_desc', type: 'string'},  placeholderText: ' Template Describtion')
-          # # 包版本号
-          # @div class: 'section-body', =>
-          #   @div class: 'control-group', =>
-          #     @div class: 'controls', =>
-          #       @label class: 'control-label', =>
-          #         @div class: 'info-label', "模板版本"
-          #         @div class: 'setting-description', "默认为0.1, 每次+0.1"
-          #     @div class: 'controls', =>
-          #       # @div class: 'editor-container', =>
-          #       # @div class: 'editor-container', =>
-          #       @subview "template_ver", new TextEditorView(mini: true,attributes: {id: 'template_ver', type: 'string'},  placeholderText: ' Template Version')
 
           # 包类型
           @div class: 'section-body', =>
@@ -100,6 +89,8 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "template_html", new TextEditorView(mini: true,attributes: {id: 'template_html', type: 'string'},  placeholderText: ' Template Html Content')
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_html',' Chose File '
+                @button class: 'control-btn btn btn-info', click:'create_html',' Create File '
+                @button class: 'control-btn btn btn-info', click:'edit_html',' Edit File '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -111,6 +102,8 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+                @button class: 'control-btn btn btn-info', click:'create_css',' Create File '
+                @button class: 'control-btn btn btn-info', click:'edit_css',' Edit File '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -122,6 +115,8 @@ class InstalledTemplatePanel extends ScrollView
                 @subview "template_lua", new TextEditorView(mini: true,attributes: {id: 'template_lua', type: 'string'},  placeholderText: ' Template Lua Script')
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
                 @button class: 'control-btn btn btn-info', click:'select_lua',' Chose File '
+                @button class: 'control-btn btn btn-info', click:'create_lua',' Create File '
+                @button class: 'control-btn btn btn-info', click:'edit_lua',' Edit File '
 
           # 包图标
           @div class: 'section-body', =>
@@ -194,8 +189,9 @@ class InstalledTemplatePanel extends ScrollView
     @cbb_management = atom.project.cbb_management
     @packs = @cbb_management.get_pacakges()
 
-    # @cbb_management = atom.project.cbb_management
-    # console.log templates_json
+    @templates_store_path = atom.project.templates_path
+    console.log @templates_store_path
+
 
     @logo_select.change (event) =>
       @logo_image.attr("src", @logo_select.val())
@@ -542,3 +538,72 @@ class InstalledTemplatePanel extends ScrollView
 
   remove_detail_callback: (name)->
     delete @image_detail[name]
+
+# --------------------
+  initial_create_tmp_file: ->
+    tmp_path = path.join @templates_store_path, emp.EMP_TMP_TEMP_FILE_PATH
+
+    if !fs.existsSync tmp_path
+      emp.mkdir_sync_safe tmp_path
+
+    tmp_path
+
+  # 创建 html 模板
+  create_html: ->
+    console.log "create html"
+    tmp_path = @initial_create_tmp_file()
+    tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_HTML
+    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_XHTML, " ")
+    @template_html.setText(tmp_file)
+
+  edit_html: ->
+    @edit_temp_file(@template_html, emp.EMP_GRAMMAR_XHTML)
+
+  # 创建 css 模板
+  create_css: ->
+    console.log "create css"
+    tmp_path = @initial_create_tmp_file()
+    tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_CSS
+    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_CSS, " ")
+    @template_css.setText(tmp_file)
+
+  edit_css: ->
+    @edit_temp_file(@template_css, emp.EMP_GRAMMAR_LUA)
+
+
+  # 创建 lua 模板
+  create_lua: ->
+    console.log "create lua"
+    tmp_path = @initial_create_tmp_file()
+    tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_LUA
+    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_LUA, " ")
+    @template_lua.setText(tmp_file)
+
+  edit_lua: ->
+    @edit_temp_file(@template_lua, emp.EMP_GRAMMAR_LUA)
+
+  edit_temp_file: (tmp_view, grammar) ->
+    tmp_file = tmp_view.getText()
+    if tmp_file
+      tmp_editor = @create_editor(tmp_file, grammar)
+    else
+      emp.show_error "没有可编辑的文件, 请先选择或者创建模板文件!"
+
+
+  create_editor:(tmp_file_path, tmp_grammar, content) ->
+    changeFocus = true
+    tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
+    # console.log content
+    unless content is undefined
+      tmp_editor.setText(content) #unless !content
+
+    gramers = @getGrammars(tmp_grammar)
+    tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+    return tmp_editor
+
+  # set the opened editor grammar, default is HTML
+  getGrammars: (grammar_name)->
+    grammars = atom.syntax.getGrammars().filter (grammar) ->
+      (grammar isnt atom.syntax.nullGrammar) and
+      grammar.name is grammar_name
+    grammars

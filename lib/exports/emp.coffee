@@ -13,6 +13,16 @@ module.exports =
 
   EMP_ALL_TYPE : "All Type"
 
+  # 创建模板临时文件路径
+  EMP_TMP_TEMP_FILE_PATH:'tmp_file'
+  EMP_TMP_TEMP_HTML:'tmp.xhtml'
+  EMP_TMP_TEMP_CSS:'tmp.css'
+  EMP_TMP_TEMP_LUA:'tmp.lua'
+  EMP_GRAMMAR_XHTML:'Emp View'
+  EMP_GRAMMAR_CSS:'CSS'
+  EMP_GRAMMAR_LUA:'LUA'
+
+
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'

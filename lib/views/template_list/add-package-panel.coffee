@@ -104,13 +104,8 @@ class AddPackagePanel extends View
 
   initial_input: ->
     def_type = emp.EMP_CPP_TYPE_DEF
-    # def_type.push "test"
-    # def_type.push "test1"
-    # def_type.push "test2"
-    # def_type.push emp.EMP_DEFAULT_TYPE
     @type_view = {}
     @ccb_tree.empty()
-
     # 默认类型
     def_view = new CbbEleView(this, emp.EMP_DEFAULT_TYPE, true)
     @type_view[emp.EMP_DEFAULT_TYPE]= def_view
@@ -125,7 +120,6 @@ class AddPackagePanel extends View
     @package_desc.setText ""
     @package_type_add.setText ""
     @package_type_edit.setText ""
-
     # 设置默认图片
     @logo_select.empty()
     def_opt = document.createElement 'option'
@@ -138,7 +132,6 @@ class AddPackagePanel extends View
 
   set_add_flag:(tmp_flag=true)->
     @add_flag=tmp_flag
-
 
   #用于编辑时设置初始值
   set_edit_state: (tmp_obj)->
