@@ -575,8 +575,8 @@ class ElementDetailPanel extends View
     changeFocus = true
     tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
     gramers = @getGrammars()
-
-    tmp_editor.setText(content) #unless !content
+    unless content is undefined
+      tmp_editor.setText(content) #unless !content
     tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
     return tmp_editor
 
