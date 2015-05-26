@@ -612,7 +612,7 @@ class ElementDetailPanel extends View
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
       @cbb_management.add_element(cbb_obj)
-      @pack.delete_element_detail(old_type, @snippet_obj.name)
+      @pack.delete_element_detail(@snippet_obj.name, old_type)
     else
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
