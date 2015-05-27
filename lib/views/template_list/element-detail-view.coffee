@@ -652,7 +652,6 @@ class ElementDetailPanel extends View
         cbb_obj.set_file path.join(@template_path, cbb_css), emp.EMP_QCSS
       else
         cbb_obj.set_con cbb_css, emp.EMP_QCSS
-      cbb_obj
 
     unless !@snippet_obj.lua
       cbb_lua = @snippet_obj.lua.body
@@ -661,7 +660,7 @@ class ElementDetailPanel extends View
         cbb_obj.set_file path.join(@template_path, cbb_lua), emp.EMP_QLUA
       else
         cbb_obj.set_con cbb_lua, emp.EMP_QLUA
-      cbb_obj
+    cbb_obj
 
 get_tmp_file =() ->
   path.join __dirname, "../../../tmp.txt"
