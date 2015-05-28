@@ -152,13 +152,14 @@ class EmpTemplateManagement
     @templates_obj
 
 
-  add_element: (ccb_obj) ->
+  add_element: (cbb_obj) ->
     # console.log "add_element"
-    package_name = ccb_obj.own_package
+    # console.log cbb_obj
+    package_name = cbb_obj.own_package
     if own_pack = @packages[package_name]
-      own_pack.add_element ccb_obj
+      own_pack.add_element cbb_obj
     else
-      @default_package.add_element(ccb_obj)
+      @default_package.add_element(cbb_obj)
 
   edit_element: (ccb_obj, old_obj) ->
     # console.log "add_element"

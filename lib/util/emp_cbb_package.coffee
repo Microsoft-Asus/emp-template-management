@@ -125,7 +125,7 @@ class EmpCbbPackage
   # 添加子元素
   add_element: (ccb_obj) ->
     console.log "add_element"
-    console.log  @obj_json
+    # console.log  @obj_json
     # console.log ccb_obj
     # TODO 如果已存在添加提醒
     if !(@obj_json?.type?.indexOf(ccb_obj.type)+1)

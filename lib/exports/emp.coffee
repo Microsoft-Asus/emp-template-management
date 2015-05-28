@@ -22,7 +22,6 @@ module.exports =
   EMP_GRAMMAR_CSS:'CSS'
   EMP_GRAMMAR_LUA:'LUA'
 
-
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'
@@ -109,6 +108,10 @@ module.exports =
 
   # config key
   EMP_CBB_TYPE: 'emp-template-management.cbb_type'
+  #保存模板添加过程中选中的 package
+  EMP_ADD_TEMP_STORE_PACK:'emp-template-management.cbb_add_temp_pack'
+  EMP_ADD_TEMP_STORE_TYPE:'emp-template-management.cbb_add_temp_type'
+
 
   # config value
   EMP_CPP_TYPE_DEF:[]

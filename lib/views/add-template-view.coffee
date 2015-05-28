@@ -190,52 +190,53 @@ class InstalledTemplatePanel extends ScrollView
     @packs = @cbb_management.get_pacakges()
 
     @templates_store_path = atom.project.templates_path
-    console.log @templates_store_path
-
+    # console.log @templates_store_path
 
     @logo_select.change (event) =>
       @logo_image.attr("src", @logo_select.val())
-    @do_initial()
 
-  do_initial: ()->
     @pack_select.change (event) =>
       tmp_name = @pack_select.val()
+      # atom.project.add_temp_pack_sel = tmp_name
+      atom.config.set emp.EMP_ADD_TEMP_STORE_PACK, tmp_name
       tmp_obj = @packs[tmp_name]
       type_list = tmp_obj.get_type()
       @type_select.empty()
       for tmp_type in type_list
         @type_select.append @new_option(tmp_type)
 
-    @pack_select.empty()
-    for name, obj of @packs
-      if name is default_select_pack
-        @pack_select.append @new_selec_option(name)
-      else
-        @pack_select.append @new_option(name)
-    # console.log @packs
-    tmp_pack = @packs[default_select_pack]
-    # console.log tmp_pack
-    type_list = tmp_pack.get_type()
-    @type_select.empty()
-    for tmp_type in type_list
-      @type_select.append @new_option(tmp_type)
+    @type_select.change (event) =>
+      tmp_name = @type_select.val()
+      # atom.project.add_temp_type_sel = tmp_name
+      atom.config.set emp.EMP_ADD_TEMP_STORE_TYPE, tmp_name
+
+    # @refresh_detail()
+
 
   refresh_detail: ->
     console.log 'refresh_detail'
     @packs = @cbb_management.get_pacakges()
     @pack_select.empty()
+    unless default_pack = atom.config.get emp.EMP_ADD_TEMP_STORE_PACK
+      default_pack = default_select_pack
+
     for name, obj of @packs
-      if name is default_select_pack
+      if name is default_pack
         @pack_select.append @new_selec_option(name)
       else
         @pack_select.append @new_option(name)
-    # console.log @packs
-    tmp_pack = @packs[default_select_pack]
+
+    tmp_pack = @packs[default_pack]
     # console.log tmp_pack
+    default_type = atom.config.get emp.EMP_ADD_TEMP_STORE_TYPE
+
     type_list = tmp_pack.get_type()
     @type_select.empty()
     for tmp_type in type_list
-      @type_select.append @new_option(tmp_type)
+      if tmp_type is default_type
+        @type_select.append @new_selec_option(tmp_type)
+      else
+        @type_select.append @new_option(tmp_type)
 
   new_option: (name)->
     $$ ->
