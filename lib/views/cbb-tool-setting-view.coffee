@@ -15,7 +15,7 @@ class CbbToolSettingPanel extends View
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'setting-description', "this is a description~"
+                  # @div class: 'setting-description', "保存全部"
                   @button click:'do_save_all', class:'btn',"Save All Changes"
 
           # @section outlet:'package_list', class: 'sub-section installed-packages', =>
@@ -30,7 +30,7 @@ class CbbToolSettingPanel extends View
     @cbb_management = atom.project.cbb_management
     @packs = @cbb_management.get_pacakges()
     @cbb_tools = @cbb_management.get_tool_detail()
-    console.log @cbb_tools
+    # console.log @cbb_tools
     # for tool_name, tool_obj of @cbb_tools
       # new CbbToolPanel(tool_name,tool_obj)
 
@@ -38,47 +38,34 @@ class CbbToolSettingPanel extends View
     tool_view_2 = new CbbToolPanel(emp.TOOL_SECOND, @cbb_tools[emp.TOOL_SECOND])
     tool_view_3 = new CbbToolPanel(emp.TOOL_THIRD, @cbb_tools[emp.TOOL_THIRD])
     tool_view_4 = new CbbToolPanel(emp.TOOL_FOURTH, @cbb_tools[emp.TOOL_FOURTH])
+
     @tool_views = [tool_view_1,tool_view_2,tool_view_3,tool_view_4]
 
     for tool_view in @tool_views
       @section_container.append tool_view
-    # @section_container.append tool_view_1
-    # @section_container.append tool_view_2
-    # @section_container.append tool_view_3
-    # @section_container.append tool_view_4
-
 
   do_save_all:  ->
     # console.log "do save all"
-    refresh_flag = false
     for tool_view in @tool_views
       result = tool_view.get_setting_val()
-      # console.log result
-      if @check_diff(result)
-        refresh_flag = true
-        tmp_name = result.name
-        tmp_re = delete result.name
-        @cbb_tools[tmp_name] = result
-
-    if refresh_flag
-      @cbb_management.refresh_tool_detail @cbb_tools
-
+      tmp_name = result.name
+      @cbb_tools[tmp_name] = result.val
+    @cbb_management.refresh_tool_detail @cbb_tools
     emp.show_info(emp.EMP_SAVE_SUCCESS)
 
 
-
-  check_diff: (new_obj)->
-    # console.log new_obj
-    # console.log @cbb_tools[new_obj.name]
-    tmp_name = new_obj.pack_name
-    old_obj = @cbb_tools[new_obj.name]
-    # console.log old_obj
-    if tmp_name is null
-      return false
-    else if !old_obj
-      return true
-    else
-      return tmp_name isnt old_obj.pack_name or new_obj.type_name isnt old_obj.type_name
+  # check_diff: (new_obj)->
+  #   # console.log new_obj
+  #   # console.log @cbb_tools[new_obj.name]
+  #   tmp_len = new_obj.length
+  #   old_obj = @cbb_tools[new_obj.name]
+  #   # console.log old_obj
+  #   if tmp_name is null
+  #     return false
+  #   else if !old_obj
+  #     return true
+  #   else
+  #     return tmp_name isnt old_obj.pack_name or new_obj.type_name isnt old_obj.type_name
 
     #
     # @append(new TutorialPanel(msg))
