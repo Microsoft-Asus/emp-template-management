@@ -47,15 +47,17 @@ class EmpDebugAdpPackageView extends View
     tab_setting = tool_setting[tab_index]
     # console.log tab_setting
     if tab_setting
-      pack = @cbb_management.get_pacakge tab_setting.pack_name
-      # console.log pack
-      ele_list = pack.get_element tab_setting.type_name
-      # console.log ele_list
-      # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+      for key, val of tab_setting
+        pack = @cbb_management.get_pacakge key
+        # console.log pack
+        for tmp_type in val
+          ele_list = pack.get_element tmp_type
+          # console.log ele_list
+          # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
 
-      for name, obj of ele_list
-        tempView = new ComponmentElementView(obj, this)
-        @list.append tempView
+          for name, obj of ele_list
+            tempView = new ComponmentElementView(obj, this)
+            @list.append tempView
     else
         tempView = $$ ->
               @li class:'two-lines cbb_li_view', "No Setting"
