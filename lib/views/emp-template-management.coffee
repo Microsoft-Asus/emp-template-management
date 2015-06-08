@@ -184,11 +184,26 @@ class EmpTemplateManagement
 
 
   initial_tool_setting: ->
-    tool_list = {1:{pack_name:emp.EMP_DEFAULT_PACKAGE, type_name:emp.EMP_DEFAULT_TYPE}}
+    tool_list = {}
+    tool_list[emp.TOOL_FIRST] = {}
+    tool_list[emp.TOOL_FIRST][emp.EMP_DEFAULT_PACKAGE]=[emp.EMP_DEFAULT_TYPE]
     return tool_list
 
   get_tool_detail: () ->
     tool_list = @templates_obj.atom_tool_setting
+
+    tmp_new_list = tool_list
+    for key, val of tool_list
+      if val.pack_name
+        tmp_new_list = {}
+        for key, val of tool_list
+          tmp_new_list[key] = {}
+          tmp_new_list[key][val.pack_name] = [val.type_name]
+
+        @templates_obj.atom_tool_setting = tmp_new_list
+        break
+
+    tool_list = tmp_new_list
     tool_list ?= @initial_tool_setting()
 
   refresh_tool_detail: (new_setting) ->

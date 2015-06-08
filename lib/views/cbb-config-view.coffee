@@ -1,5 +1,4 @@
-{$, $$, View} = require 'atom'
-{TextEditorView} = require 'atom-space-pen-views'
+{$, $$, View, TextEditorView} = require 'atom-space-pen-views'
 fs_plus = require 'fs-plus'
 emp = require '../exports/emp'
 remote = require 'remote'

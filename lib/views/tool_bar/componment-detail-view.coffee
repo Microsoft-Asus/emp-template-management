@@ -1,5 +1,5 @@
-{View, Range} = require 'atom'
-{$, $$, TextEditorView} = require 'atom-space-pen-views'
+{Range} = require 'atom'
+{$, $$, TextEditorView, View} = require 'atom-space-pen-views'
 # fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
@@ -174,7 +174,7 @@ class CbbDetailView extends View
     @on 'core:cancel', (e) =>
       console.log "cancel"
 
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     if editor
       if html_path = editor.getPath?()
 
@@ -297,7 +297,7 @@ class CbbDetailView extends View
 
   do_input_snippet: ->
     console.log @com
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
 
     if editor
       try
