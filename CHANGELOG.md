@@ -1,3 +1,6 @@
+## 0.1.15
+1. 删除Deprecated API
+
 ## 0.1.14
 1. 重定义 CBB Tool Bar 配置规则, 现在允许配置多个 Pack/Type.
 2. 重定义 CBB Tool Bar 显示样式.

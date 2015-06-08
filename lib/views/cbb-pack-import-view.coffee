@@ -1,5 +1,4 @@
-{$, $$, View} = require 'atom'
-{TextEditorView} = require 'atom-space-pen-views'
+{$, $$, View, TextEditorView} = require 'atom-space-pen-views'
 ZipWriter = require("moxie-zip").ZipWriter
 AdmZip = require('adm-zip')
 emp = require '../exports/emp'
@@ -72,7 +71,7 @@ class CbbPackImportView extends View
     @cbb_management = atom.project.cbb_management
     @packs = @cbb_management.get_pacakges()
     @cbb_tools = @cbb_management.get_tool_detail()
-    project_path = atom.project.getPath()
+    projectPath = atom.project.getPaths()[0]
     if project_path
       tmp_export_store_path = path.join project_path,"tmp"
       console.log tmp_export_store_path

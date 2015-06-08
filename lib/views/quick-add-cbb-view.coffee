@@ -1,5 +1,4 @@
-{View} = require 'atom'
-{$, $$, TextEditorView} = require 'atom-space-pen-views'
+{$, $$, View, TextEditorView} = require 'atom-space-pen-views'
 # fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
@@ -182,7 +181,7 @@ class QuickAddCbbView extends View
 
   show: (type)->
     console.log " show this "
-    editor = atom.workspace.getActiveEditor()
+    editor = atom.workspace.getActiveTextEditor()
     if editor
       selection = editor.getSelection().getText()
       if selection.length > 0

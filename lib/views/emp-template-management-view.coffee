@@ -1,4 +1,4 @@
-{$, $$, ScrollView} = require 'atom'
+{$, $$, ScrollView} = require 'atom-space-pen-views'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 fs = require 'fs'
@@ -131,8 +131,6 @@ class EmpTmpManagementView extends ScrollView
     activePanelName: @activePanelName ? @panelToShow
     uri: @uri
 
-  detached: ->
-    @unsubscribe()
 
   focus: ->
     super

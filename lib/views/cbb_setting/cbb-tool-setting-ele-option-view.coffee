@@ -1,4 +1,4 @@
-{$$,View} = require 'atom'
+{$, $$, View} = require 'atom-space-pen-views'
 emp = require '../../exports/emp'
 default_select_pack = emp.EMP_DEFAULT_PACKAGE
 default_select_type = emp.EMP_DEFAULT_TYPE

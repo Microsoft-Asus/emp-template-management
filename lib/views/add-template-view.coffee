@@ -1,5 +1,4 @@
-{$, $$, ScrollView} = require 'atom'
-{TextEditorView} = require 'atom-space-pen-views'
+{$, $$, ScrollView,TextEditorView} = require 'atom-space-pen-views'
 path = require 'path'
 fs = require 'fs'
 remote = require 'remote'

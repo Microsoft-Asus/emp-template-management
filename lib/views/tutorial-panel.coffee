@@ -1,5 +1,5 @@
 {CompositeDisposable} = require 'atom'
-{$, $$, TextEditorView, View} = require 'atom'
+{$, $$, TextEditorView, View} = require 'atom-space-pen-views'
 # _ = require 'underscore-plus'
 
 module.exports =

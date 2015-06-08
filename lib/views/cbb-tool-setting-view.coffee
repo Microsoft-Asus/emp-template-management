@@ -1,4 +1,4 @@
-{View} = require 'atom'
+{View} = require 'atom-space-pen-views'
 CbbToolPanel = require './cbb_setting/cbb-tool-setting-ele-panel'
 emp = require '../exports/emp'
 

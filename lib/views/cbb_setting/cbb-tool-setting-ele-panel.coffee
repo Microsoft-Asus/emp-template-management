@@ -1,4 +1,4 @@
-{$$,View} = require 'atom'
+{$, $$, View} = require 'atom-space-pen-views'
 emp = require '../../exports/emp'
 CBBToolEleOptionView = require './cbb-tool-setting-ele-option-view'
 # default_select_pack = null
