@@ -10,6 +10,7 @@ ComponmentElementView = require './tool_bar/componment-view-element'
 
 module.exports = class EmpDebugAdpPackageView extends View
 
+
   @content: ->
     @div oulet:'cbb_tool_view', class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
       @div class:'cbb-view-scroller', =>
@@ -32,6 +33,7 @@ module.exports = class EmpDebugAdpPackageView extends View
 
   initialize: ->
     @active_panel=null
+    @first_show = true
     @disposables = new CompositeDisposable()
     # project_path = atom.project.getPath()
     # console.log "init"
@@ -72,16 +74,18 @@ module.exports = class EmpDebugAdpPackageView extends View
 
 
   toggle: ->
-    if @isVisible()
-      @detach()
+    # console.log "---- toggle ----"
+    if @first_show
+      @first_show = false
+      if @isVisible()
+        @detach()
+      else
+        @attach()
     else
-      # console.log "---- show ----"
-      @show()
-
-  show: ->
-
-    @attach()
-    # @
+      if @isVisible()
+        this.hide()
+      else
+        this.show()
 
   detached: ->
     @disposables.dispose()
