@@ -381,7 +381,7 @@ class ElementDetailPanel extends View
     if tmp_path ?= @source_file.getText()
       fs.stat tmp_path, (err, stats) =>
         if err
-          console.log err
+          console.error err
 
         if stats?.isFile()
           unless @source_files[tmp_path]
@@ -494,24 +494,28 @@ class ElementDetailPanel extends View
         tmp_body = tmp_obj.body
         # tmp_editor = atom.workspace.openSync()
         # @store_info(tmp_editor, tmp_body)
-        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
-        tmp_editor.onDidSave (event) =>
-          console.log event
-          tmp_body = tmp_editor.getText()
-          @snippet_obj.html.body = tmp_body
-          @html_body.empty()
-          re_body = new ExampleView(tmp_body)
-          @html_body.append re_body
+
+        tmp_editor = @create_editor_cb(get_tmp_file(), (tmp_editor) =>
+                  tmp_editor.onDidSave (event) =>
+                    # console.log event
+                    tmp_body = tmp_editor.getText()
+                    @snippet_obj.html.body = tmp_body
+                    @html_body.empty()
+                    re_body = new ExampleView(tmp_body)
+                    @html_body.append(re_body)
+                ,tmp_body)
+
       else
         # TODO 改为文件显示
         tmp_path = path.join @templates_path, tmp_obj.body
-        tmp_editor = @create_editor(tmp_path)
-        tmp_editor.onDidSave (event) =>
-          console.log event
-          tmp_body = tmp_editor.getText()
-          @html_body.empty()
-          re_body = new ExampleView(tmp_body)
-          @html_body.append re_body
+        tmp_editor = @create_editor_cb(tmp_path, (tmp_editor) =>
+                tmp_editor.onDidSave (event) =>
+                  # console.log event
+                  tmp_body = tmp_editor.getText()
+                  @html_body.empty()
+                  re_body = new ExampleView(tmp_body)
+                  @html_body.append(re_body)
+              )
 
   # 编辑样式模板
   edit_css: ->
@@ -521,28 +525,28 @@ class ElementDetailPanel extends View
     if tmp_obj
       if tmp_obj.type is emp.EMP_CON_TYPE
         tmp_body = tmp_obj.body
-        # tmp_editor = atom.workspace.openSync()
-        console.log tmp_body
-        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+        # console.log tmp_body
+        tmp_editor = @create_editor_cb(get_tmp_file(), (tmp_editor) =>
         # @store_info(tmp_editor, tmp_body)
-        tmp_editor.onDidSave (event) =>
-          console.log event
-          tmp_body = fs.readFileSync event.path, 'utf-8'
-          @snippet_obj.css.body = tmp_body
-          @css_body.empty()
-          re_body = new ExampleView(tmp_body)
-          @css_body.append re_body
+                      tmp_editor.onDidSave (event) =>
+                        # console.log event
+                        tmp_body = fs.readFileSync event.path, 'utf-8'
+                        @snippet_obj.css.body = tmp_body
+                        @css_body.empty()
+                        re_body = new ExampleView(tmp_body)
+                        @css_body.append(re_body)
+                  ,tmp_body)
+
       else
         # TODO 改为文件显示
         tmp_path = path.join @templates_path, tmp_obj.body
-        tmp_editor = @create_editor(tmp_path)
-
-        tmp_editor.onDidSave (e) ->
-          console.log e
-          tmp_body = tmp_editor.getText()
-          @css_body.empty()
-          re_body = new ExampleView(tmp_body)
-          @css_body.append re_body
+        tmp_editor = @create_editor_cb(tmp_path, (tmp_editor) =>
+                    tmp_editor.onDidSave (e) =>
+                      tmp_body = tmp_editor.getText()
+                      @css_body.empty()
+                      re_body = new ExampleView(tmp_body)
+                      @css_body.append(re_body)
+                  )
     else
       emp.show_error 'no css style file!'
 
@@ -556,12 +560,13 @@ class ElementDetailPanel extends View
         tmp_body = tmp_obj.body
         # tmp_editor = atom.workspace.openSync()
 
-        tmp_editor = @create_editor(get_tmp_file(), tmp_body)
+        tmp_editor = @create_editor(get_tmp_file(), (tmp_editor) =>
         # @store_info(tmp_editor, tmp_body)
-        tmp_editor.onDidSave (event) =>
-          console.log event
-          tmp_body = fs.readFileSync event.path, 'utf-8'
-          @snippet_obj.lua.body = tmp_body
+                  tmp_editor.onDidSave (event) =>
+                    # console.log event
+                    tmp_body = fs.readFileSync event.path, 'utf-8'
+                    @snippet_obj.lua.body = tmp_body
+                ,tmp_body)
 
       else
         # TODO 改为文件显示
@@ -573,12 +578,21 @@ class ElementDetailPanel extends View
 
   create_editor:(tmp_file_path, content) ->
     changeFocus = true
-    tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
-    gramers = @getGrammars()
-    unless content is undefined
-      tmp_editor.setText(content) #unless !content
-    tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
-    return tmp_editor
+    atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
+      gramers = @getGrammars()
+      unless content is undefined
+        tmp_editor.setText(content) #unless !content
+      tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+
+
+  create_editor_cb:(tmp_file_path, callback, content) ->
+    changeFocus = true
+    atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
+      gramers = @getGrammars()
+      unless content is undefined
+        tmp_editor.setText(content) #unless !content
+      tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+      callback(tmp_editor)
 
   store_info: (tmp_editor, content)->
     tmp_editor.setText(content)
@@ -587,8 +601,8 @@ class ElementDetailPanel extends View
 
   # set the opened editor grammar, default is HTML
   getGrammars: ->
-    grammars = atom.syntax.getGrammars().filter (grammar) ->
-      (grammar isnt atom.syntax.nullGrammar) and
+    grammars = atom.grammars.getGrammars().filter (grammar) ->
+      (grammar isnt atom.grammars.nullGrammar) and
       grammar.name is 'HTML'
     grammars
 

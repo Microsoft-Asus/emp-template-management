@@ -553,7 +553,7 @@ class InstalledTemplatePanel extends ScrollView
     console.log "create html"
     tmp_path = @initial_create_tmp_file()
     tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_HTML
-    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_XHTML, " ")
+    @create_editor(tmp_file, emp.EMP_GRAMMAR_XHTML, " ")
     @template_html.setText(tmp_file)
 
   edit_html: ->
@@ -564,7 +564,7 @@ class InstalledTemplatePanel extends ScrollView
     console.log "create css"
     tmp_path = @initial_create_tmp_file()
     tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_CSS
-    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_CSS, " ")
+    @create_editor(tmp_file, emp.EMP_GRAMMAR_CSS, " ")
     @template_css.setText(tmp_file)
 
   edit_css: ->
@@ -576,7 +576,7 @@ class InstalledTemplatePanel extends ScrollView
     console.log "create lua"
     tmp_path = @initial_create_tmp_file()
     tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_LUA
-    tmp_editor = @create_editor(tmp_file, emp.EMP_GRAMMAR_LUA, " ")
+    @create_editor(tmp_file, emp.EMP_GRAMMAR_LUA, " ")
     @template_lua.setText(tmp_file)
 
   edit_lua: ->
@@ -585,25 +585,22 @@ class InstalledTemplatePanel extends ScrollView
   edit_temp_file: (tmp_view, grammar) ->
     tmp_file = tmp_view.getText()
     if tmp_file
-      tmp_editor = @create_editor(tmp_file, grammar)
+      @create_editor(tmp_file, grammar)
     else
       emp.show_error "没有可编辑的文件, 请先选择或者创建模板文件!"
 
 
   create_editor:(tmp_file_path, tmp_grammar, content) ->
     changeFocus = true
-    tmp_editor = atom.workspace.openSync(tmp_file_path, { changeFocus })
-    # console.log content
-    unless content is undefined
-      tmp_editor.setText(content) #unless !content
-
-    gramers = @getGrammars(tmp_grammar)
-    tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
-    return tmp_editor
+    tmp_editor = atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
+      gramers = @getGrammars()
+      unless content is undefined
+        tmp_editor.setText(content) #unless !content
+      tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
 
   # set the opened editor grammar, default is HTML
   getGrammars: (grammar_name)->
-    grammars = atom.syntax.getGrammars().filter (grammar) ->
-      (grammar isnt atom.syntax.nullGrammar) and
+    grammars = atom.grammars.getGrammars().filter (grammar) ->
+      (grammar isnt atom.grammars.nullGrammar) and
       grammar.name is grammar_name
     grammars
