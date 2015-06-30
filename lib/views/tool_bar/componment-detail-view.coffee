@@ -100,7 +100,7 @@ class CbbDetailView extends View
       @div class:'div_box_bor'
       @div class:'cbb_detail_foot', =>
         @button "Done", class: "createSnippetButton btn btn-primary", click:'do_input'
-        @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
+        @button "Cancel", class: "createSnippetButton btn-warning btn btn-primary", click:'do_cancel'
 
   initialize: (@com) ->
     # @handle_event()
