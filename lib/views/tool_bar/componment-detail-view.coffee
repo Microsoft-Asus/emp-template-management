@@ -24,6 +24,8 @@ class CbbDetailView extends View
     @div outlet:'cbb_detail_div', class:'cbb-detail-view  overlay from-top', =>
       @div class:'cbb_detail_panel panel', =>
         @h1 "Insert Cbb Templates", class: 'panel-heading'
+        @div class:'bar_div', =>
+          @button class: 'btn-warning btn  inline-block-tight btn_right', click: 'do_cancel', 'Cancel'
 
       @div class: 'cbb_detail_info', =>
 
