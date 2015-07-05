@@ -22,18 +22,11 @@ class EmpCbbPackage
     @name = @obj_json.name
     @logo = @obj_json.logo
     @desc = @obj_json.desc
-    if !@type_list = @obj_json.type
-      @type_list = []
-    # console.log @type_list
-    if !(@type_list.indexOf(emp.EMP_DEFAULT_TYPE)+1)
-      # console.log "push"
-      @type_list.push emp.EMP_DEFAULT_TYPE
-    # if !@package_path = @obj_json.path
+
     @package_path = path.join @store_path, @name
 
     emp.mkdir_sync_safe @package_path
-    for tmp_dir in @type_list
-      emp.mkdir_sync_safe path.join(@package_path, tmp_dir)
+
     @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
     edit_flag = false
     if fs.existsSync @template_json
@@ -46,6 +39,16 @@ class EmpCbbPackage
         tmp_obj.desc = @desc
         edit_flag = true
       @obj_json = tmp_obj
+
+    if !@type_list = @obj_json.type
+      @type_list = []
+    # console.log @type_list
+    if !(@type_list.indexOf(emp.EMP_DEFAULT_TYPE)+1)
+      # console.log "push"
+      @type_list.push emp.EMP_DEFAULT_TYPE
+    # if !@package_path = @obj_json.path
+    for tmp_dir in @type_list
+      emp.mkdir_sync_safe path.join(@package_path, tmp_dir)
     # console.log @obj_json
     if !@obj_json[emp.EMP_DEFAULT_TYPE]
       @obj_json[emp.EMP_DEFAULT_TYPE] = {}
