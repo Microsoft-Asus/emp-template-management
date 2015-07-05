@@ -1,6 +1,6 @@
 {CompositeDisposable} = require 'atom'
 # {View} = require 'atom'
-{View} = require 'atom-space-pen-views'
+{$, $$, View} = require 'atom-space-pen-views'
 # os = require 'os'
 path = require 'path'
 fs = require 'fs'
@@ -24,10 +24,15 @@ module.exports = class EmpDebugAdpPackageView extends View
               @div class:'title', "Tab3"
             @li class:'tab sortable', outlet:'tab4',click:'active_tab4',=>
               @div class:'title', "Tab4"
-          @div class:'cbb-view-detail', =>
+          # @div class:'cbb-view-detail', =>
 
       # @div class:'cbb-view-scroller', =>
-              @ol class: 'list-group cbb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
+          @div class:'cbb-view-detail', =>
+            @ol class: 'list-group cbb-view full-menu focusable-panel', tabindex: -1, outlet: 'list'
+          @div class: 'cbb-footor', =>
+            @ul class:'eul' ,=>
+              @li outlet:"emp_footor_btn", class:'eli curr',click: 'hide_view', "Hide"
+
       @div class:'cbb-view-resize-handle', mousedown: 'resizeStarted'
 
 
@@ -54,14 +59,15 @@ module.exports = class EmpDebugAdpPackageView extends View
       for key, val of tab_setting
         pack = @cbb_management.get_pacakge key
         # console.log pack
-        for tmp_type in val
-          ele_list = pack.get_element tmp_type
-          # console.log ele_list
-          # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
-
-          for name, obj of ele_list
-            tempView = new ComponmentElementView(obj, this)
-            @list.append tempView
+        if pack
+          for tmp_type in val
+            ele_list = pack.get_element tmp_type
+            # console.log ele_list
+            # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
+            if tmp_type
+              for name, obj of ele_list
+                tempView = new ComponmentElementView(obj, this)
+                @list.append tempView
     else
         tempView = $$ ->
               @li class:'two-lines cbb_li_view', "No Setting"
@@ -152,3 +158,7 @@ module.exports = class EmpDebugAdpPackageView extends View
     unless !@store_detail
       @store_detail.destroy()
     @store_detail = new_detail_view
+
+  # 隐藏当前页面
+  hide_view: ->
+    this.hide()

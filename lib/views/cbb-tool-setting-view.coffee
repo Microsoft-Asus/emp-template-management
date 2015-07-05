@@ -17,6 +17,7 @@ class CbbToolSettingPanel extends View
                 @label class: 'control-label', =>
                   # @div class: 'setting-description', "保存全部"
                   @button click:'do_save_all', class:'btn',"Save All Changes"
+          @div outlet:"section_container_detail"
 
           # @section outlet:'package_list', class: 'sub-section installed-packages', =>
           #   @h3 class: 'sub-section-heading icon icon-package', =>
@@ -27,13 +28,28 @@ class CbbToolSettingPanel extends View
 
   initialize: (msg)->
     @loadingElement.remove()
-    @cbb_management = atom.project.cbb_management
-    @packs = @cbb_management.get_pacakges()
-    @cbb_tools = @cbb_management.get_tool_detail()
-    # console.log @cbb_tools
-    # for tool_name, tool_obj of @cbb_tools
-      # new CbbToolPanel(tool_name,tool_obj)
+    # @cbb_management = atom.project.cbb_management
+    # # @packs = @cbb_management.get_pacakges()
+    # @cbb_tools = @cbb_management.get_tool_detail()
+    # # console.log @cbb_tools
+    # # for tool_name, tool_obj of @cbb_tools
+    #   # new CbbToolPanel(tool_name,tool_obj)
+    #
+    # tool_view_1 = new CbbToolPanel(emp.TOOL_FIRST, @cbb_tools[emp.TOOL_FIRST])
+    # tool_view_2 = new CbbToolPanel(emp.TOOL_SECOND, @cbb_tools[emp.TOOL_SECOND])
+    # tool_view_3 = new CbbToolPanel(emp.TOOL_THIRD, @cbb_tools[emp.TOOL_THIRD])
+    # tool_view_4 = new CbbToolPanel(emp.TOOL_FOURTH, @cbb_tools[emp.TOOL_FOURTH])
+    #
+    # @tool_views = [tool_view_1,tool_view_2,tool_view_3,tool_view_4]
+    #
+    # for tool_view in @tool_views
+    #   @section_container_detail.append tool_view
 
+  refresh_detail:() ->
+    # console.log "do refresh"
+    @cbb_management = atom.project.cbb_management
+    @cbb_tools = @cbb_management.get_tool_detail()
+    @section_container_detail.empty()
     tool_view_1 = new CbbToolPanel(emp.TOOL_FIRST, @cbb_tools[emp.TOOL_FIRST])
     tool_view_2 = new CbbToolPanel(emp.TOOL_SECOND, @cbb_tools[emp.TOOL_SECOND])
     tool_view_3 = new CbbToolPanel(emp.TOOL_THIRD, @cbb_tools[emp.TOOL_THIRD])
@@ -42,7 +58,10 @@ class CbbToolSettingPanel extends View
     @tool_views = [tool_view_1,tool_view_2,tool_view_3,tool_view_4]
 
     for tool_view in @tool_views
-      @section_container.append tool_view
+      @section_container_detail.append tool_view
+
+
+
 
   do_save_all:  ->
     # console.log "do save all"

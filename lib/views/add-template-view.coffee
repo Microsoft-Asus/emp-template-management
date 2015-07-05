@@ -7,6 +7,7 @@ emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'
 CbbSrcEleView = require './template_list/cbb-source-ele-view'
 default_select_pack = emp.EMP_DEFAULT_PACKAGE
+default_select_type = emp.EMP_DEFAULT_TYPE
 
 module.exports =
 class InstalledTemplatePanel extends ScrollView
@@ -219,13 +220,20 @@ class InstalledTemplatePanel extends ScrollView
     unless default_pack = atom.config.get emp.EMP_ADD_TEMP_STORE_PACK
       default_pack = default_select_pack
 
+    tmp_pack = @packs[default_pack]
+    if !tmp_pack
+      default_pack = default_select_pack
+      tmp_pack = @packs[default_select_pack]
+      default_type = default_select_type
+      atom.config.set emp.EMP_ADD_TEMP_STORE_PACK, default_pack
+      atom.config.set emp.EMP_ADD_TEMP_STORE_TYPE, default_type
+
     for name, obj of @packs
       if name is default_pack
         @pack_select.append @new_selec_option(name)
       else
         @pack_select.append @new_option(name)
 
-    tmp_pack = @packs[default_pack]
     # console.log tmp_pack
     default_type = atom.config.get emp.EMP_ADD_TEMP_STORE_TYPE
 

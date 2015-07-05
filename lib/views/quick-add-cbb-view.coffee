@@ -24,6 +24,9 @@ class QuickAddCbbView extends View
     @div class:'quick-add overlay from-top', =>
       @div class:'quick_add_panel panel', =>
         @h1 "快速创建公共模板", class: 'panel-heading'
+        @div class:'bar_div', =>
+          @button class: 'btn-warning btn  inline-block-tight btn_right', click: 'do_cancel', 'Cancel'
+
       @div class: 'quick_add_info', =>
         @div  class:'div_snippet', =>
           @ul class:'list-tree has-collapsable-children', click:'collapsable_text', =>
@@ -72,7 +75,7 @@ class QuickAddCbbView extends View
       #     @button "?", class:"btn", outlet:"sourceHelp"
       @div class:'quick_add_foot', =>
         @button "Done", class: "createSnippetButton btn btn-primary", click:'create_snippet'
-        @button "Cancel", class: "createSnippetButton btn btn-primary", click:'do_cancel'
+        @button "Cancel", class: "createSnippetButton btn-warning btn btn-primary", click:'do_cancel'
         @button "Refresh", class: "createSnippetButton btn btn-primary", click:'refresh_panl'
 
   initialize: (@emp_temp_management) ->
@@ -183,7 +186,8 @@ class QuickAddCbbView extends View
     console.log " show this "
     editor = atom.workspace.getActiveTextEditor()
     if editor
-      selection = editor.getSelection().getText()
+      selection = editor.getSelectedText()
+      console.log selection
       if selection.length > 0
         @set_snippet(type, selection)
     atom.workspace.addTopPanel(item: this)

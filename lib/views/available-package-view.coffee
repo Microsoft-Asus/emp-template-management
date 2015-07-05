@@ -70,7 +70,7 @@ class AvailablePackageView extends View
 
   do_uninstall: ->
     tmp_flag = @show_alert()
-    console.log tmp_flag
+    # console.log tmp_flag
     switch tmp_flag
       when 1
         console.log "1"
