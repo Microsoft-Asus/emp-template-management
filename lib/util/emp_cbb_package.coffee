@@ -35,12 +35,22 @@ class EmpCbbPackage
     for tmp_dir in @type_list
       emp.mkdir_sync_safe path.join(@package_path, tmp_dir)
     @template_json = path.join @package_path, emp.EMP_TEMPLATE_JSON
+    edit_flag = false
     if fs.existsSync @template_json
       json_con = fs.readFileSync @template_json
-      @obj_json = JSON.parse json_con
+      tmp_obj = JSON.parse json_con
+      if tmp_obj.logo isnt @logo
+        tmp_obj.logo = @logo
+        edit_flag = true
+      if tmp_obj.desc isnt @desc
+        tmp_obj.desc = @desc
+        edit_flag = true
+      @obj_json = tmp_obj
     # console.log @obj_json
     if !@obj_json[emp.EMP_DEFAULT_TYPE]
       @obj_json[emp.EMP_DEFAULT_TYPE] = {}
+    if edit_flag
+      @refresh()
     # console.log @obj_json
 
   refresh: ->

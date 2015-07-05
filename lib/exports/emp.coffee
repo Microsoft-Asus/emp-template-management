@@ -189,6 +189,15 @@ module.exports.self_info = (title_msg, detail_msg) ->
     detailedMessage:detail_msg
     buttons:["Ok"]
 
+module.exports.show_alert = (text_title, text_msg) ->
+  atom.confirm
+    message: "#{text_title}"
+    detailedMessage: "#{text_msg}"
+    buttons:
+      '否': -> return 0
+      '是': -> return 1
+
+
 
 module.exports.isEmpty = (obj) ->
     for key,name of obj
@@ -247,6 +256,33 @@ mk_dirs_sync = (p, made) ->
           unless stat.isDirectory()
             throw err0
   made
+
+
+# show_msg_cb: ->
+#   tmp_flag = @show_alert()
+#   console.log tmp_flag
+#   switch tmp_flag
+#     when 1
+#       console.log "1"
+#       @cbb_management.delete_package_detail(@package_obj.name)
+#       emp.show_info "删除成功！"
+#       @fa_view.refresh_detail()
+#     when 2
+#       console.log "2"
+#       @cbb_management.delete_package(@package_obj.name)
+#       emp.show_info "删除成功！"
+#       @fa_view.refresh_detail()
+#     else return
+#
+# show_alert: (replace_con, relative_path, editor) ->
+#   atom.confirm
+#     message: '警告'
+#     detailedMessage: '是否确定要删除该模板集?'
+#     buttons:
+#       '同时删除文件': -> return 1
+#       '是': -> return 2
+#       '否': -> return 3
+
 
 valid_ip = (ip_add)->
     # console.log ip_add

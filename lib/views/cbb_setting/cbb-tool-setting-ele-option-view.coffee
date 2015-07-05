@@ -51,6 +51,9 @@ class CbbToolSettingOptionView extends View
 
     tmp_pack = @packs[@default_pack]
     # console.log tmp_pack
+    if !tmp_pack
+      tmp_pack = @packs[default_select_pack]
+
     type_list = tmp_pack.get_type()
     @type_select.empty()
     for tmp_type in type_list
@@ -58,6 +61,7 @@ class CbbToolSettingOptionView extends View
         @type_select.append @new_selec_option(tmp_type)
       else
         @type_select.append @new_option(tmp_type)
+
 
   new_option: (name)->
     $$ ->

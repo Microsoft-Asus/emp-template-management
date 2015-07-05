@@ -2,6 +2,9 @@ emp = require '../exports/emp'
 fs = require 'fs'
 path = require 'path'
 
+tmp_alert_title = "提示"
+tmp_alert_msg = "插件侦测到存在之前参与的模板配置, 是否使用之前的模板配置?"
+
 module.exports =
 class EmpCbbEle
 
@@ -77,9 +80,36 @@ class EmpCbbEle
     @element_path_rel = path.join @own_package, @type, @name
     emp.mkdir_sync_safe @element_path
     @template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
-    @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
-    @format_template()
-    @refresh()
+
+    if fs.existsSync @template_json
+      return_flag = emp.show_alert(tmp_alert_title, tmp_alert_msg)
+
+      if return_flag
+        json_con = fs.readFileSync @template_json
+        tmp_obj = JSON.parse json_con
+        @name = tmp_obj.name
+        @desc = tmp_obj.desc
+        @type = tmp_obj.type
+        @logo = tmp_obj.logo
+        @detail = tmp_obj.detail
+        @element_path = tmp_obj.element_path
+        @html = tmp_obj.html
+        @css = tmp_obj.css
+        @lua = tmp_obj.lua
+        @available = tmp_obj.available
+        @own_package = tmp_obj.own_package
+        @source = tmp_obj.source
+        @level = tmp_obj.level
+
+        @available = tmp_obj.available
+        @available = tmp_obj.available
+        @available = tmp_obj.available
+        @available = tmp_obj.available
+
+      else
+        @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
+        @format_template()
+        @refresh()
 
   edit: (@package_path, @own_package, @old_obj)->
     @element_path = path.join @package_path, @type, @name
