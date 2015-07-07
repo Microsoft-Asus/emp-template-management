@@ -33,7 +33,7 @@ class ComponmentEleView extends View
 # click: 'do_click',
 
 
-  initialize: (@com, @fa_view) ->
+  initialize: (@com, @fa_view, @pack_name) ->
     @templates_path = atom.project.templates_path
     @ele_path = @com.element_path
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
@@ -205,6 +205,6 @@ class ComponmentEleView extends View
 
   do_click_panel: ->
     # console.log @com
-    @detail_view = new CbbDetailView(@com)
+    @detail_view = new CbbDetailView(@com, @pack_name)
     @detail_view.show()
     @fa_view.store_ele_detail(@detail_view)

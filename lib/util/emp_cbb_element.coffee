@@ -110,6 +110,10 @@ class EmpCbbEle
         @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
         @format_template()
         @refresh()
+    else
+      @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
+      @format_template()
+      @refresh()
 
   edit: (@package_path, @own_package, @old_obj)->
     @element_path = path.join @package_path, @type, @name

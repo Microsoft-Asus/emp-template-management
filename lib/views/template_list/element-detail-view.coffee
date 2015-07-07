@@ -603,7 +603,7 @@ class ElementDetailPanel extends View
   getGrammars: ->
     grammars = atom.grammars.getGrammars().filter (grammar) ->
       (grammar isnt atom.grammars.nullGrammar) and
-      grammar.name is 'HTML'
+      grammar.name is 'Emp View'
     grammars
 
   save_snippet: ->

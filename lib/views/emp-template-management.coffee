@@ -15,6 +15,7 @@ class EmpTemplateManagement
   packages:{}
   # package_list:[]
   default_package:null
+  default_common_css:{}
 
   constructor: ->
     # console.log "constructor"
@@ -22,13 +23,19 @@ class EmpTemplateManagement
     # atom.project.package_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME)
     # console.log atom.config.get emp.EMP_TEMPLATES_KEY
     # console.log atom.project.templates_path
+    @do_initialize()
+
+  do_initialize: ->
     @do_initial()
+    # 以 Package 为单位合并所有的模板 UI, 生成公共的 Css 文件
+    @initialize_common_ui_css_merge()
 
   do_initial: ->
     # if !templates_store_path = atom.project.templates_path
-    atom.project.templates_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
+    templates_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
+    atom.project.templates_path = templates_store_path
       # atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
-    templates_store_path = atom.project.templates_path
+    # templates_store_path = atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     @templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
@@ -42,7 +49,7 @@ class EmpTemplateManagement
     # console.log @templates_obj
 
   initialize_default: ->
-    console.log "initial"
+    # console.log "initial"
     # console.log "$1"
     @templates_obj = {templates:[], length:0,
     level:emp.EMP_JSON_ALL, atom_tool_setting:@initial_tool_setting()}
@@ -182,6 +189,9 @@ class EmpTemplateManagement
   get_package_obj: (name)->
     @templates_obj[name]
 
+  # 返回对应文件的 css 公共文件
+  get_common_css: (name) ->
+    @default_common_css[name]
 
   initial_tool_setting: ->
     tool_list = {}
@@ -223,6 +233,60 @@ class EmpTemplateManagement
       fs.writeFile tmp_file_path, tmp_data, (err) ->
          unless !err
            console.error err
+
+  # @doc: 以 Package 为单位合并所有的模板 UI, 生成公共的 Css 文件
+  initialize_common_ui_css_merge: () ->
+    # console.log "-------- ---- --- initialize_common_ui_css_merge ++++++ "
+    # console.log @packages
+    for tmp_pack, tmp_obj of @packages
+      # console.log "package: #{tmp_pack}"
+      @do_writer_file(tmp_pack, tmp_obj)
+
+    console.info "formate common ui css files completed."
+
+  do_writer_file:(pack_name, pack_obj) ->
+    tmp_result_name = emp.EMP_TEMPLATE_CSS_NAME_HEAD + pack_name+"."+emp.EMP_CSS_DIR
+    tmp_result_file = path.join templates_store_path, emp.EMP_TMP_TEMP_FILE_PATH,tmp_result_name
+    @default_common_css[pack_name]= tmp_result_file
+    # console.log "tmp_result_file: #{tmp_result_file}"
+    tmp_type_list = pack_obj.type_list
+    tmp_obj_json = pack_obj.obj_json
+    fs.open tmp_result_file, "w+", (err, fd) =>
+      fs.writeSync fd, emp.EMP_TEMPLATE_CSS_HEAD, 'utf-8'
+      tmp_count = tmp_type_list?.length
+      for tmp_type in tmp_type_list
+        tmp_type_obj = tmp_obj_json[tmp_type]
+        css_arr = @merge_type_css(tmp_type_obj)
+        css_arr = css_arr.join "\r\n"
+        fs.writeSync fd, css_arr ,'utf-8'
+      fs.close(fd)
+
+  merge_type_css: (type_obj_list) ->
+    # console.log type_obj_list
+    result_css = []
+    for temp, temp_obj of type_obj_list
+      temp_path = path.join templates_store_path, temp_obj.element_path, emp.EMP_TEMPLATE_JSON
+
+      if fs.existsSync temp_path
+        json_con = fs.readFileSync temp_path
+        tmp_obj = JSON.parse json_con
+        tmp_css_obj = tmp_obj.css
+
+        if tmp_css_obj.type is emp.EMP_FILE_TYPE
+          tmp_css_file = path.join templates_store_path, tmp_css_obj.body
+          if fs.existsSync tmp_css_file
+            tmp_css = fs.readFileSync(tmp_css_file, 'utf8')
+            result_css.push tmp_css
+        else
+          result_css.push tmp_css_obj.body
+    result_css
+
+
+
+
+    # template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
+
+
 
 
 

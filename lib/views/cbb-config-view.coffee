@@ -71,7 +71,7 @@ class CbbConfigView extends View
 
     @store_path.setText(reset_default_path)
     atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, reset_default_path
-    @cbb_management.do_initial()
+    @cbb_management.do_initialize()
 
   do_set: ->
     tmp_conf_path = @store_path.getText()
@@ -97,7 +97,7 @@ class CbbConfigView extends View
       else
         return
     atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, tmp_conf_path
-    @cbb_management.do_initial()
+    @cbb_management.do_initialize()
     emp.show_info "修改默认路径成功"
 
 

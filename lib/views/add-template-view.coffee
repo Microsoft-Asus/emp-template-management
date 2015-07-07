@@ -610,5 +610,5 @@ class InstalledTemplatePanel extends ScrollView
   getGrammars: (grammar_name)->
     grammars = atom.grammars.getGrammars().filter (grammar) ->
       (grammar isnt atom.grammars.nullGrammar) and
-      grammar.name is grammar_name
+      grammar.name is 'Emp View'
     grammars

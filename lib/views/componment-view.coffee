@@ -66,7 +66,7 @@ module.exports = class EmpDebugAdpPackageView extends View
             # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
             if tmp_type
               for name, obj of ele_list
-                tempView = new ComponmentElementView(obj, this)
+                tempView = new ComponmentElementView(obj, this, key)
                 @list.append tempView
     else
         tempView = $$ ->
