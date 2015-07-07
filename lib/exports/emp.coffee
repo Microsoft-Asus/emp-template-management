@@ -116,6 +116,18 @@ module.exports =
   # config value
   EMP_CPP_TYPE_DEF:[]
 
+  # EMP APP Common Resource Path
+  EMP_RESOURCE_PATH: "public/www/resource_dev/common/"
+
+  EMP_TEMPLATE_CSS_NAME_HEAD : "ert_ui_"
+  EMP_TEMPLATE_CSS_HEAD: "/* Copyright (c) 2015-2016 Beijing RYTong Information Technologies, Ltd.\r\n
+  All rights reserved.\r\n
+  No part of this source code may be copied, used, or modified\r\n
+  without the express written consent of RYTong. \r\n
+  This file is created by EMP Template Management.\r\n*/\r\n"
+
+  STATIC_UI_CSS_TEMPLATE_DEST_PATH:"public/www/resource_dev/common/css/"
+
 
 
   new_templates_obj: ->

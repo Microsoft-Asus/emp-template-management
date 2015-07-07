@@ -62,7 +62,7 @@ class InstalledTemplatePanel extends View
 
   refresh_detail:() ->
     # console.log "do refresh"
-    @cbb_management.do_initial()
+    @cbb_management.do_initialize()
     @cancel_add_panel()
     @loadTemplates1()
 
