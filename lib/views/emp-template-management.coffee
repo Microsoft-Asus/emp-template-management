@@ -246,7 +246,10 @@ class EmpTemplateManagement
 
   do_writer_file:(pack_name, pack_obj) ->
     tmp_result_name = emp.EMP_TEMPLATE_CSS_NAME_HEAD + pack_name+"."+emp.EMP_CSS_DIR
-    tmp_result_file = path.join templates_store_path, emp.EMP_TMP_TEMP_FILE_PATH,tmp_result_name
+    tmp_dir = path.join templates_store_path, emp.EMP_TMP_TEMP_FILE_PATH
+    if !fs.existsSync tmp_dir
+      emp.mkdir_sync_safe tmp_dir
+    tmp_result_file = path.join tmp_dir,tmp_result_name
     @default_common_css[pack_name]= tmp_result_file
     # console.log "tmp_result_file: #{tmp_result_file}"
     tmp_type_list = pack_obj.type_list
