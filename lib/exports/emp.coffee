@@ -22,6 +22,10 @@ module.exports =
   EMP_GRAMMAR_CSS:'CSS'
   EMP_GRAMMAR_LUA:'LUA'
 
+  EMP_OFF_CHA_LV_PATH:"channels"
+  EMP_OFF_COM_LV_PATH:"common"
+  EMP_OFF_ROOT_LV_PATH:"resource_dev"
+
   # 描述文件类型
   EMP_JSON_ALL:'0'
   EMP_JSON_PACK:'1'
@@ -82,6 +86,10 @@ module.exports =
   EMP_CSS_DIR:"css"
   EMP_LUA_DIR:"lua"
   EMP_IMGS_DIR:"images"
+
+  COMMON_DIR_LIST :["images", "css", "lua", "xhtml","channels"]
+  OFF_CHA_DIR_LIST : ["xhtml", "css", "lua", "images", "json"]
+  OFF_CHA_PLT_LIST:["wp", "iphone", "android", "common"]
 
   # 存储类型
   EMP_CON_TYPE: '0'
