@@ -100,6 +100,7 @@ class EmpTemplateManagement
     # console.log @packages
     if !@packages[name]
       tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo, type:type})
+      tmp_package.creat_pack()
       @store_package(tmp_package)
       tmp_package
     else
@@ -274,14 +275,14 @@ class EmpTemplateManagement
         json_con = fs.readFileSync temp_path
         tmp_obj = JSON.parse json_con
         tmp_css_obj = tmp_obj.css
-
-        if tmp_css_obj.type is emp.EMP_FILE_TYPE
-          tmp_css_file = path.join templates_store_path, tmp_css_obj.body
-          if fs.existsSync tmp_css_file
-            tmp_css = fs.readFileSync(tmp_css_file, 'utf8')
-            result_css.push tmp_css
-        else
-          result_css.push tmp_css_obj.body
+        if tmp_css_obj
+          if tmp_css_obj && tmp_css_obj.type is emp.EMP_FILE_TYPE
+            tmp_css_file = path.join templates_store_path, tmp_css_obj.body
+            if fs.existsSync tmp_css_file
+              tmp_css = fs.readFileSync(tmp_css_file, 'utf8')
+              result_css.push tmp_css
+          else
+            result_css.push tmp_css_obj.body
     result_css
 
 

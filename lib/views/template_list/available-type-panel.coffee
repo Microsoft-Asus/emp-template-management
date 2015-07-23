@@ -22,7 +22,7 @@ class AvailableTypePanel extends View
         @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
 
       @div outlet: 'template_element', class: 'container package-container', =>
-        @div class: 'alert alert-info loading-area icon icon-hourglass', "No Ccb Element"
+        @div class: 'alert alert-info loading-area icon icon-hourglass', "No CBB Element"
 
 
   initialize: (@type, @pack) ->

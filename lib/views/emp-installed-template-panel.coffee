@@ -20,9 +20,7 @@ class InstalledTemplatePanel extends View
     @div =>
       @section class: 'section', =>
         @div class: 'section-container', =>
-          @div class: 'section-heading icon icon-package', =>
-            @text 'Installed Packages'
-            @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
+          @div class: 'block section-heading icon icon-package','Installed Packages'
           @div class: 'editor-container', =>
             # @subview 'filterEditor', new TextEditorView(mini: true, placeholderText: 'Filter packages by name')
             @button class: 'control-btn btn btn-info', click:'show_add_panel',' Add New Package'

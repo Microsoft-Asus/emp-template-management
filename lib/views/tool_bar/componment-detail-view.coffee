@@ -124,27 +124,7 @@ class CbbDetailView extends View
     @css_obj = @snippet_obj.css
     @lua_obj = @snippet_obj.lua
 
-
     @html_snippet = @set_con(@html_obj)
-
-
-
-    # console.log @snippet_obj
-
-    # @css_insert_flag = true
-    # if !@css_obj
-    #   @css_div.hide()
-    #   @css_insert_flag=false
-    # else
-    #   @css_snippet = @set_con(@css_obj)
-    #   if @css_obj.type isnt emp.EMP_CON_TYPE
-    #   # @css_obj.body
-    #   # for tmp_src in src_arr
-    #     tmp_view = new SniEle(this, @css_obj.body)
-    #     tmp_name = path.basename tmp_view
-    #
-    #     @insert_css_view[tmp_name]= tmp_view
-    #     @css_tree.append tmp_view
 
     @lua_insert_flag = true
     if !@lua_obj
@@ -183,51 +163,49 @@ class CbbDetailView extends View
     @on 'core:cancel', (e) =>
       console.log "cancel"
 
-
-
-
     editor = atom.workspace.getActiveTextEditor()
     if editor
-      tmp_project_path = atom.project.getPaths()[0]
-      console.log tmp_project_path
-      tmp_common_path = path.join tmp_project_path, emp.EMP_RESOURCE_PATH
+      # 判断 project 有多个的情况
+
+      project_path_list = atom.project.getPaths()
+      html_path = editor.getPath?()
+      @project_path = project_path_list[0]
+      if project_path_list.length > 1
+        for tmp_path in project_path_list
+          relate_path = path.relative tmp_path, html_path
+          if relate_path.match(/^\.\..*/ig) isnt null
+            @project_path = tmp_path
+            break
+
+      # console.log @project_path
+      tmp_common_path = path.join @project_path, emp.EMP_RESOURCE_PATH
 
       if fs.existsSync tmp_common_path
-        src_path = path.join tmp_common_path, emp.EMP_IMGS_DIR
-        @insert_src_path.setText src_path
+        rel_src_path = path.join emp.EMP_RESOURCE_PATH, emp.EMP_IMGS_DIR
+        @com_src_path = path.join tmp_common_path, emp.EMP_IMGS_DIR
+
+        @insert_src_path.setText rel_src_path
+        @first_src_path_chose = true
         @css_path = path.join tmp_common_path, emp.EMP_CSS_DIR
         # @insert_css_path.setText css_path
-
-
-      if html_path = editor.getPath?()
-
-        root_path = path.dirname path.dirname html_path
-        # css_path = path.join root_path, emp.EMP_CSS_DIR
-        # fs.stat css_path, (err, stat) =>
-        #   if !err
-        #     if stat?.isDirectory()
-        #       @insert_css_path.setText css_path
-
-        # console.log html_path
-        # console.log root_path
-        lua_path = path.join root_path, emp.EMP_LUA_DIR
-        # fs.stat lua_path, (err, stat) =>
-        #   if !err
-        #     if stat?.isDirectory()
-        @insert_lua_path.setText lua_path
-
-        # src_path = path.join root_path, emp.EMP_IMGS_DIR
-        # # fs.stat src_path, (err, stat) =>
-        # #   if !err
-        # #     if stat?.isDirectory()
-        # @insert_src_path.setText src_path
-
-
-
+      if html_path
+        fa_root_path = path.dirname path.dirname html_path
+        fa_path_ext = path.basename path.dirname html_path
+        if fa_path_ext is emp.EMP_HTML_DIR
+          rel_path = path.relative @project_path, fa_root_path
+          lua_path = path.join rel_path, emp.EMP_LUA_DIR
+          @insert_lua_path.setText lua_path
+          @first_lua_path_chose = true
 
   chose_src_path: ->
     tmp_conf_path = @insert_src_path.getText()
-    @do_select_path(@insert_src_path, tmp_conf_path)
+
+    if @first_src_path_chose
+      tmp_conf_path = path.join @project_path,tmp_conf_path
+    @do_select_src_path(tmp_conf_path, (tmp_text)=>
+      @insert_src_path.setText tmp_text
+      @first_src_path_chose = false
+      )
 
   # chose_css_path: ->
   #   tmp_conf_path = @insert_css_path.getText()
@@ -235,9 +213,14 @@ class CbbDetailView extends View
 
   chose_lua_path: ->
     tmp_conf_path = @insert_lua_path.getText()
-    @do_select_file(@insert_lua_path, tmp_conf_path)
+    if @first_lua_path_chose
+      tmp_conf_path = path.join @project_path,tmp_conf_path
+    @do_select_lua_file(tmp_conf_path,(tmp_text)=>
+      @insert_lua_path.setText tmp_text
+      @first_lua_path_chose = false
+      )
 
-  do_select_path: (view, def_path)->
+  do_select_src_path: (def_path, callback)->
     dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory'], (logo_path) => # 'openDirectory'
       # console.log logo_path
       if logo_path
@@ -245,9 +228,9 @@ class CbbDetailView extends View
         if path_state?.isDirectory()
           # @cbb_logo.setText
           console.log logo_path[0]
-          view.setText logo_path[0]
+          callback logo_path[0]
 
-  do_select_file: (view, def_path)->
+  do_select_lua_file: (def_path, callback)->
     dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory', 'openFile'], (logo_path) => # 'openDirectory'
       # console.log logo_path
       if logo_path
@@ -255,7 +238,7 @@ class CbbDetailView extends View
         # if path_state?.isDirectory()
           # @cbb_logo.setText
           # console.log logo_path[0]
-        view.setText logo_path[0]
+        callback logo_path[0]
 
 
   new_option: (name)->
@@ -301,14 +284,10 @@ class CbbDetailView extends View
     @toggle()
 
   do_input: ->
-    # console.log atom.workspace.getActivePaneItem()
-    # console.log atom.workspace.getActivePane()
     # console.log @insert_html.val()
     # console.log @insert_html.prop('checked')
     # console.log @com
     @do_input_snippet()
-
-
 
   do_input_snippet: ->
     # console.log @com
@@ -316,9 +295,7 @@ class CbbDetailView extends View
 
     if editor
       try
-
         project_path = atom.project.getPaths()[0]
-        # console.log @css_com_file_name
         dest_dir = path.join project_path, emp.STATIC_UI_CSS_TEMPLATE_DEST_PATH
         if !fs.existsSync dest_dir
           emp.mkdir_sync_safe dest_dir
@@ -326,24 +303,30 @@ class CbbDetailView extends View
         # console.log @css_com_file
         # console.log dest_path
         # fs_plus.copySync  @css_com_file, dest_dir
+        # console.info "add link #{@css_com_file}"
         if fs.existsSync @css_com_file
           css_con = fs.readFileSync @css_com_file, 'utf8'
           fs.writeFileSync(dest_path, css_con, 'utf8')
         else
           console.error "不存在公共的样式文件."
 
+        temp_lua_path = ""
+        # temp_lua_name = ""
         if @lua_insert_flag
           unless !@insert_lua.prop('checked')
 
             # console.log "has css"
-            tmp_path = @insert_lua_path.getText()
-            if !tmp_path
+            temp_lua_path = @insert_lua_path.getText()
+            if !temp_lua_path
               emp.show_error "插入Lua 地址不能为空!"
               return
 
+            if @first_lua_path_chose
+              temp_lua_path = path.join @project_path,temp_lua_path
+
             # tmp_ext = path.extname tmp_path
-            if path.extname tmp_path
-              tmp_dir = path.dirname tmp_path
+            if path.extname temp_lua_path
+              tmp_dir = path.dirname temp_lua_path
               emp.mkdir_sync_safe tmp_dir
 
               if @lua_obj.type is emp.EMP_CON_TYPE
@@ -352,11 +335,11 @@ class CbbDetailView extends View
                 temp_path = path.join @templates_path, @lua_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
               if fs.existsSync temp_path
-                fs.appendFileSync tmp_path,"\n"+tmp_body
+                fs.appendFileSync temp_lua_path,"\n"+tmp_body
               else
-                fs.writeFileSync tmp_path,"\n"+tmp_body
+                fs.writeFileSync temp_lua_path,"\n"+tmp_body
             else
-              emp.mkdir_sync_safe tmp_path
+              emp.mkdir_sync_safe temp_lua_path
               # lua_obj = @snippet_obj.lua
               if @lua_obj.type is emp.EMP_CON_TYPE
                 emp.show_error "请指定需要插入的Lua文件!"
@@ -365,22 +348,25 @@ class CbbDetailView extends View
                 temp_path = path.join @templates_path, @lua_obj.body
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
                 tmp_name = path.basename temp_path
-                tmp_re_file = path.join tmp_path, tmp_name
+                temp_lua_path = path.join temp_lua_path, tmp_name
                 # console.log tmp_re_file
                 # console.log tmp_body
-                if fs.existsSync tmp_re_file
+                if fs.existsSync temp_lua_path
                   tmp_flag = @show_alert("指定的 lua 文件已经存在,请指定后续操作.")
                   switch tmp_flag
                     when 1
-                      fs.appendFileSync tmp_re_file,"\n"+tmp_body
+                      fs.appendFileSync temp_lua_path,"\n"+tmp_body
                     when 2
-                      fs.writeFileSync tmp_re_file, tmp_body
+                      fs.writeFileSync temp_lua_path, tmp_body
                     else return
                 else
-                  fs.writeFileSync tmp_re_file, tmp_body
+                  fs.writeFileSync temp_lua_path, tmp_body
         if @src_insert_flag
           unless !@insert_source.prop('checked')
             tmp_path = @insert_src_path.getText()
+
+            if @first_src_path_chose
+              tmp_path = path.join @project_path,tmp_path
             emp.mkdir_sync_safe tmp_path
 
             for tmp_src in @src_obj
@@ -391,20 +377,62 @@ class CbbDetailView extends View
               # force copy
               fs.writeFileSync tmp_re_file, f_con
 
+        console.log "temp_lua_path:#{temp_lua_path}"
+        result_lua_path = path.basename temp_lua_path
+        tmp_pre_path = path.dirname temp_lua_path
+        fa_path_ext = path.basename(tmp_pre_path).toLowerCase()
+        # console.log fa_path_ext
+        if emp.OFF_CHA_DIR_LIST.indexOf(fa_path_ext) >= 0
+          tmp_pre_path = path.dirname tmp_pre_path
+          fa_chi_ext = path.basename tmp_pre_path
+          fa_chi_ext = fa_chi_ext.toLowerCase()
+
+          # console.log fa_chi_ext
+          tmp_pre_path = path.dirname tmp_pre_path
+          fa_par_ext = path.basename tmp_pre_path
+          fa_par_ext = fa_par_ext.toLowerCase()
+          # console.log fa_par_ext
+
+          if (fa_chi_ext is emp.EMP_OFF_COM_LV_PATH) and (fa_par_ext is emp.EMP_OFF_ROOT_LV_PATH)
+            result_lua_path = result_lua_path.toLowerCase()
+          else
+            result_lua_path = path.join fa_chi_ext, fa_path_ext, result_lua_path
+
+        # console.log result_lua_path
+
+
+        unless !@insert_html.prop('checked')
+          atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
 
         # 插入外联脚本 样式
-        # tmp_editor = atom.workspace.getActiveTextEditor()
-        # if tmp_editor
-        #   debug_text = tmp_editor.getText()
-        #   re_text = head_parser.insert debug_text, @css_com_file_name
-        #   console.log re_text
+
+        # console.log @css_com_file_name
+        tmp_editor = atom.workspace.getActiveTextEditor()
+        if tmp_editor
+          debug_text = tmp_editor.getText()
+          re_text = head_parser.insert debug_text, @css_com_file_name, "    "
+          re_text = head_parser.insert re_text, result_lua_path, "    "
+          tmp_editor.setText(re_text)
+          # console.log re_text
+
+        # unless !@insert_html.prop('checked')
+        #   atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
+            #
+          # tmp_pre_path = path.dirname tmp_pre_path
+          # fa_root_ext = path.basename tmp_pre_path
+          # console.log fa_root_ext
+
+        # if fa_path_ext is emp.EMP_HTML_DIR
+        #   rel_path = path.relative @project_path, fa_root_path
+        #   lua_path = path.join rel_path, emp.EMP_LUA_DIR
+        #   @insert_lua_path.setText lua_path
+        #   @first_lua_path_chose = true
 
       catch err
         console.error "insert snippets error "
         console.error err
 
-      unless !@insert_html.prop('checked')
-        atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet
+
         # console.log escape edit_text
     @toggle()
 
@@ -412,8 +440,11 @@ class CbbDetailView extends View
     tmp_editor = atom.workspace.getActiveTextEditor()
     if tmp_editor
       debug_text = tmp_editor.getText()
-      re_text = head_parser.insert debug_text, @css_com_file_name
-      console.log re_text
+      # console.log @css_com_file_name
+      # tmp_pro = atom.project.getPaths()[0]
+      # tmp_f = path.join tmp_pro,"test.xhtml"
+
+      re_text = head_parser.insert debug_text, @css_com_file_name, "     "
 
   set_con: (tmp_obj) ->
     if tmp_obj
