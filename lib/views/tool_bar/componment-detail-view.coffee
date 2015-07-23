@@ -377,51 +377,45 @@ class CbbDetailView extends View
               # force copy
               fs.writeFileSync tmp_re_file, f_con
 
-        console.log "temp_lua_path:#{temp_lua_path}"
-        result_lua_path = path.basename temp_lua_path
-        tmp_pre_path = path.dirname temp_lua_path
-        fa_path_ext = path.basename(tmp_pre_path).toLowerCase()
-        # console.log fa_path_ext
-        if emp.OFF_CHA_DIR_LIST.indexOf(fa_path_ext) >= 0
-          tmp_pre_path = path.dirname tmp_pre_path
-          fa_chi_ext = path.basename tmp_pre_path
-          fa_chi_ext = fa_chi_ext.toLowerCase()
-
-          # console.log fa_chi_ext
-          tmp_pre_path = path.dirname tmp_pre_path
-          fa_par_ext = path.basename tmp_pre_path
-          fa_par_ext = fa_par_ext.toLowerCase()
-          # console.log fa_par_ext
-
-          if (fa_chi_ext is emp.EMP_OFF_COM_LV_PATH) and (fa_par_ext is emp.EMP_OFF_ROOT_LV_PATH)
-            result_lua_path = result_lua_path.toLowerCase()
-          else
-            result_lua_path = path.join fa_chi_ext, fa_path_ext, result_lua_path
-
+        # console.log "temp_lua_path:#{temp_lua_path}"
+        # result_lua_path = path.basename temp_lua_path
+        # tmp_pre_path = path.dirname temp_lua_path
+        # fa_path_ext = path.basename(tmp_pre_path).toLowerCase()
+        # # console.log fa_path_ext
+        # if emp.OFF_CHA_DIR_LIST.indexOf(fa_path_ext) >= 0
+        #   tmp_pre_path = path.dirname tmp_pre_path
+        #   fa_chi_ext = path.basename tmp_pre_path
+        #   fa_chi_ext = fa_chi_ext.toLowerCase()
+        #
+        #   # console.log fa_chi_ext
+        #   tmp_pre_path = path.dirname tmp_pre_path
+        #   fa_par_ext = path.basename tmp_pre_path
+        #   fa_par_ext = fa_par_ext.toLowerCase()
+        #   # console.log fa_par_ext
+        #
+        #   if (fa_chi_ext is emp.EMP_OFF_COM_LV_PATH) and (fa_par_ext is emp.EMP_OFF_ROOT_LV_PATH)
+        #     result_lua_path = result_lua_path.toLowerCase()
+        #   else
+        #     result_lua_path = path.join fa_chi_ext, fa_path_ext, result_lua_path
         # console.log result_lua_path
-
 
         unless !@insert_html.prop('checked')
           atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
-
         # 插入外联脚本 样式
-
         # console.log @css_com_file_name
-        tmp_editor = atom.workspace.getActiveTextEditor()
-        if tmp_editor
-          debug_text = tmp_editor.getText()
-          re_text = head_parser.insert debug_text, @css_com_file_name, "    "
-          re_text = head_parser.insert re_text, result_lua_path, "    "
-          tmp_editor.setText(re_text)
+        # tmp_editor = atom.workspace.getActiveTextEditor()
+        # if tmp_editor
+        #   debug_text = tmp_editor.getText()
+        #   re_text = head_parser.insert debug_text, @css_com_file_name, "    "
+        #   re_text = head_parser.insert re_text, result_lua_path, "    "
+        #   tmp_editor.setText(re_text)
           # console.log re_text
-
         # unless !@insert_html.prop('checked')
         #   atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
             #
           # tmp_pre_path = path.dirname tmp_pre_path
           # fa_root_ext = path.basename tmp_pre_path
           # console.log fa_root_ext
-
         # if fa_path_ext is emp.EMP_HTML_DIR
         #   rel_path = path.relative @project_path, fa_root_path
         #   lua_path = path.join rel_path, emp.EMP_LUA_DIR

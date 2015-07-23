@@ -212,7 +212,6 @@ class InstalledTemplatePanel extends ScrollView
 
     # @refresh_detail()
 
-
   refresh_detail: ->
     console.log 'refresh_detail'
     @packs = @cbb_management.get_pacakges()
@@ -255,86 +254,9 @@ class InstalledTemplatePanel extends ScrollView
 
   detached: ->
     # @unsubscribe()
-    console.log "----"
-
-  select_path: (e, element)->
-    tmp_path = @template_path.getText()
-    view_set = {path:@template_path,name:@template_name,logo:@logo_select,html:@template_html,css:@template_css, lua:@template_lua}
-    @prompt_for_path(view_set, tmp_path)
-
-  prompt_for_path: (view_set, def_path) ->
-    if def_path
-      dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
-        @refresh_path( paths_to_open, view_set)
-    else
-      dialog.showOpenDialog title: 'Select', properties: ['openDirectory', 'createDirectory'], (paths_to_open) =>
-        @refresh_path( paths_to_open, view_set)
-
-  refresh_path: (new_paths, view_set)->
-    if new_paths
-      console.log new_paths
-      new_path = new_paths[0]
-      view_set.path.setText(new_path)
-      path_state = fs.statSync new_path
-
-      if path_state?.isDirectory()
-        console.log "----------------"
-        name = path.basename new_path
-        view_set.name.setText(name)
-        # view_set.ver.setText(emp.EMP_DEFAULT_VER)
-
-        html_path = path.join new_path, emp.EMP_HTML_DIR
-        fs.readdir html_path, (err, files) =>
-          if err
-            console.log "no exist html files"
-          else
-            html_files = files.filter((ele)-> !ele.match(/^\./ig))
-            if html_files?.length
-              view_set.html.setText(path.join html_path,html_files[0])
-
-        css_path = path.join new_path, emp.EMP_CSS_DIR
-        fs.readdir css_path, (err, files) =>
-          if err
-            console.log "no exist css file"
-          else
-            css_files = files.filter((ele)-> !ele.match(/^\./ig))
-            if css_files?.length
-              view_set.css.setText(path.join css_path, css_files[0])
-
-        lua_path = path.join new_path, emp.EMP_LUA_DIR
-        fs.readdir lua_path, (err, files) =>
-          if err
-            console.log "no exist lua file"
-          else
-            lua_files = files.filter((ele)-> !ele.match(/^\./ig))
-            if lua_files?.length
-              view_set.lua.setText(path.join lua_path, lua_files[0])
-
-        logo_path =  path.join new_path,emp.EMP_LOGO_DIR
-        fs.readdir logo_path, (err, files) =>
-          if err
-            console.log "no exist"
-          else
-            logo_images = files.filter((ele)-> !ele.match(/^\./ig))
-            # console.log logo_images
-            for logo in logo_images
-              tmp_opt = document.createElement 'option'
-              tmp_opt.text = logo
-              tmp_opt.value = path.join logo_path, logo
-              # console.log tmp_opt
-              view_set.logo.append tmp_opt
-            # console.log log_view
-
-        src_path =  path.join new_path,emp.EMP_IMG_DIR
-        @image_detail = {}
-        @cbb_tree.empty()
-
-        @image_detail_tree.empty()
-        @source_files = {}
-        @image_detail = {}
-        @add_source(src_path)
-
+    # console.log "----"
   # callback function for button
+
   select_html: (e, element)->
     # console.log "select html"
     tmp_con = @template_html.getText()
@@ -411,6 +333,7 @@ class InstalledTemplatePanel extends ScrollView
     # @destroy()
 
   new_template_obj: (cbb_name)->
+
     cbb_desc = @template_desc.getText()?.trim()
     cbb_logo = @logo_select.val()
     # cbb_name = @cbb_name.getText()?.trim()
@@ -424,10 +347,13 @@ class InstalledTemplatePanel extends ScrollView
     source_list = []
     for tmp_name, tmp_view of @source_files
       source_list.push tmp_name
+    # console.log source_list
 
     tmp_img_list = []
+    # console.log @image_detail
     for tmp_name, tmp_view of @image_detail
       tmp_img_list.push tmp_name
+
     # console.log cbb_type
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
     cbb_obj.set_file cbb_html, emp.EMP_QHTML

@@ -95,11 +95,9 @@ class EmpCbbPackage
     @logo = new_obj.logo
     @desc = new_obj.desc
 
-
     @obj_json.desc = @desc
     @obj_json.type = new_obj.type
     @type_list = new_obj.type
-
 
     if @name isnt new_obj.name
       @name = new_obj.name
