@@ -27,16 +27,16 @@ class InstalledTemplatePanel extends ScrollView
           @div class: 'section-heading icon icon-package', =>
             @text 'Add Packages'
             @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
-          @div class: 'section-body', =>
-            @div class: 'control-group', =>
-              @div class: 'controls', =>
-                @label class: 'control-label', =>
-                  @div class: 'info-label', "模板路径(Template Path)"
-                  @div class: 'setting-description', "Root Dir Name"
-                # @div class: 'editor-container', =>
-                @subview "template_path", new TextEditorView(mini: true,attributes: {id: 'template_path', type: 'string'},  placeholderText: ' Template Path')
-                # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                @button class: 'control-btn btn btn-info', click:'select_path',' Chose Path '
+          # @div class: 'section-body', =>
+          #   @div class: 'control-group', =>
+          #     @div class: 'controls', =>
+          #       @label class: 'control-label', =>
+          #         @div class: 'info-label', "模板路径(Template Path)"
+          #         @div class: 'setting-description', "Root Dir Name"
+          #       # @div class: 'editor-container', =>
+          #       @subview "template_path", new TextEditorView(mini: true,attributes: {id: 'template_path', type: 'string'},  placeholderText: ' Template Path')
+          #       # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
+          #       @button class: 'control-btn btn btn-info', click:'select_path',' Chose Path '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -376,7 +376,9 @@ class InstalledTemplatePanel extends ScrollView
         tmp_opt = document.createElement 'option'
         tmp_opt.text = path.basename tmp_path
         tmp_opt.value = logo_path
+        tmp_opt.selected = "selected"
         @logo_select.append tmp_opt
+        @logo_image.attr("src", tmp_path)
 
   prompt_for_file: (file_view, tmp_con) ->
     if tmp_con
@@ -396,7 +398,7 @@ class InstalledTemplatePanel extends ScrollView
 
   create_snippet: ->
     # console.log "button down"
-    if !@template_name.getText()
+    if !@template_name.getText()?.trim()
       emp.show_error "模板名称不能为空"
       return
 
@@ -405,6 +407,7 @@ class InstalledTemplatePanel extends ScrollView
     # console.log cbb_obj
     @cbb_management.add_element(cbb_obj)
     emp.show_info("添加模板 完成~")
+    @after_create()
     # @destroy()
 
   new_template_obj: (cbb_name)->
@@ -612,3 +615,35 @@ class InstalledTemplatePanel extends ScrollView
       (grammar isnt atom.grammars.nullGrammar) and
       grammar.name is 'Emp View'
     grammars
+
+ # after create ,clean all the input
+  after_create: ->
+    # console.log "button down"
+    @template_name.setText("")
+    @template_desc.setText("")
+
+    @logo_select.val()
+    # cbb_name = @cbb_name.getText()?.trim()
+    @template_html.setText("")
+    @template_css.setText("")
+    @template_lua.setText("")
+    @cbb_tree.empty()
+    @source_list = {}
+
+    @image_detail_tree.empty()
+    @image_detail = {}
+    @detail_img_text.setText ""
+    @source_file.setText ""
+    @logo_select.empty()
+
+    logo_path =  path.join __dirname, '../../images/logo'
+    logo_imgs = fs.readdirSync(logo_path).filter((ele)-> !ele.match(/^\./ig))
+    index = Math.round Math.random()*(logo_imgs.length-1)
+    logo_img = path.join logo_path,logo_imgs[index]
+
+    tmp_opt = document.createElement 'option'
+    tmp_opt.text = emp.EMP_NAME_DEFAULT
+    tmp_opt.value = logo_img
+    tmp_opt.selected = "selected"
+    @logo_select.append tmp_opt
+    @logo_image.attr("src", logo_img)
