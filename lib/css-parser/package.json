@@ -1,0 +1,29 @@
+{
+  "name": "css-parser",
+  "version": "1.0.0",
+  "description": "A library for parsing and formatting CSS.",
+  "main": "index.js",
+  "scripts": {
+    "make": "pegjs grammar/css.pegjs lib/parser.js",
+    "test": "node test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RYTong/css-parser"
+  },
+  "keywords": [
+    "EMP",
+    "css",
+    "parsing",
+    "formatting"
+  ],
+  "author": "lu.jingbo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RYTong/css-parser/issues"
+  },
+  "homepage": "https://github.com/RYTong/css-parser",
+  "devDependencies": {
+    "pegjs": "^0.8.0"
+  }
+}
