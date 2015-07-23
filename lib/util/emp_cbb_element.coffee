@@ -120,7 +120,7 @@ class EmpCbbEle
     @element_path_rel = path.join @own_package, @type, @name
     @template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
     @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
-    @format_template_edit()
+    @format_template()
 
     @refresh()
 
@@ -128,9 +128,8 @@ class EmpCbbEle
 
     if @logo
       @logo = @copy_content_ch @logo
-
     if @html?.type is emp.EMP_FILE_TYPE
-      @html.body = @copy_content_ch path.join @template_path, @html.body
+      @html.body = @copy_content_ch @html.body
 
     if @css?.type is emp.EMP_FILE_TYPE
       @css.body = @copy_content_ch path.join @template_path, @css.body
@@ -166,20 +165,10 @@ class EmpCbbEle
         @img_list_rel.push @copy_content_ch tmp_file
 
     @src_list_rel = []
-    # console.log @src_list
     if @src_list
       for tmp_file in @src_list
         @src_list_rel.push @copy_content_ch(tmp_file, emp.EMP_IMG_DIR)
 
-    # if @logo
-    #   @logo = @copy_content_ch(@logo, emp.EMP_LOGO_DIR)
-    # if @html?.type is emp.EMP_FILE_TYPE
-    #   @html.body = @copy_content_ch(@html.body, emp.EMP_HTML_DIR)
-    #
-    # if @css?.type is emp.EMP_FILE_TYPE
-    #   @css.body = @copy_content_ch(@css.body,  emp.EMP_CSS_DIR)
-    # if @lua?.type is emp.EMP_FILE_TYPE
-    #   @lua.body = @copy_content_ch(@lua.body, emp.EMP_LUA_DIR)
 
   copy_content_ch: (f_path, add_path="") ->
     # console.log t_path

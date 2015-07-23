@@ -375,7 +375,7 @@ class ElementDetailPanel extends View
     @add_source()
 
   add_source: (tmp_path)->
-    console.log "add source"
+    # console.log "add source"
     # tmp_path ?= @source_file.getText()
     # console.log tmp_path
     if tmp_path ?= @source_file.getText()
@@ -415,7 +415,7 @@ class ElementDetailPanel extends View
     @select_source(['openFile', "openDirectory"])
 
   select_source: (opts=['openFile', "openDirectory"])->
-    console.log "select source"
+    # console.log "select source"
     dialog.showOpenDialog title: 'Select', properties: opts, (src_path) => # 'openDirectory'
       # console.log logo_path
       if src_path
@@ -433,7 +433,7 @@ class ElementDetailPanel extends View
     @add_image_detail()
 
   add_image_detail: ()->
-    console.log "add image detail"
+    # console.log "add image detail"
     if tmp_path = @detail_img_text.getText()
       fs.stat tmp_path, (err, stats) =>
         if err
@@ -625,13 +625,14 @@ class ElementDetailPanel extends View
       console.log "do_con"
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
-      @cbb_management.add_element(cbb_obj)
+      @cbb_management.edit_element(cbb_obj)
       @pack.delete_element_detail(@snippet_obj.name, old_type)
     else
       cbb_obj = @new_template_obj(cbb_name, cbb_pack, cbb_type)
       # console.log cbb_obj
-      @cbb_management.add_element(cbb_obj)
+      @cbb_management.edit_element(cbb_obj)
     emp.show_info("修改模板 完成~")
+    @after_create()
     @parents('.emp-template-management').view()?.showPanel(@opts.back, {back: emp.EMP_TEMPLATE}, @pack)
     # @destroy()
 
@@ -675,6 +676,26 @@ class ElementDetailPanel extends View
       else
         cbb_obj.set_con cbb_lua, emp.EMP_QLUA
     cbb_obj
+
+ # after create ,clean all the input
+  after_create: ->
+    # console.log "button down"
+    @template_name.setText("")
+    @template_desc.setText("")
+
+    @logo_select.val()
+    # cbb_name = @cbb_name.getText()?.trim()
+    # @template_html.setText("")
+    # @template_css.setText("")
+    # @template_lua.setText("")
+    @cbb_tree.empty()
+    @source_list = {}
+
+    @image_detail_tree.empty()
+    @image_detail = {}
+    @detail_img_text.setText ""
+    @source_file.setText ""
+    @logo_select.empty()
 
 get_tmp_file =() ->
   path.join __dirname, "../../../tmp.txt"
