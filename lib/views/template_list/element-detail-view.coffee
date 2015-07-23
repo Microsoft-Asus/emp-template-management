@@ -1,13 +1,11 @@
 {$$, TextEditorView, View} = require 'atom-space-pen-views'
 _ = require 'underscore-plus'
 ExampleView = require '../example/example_view'
-
 emp = require '../../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 CbbEle = require '../../util/emp_cbb_element'
 AvailableTypePanel = require './available-type-panel'
-# CbbEle = require '../util/emp_cbb_element'
 CbbSrcEleView = require './cbb-source-ele-view'
 fs = require 'fs'
 path = require 'path'
@@ -92,11 +90,7 @@ class ElementDetailPanel extends View
                 @label class: 'control-label', =>
                   @div class: 'info-label', "模板样式"
                   @div class: 'setting-description', "模板插入的样式实体"
-                # @div class: 'editor-container', =>
               @div outlet: 'css_body', class:'controls'
-                # @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
-                # # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
               @button class: 'control-btn btn btn-info', click:'edit_css',' Edit'
 
           @div class: 'section-body', =>
@@ -106,9 +100,6 @@ class ElementDetailPanel extends View
                   @div class: 'info-label', "模板脚本"
                   @div class: 'setting-description', "模板插入的脚本"
               @div outlet: 'lua_body', class:'controls'
-                # @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
-                # # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
               @button class: 'control-btn btn btn-info', click:'edit_lua',' Edit'
 
           # 包图标
@@ -126,10 +117,7 @@ class ElementDetailPanel extends View
                   @div class:'meta-controls', =>
                     @div class:'btn-group', =>
                       @select outlet:"logo_select", id: "logo", class: 'form-control'
-                        # for option in ["emp", "ebank", "boc", "gdb"]
-                        # @option value: "#{logo_img}", emp.EMP_NAME_DEFAULT
                       @button class: 'control-btn btn btn-info', click:'select_logo',' Chose Other Logo '
-
           # 实际样式图片
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -183,12 +171,13 @@ class ElementDetailPanel extends View
     @logo_select.change (event) =>
       @logo_image.attr("src", @logo_select.val())
 
-
   refresh_detail:({@element, @pack}) ->
-    # console.log "do refresh"
+    @source_files={}
+    @image_detail={}
+    @del_source_files=[]
+    @del_image_detail=[]
 
     @title.text("#{_.undasherize(_.uncamelcase(@element.name))} Detail")
-    # console.log @element
     @templates_path = atom.project.templates_path
     @ele_path = @element.element_path
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
@@ -406,6 +395,7 @@ class ElementDetailPanel extends View
 
   # remove  callback
   remove_td_callback: (name)->
+    @del_source_files.push name
     delete @source_files[name]
 
   select_source_f: ->
@@ -425,6 +415,7 @@ class ElementDetailPanel extends View
   # 删除所有添加的资源
   remove_all: ->
     for tmp_name, tmp_view of @source_files
+      @del_source_files.push tmp_name
       tmp_view.destroy()
     @source_files ={}
 
@@ -478,10 +469,12 @@ class ElementDetailPanel extends View
 
   remove_all_detail: ->
     for tmp_name, tmp_view of @image_detail
+      @del_image_detail.push tmp_name
       tmp_view.destroy()
     @image_detail ={}
 
   remove_detail_callback: (name)->
+    @del_image_detail.push name
     delete @image_detail[name]
 
   # 编辑模板
@@ -649,9 +642,9 @@ class ElementDetailPanel extends View
     tmp_img_list = []
     for tmp_name, tmp_view of @image_detail
       tmp_img_list.push tmp_name
-    # console.log cbb_type
 
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
+    cbb_obj.set_del_files(@del_source_files, @del_image_detail)
 
     cbb_html = @snippet_obj.html.body
     tmp_html_type = @snippet_obj.html.type
