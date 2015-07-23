@@ -100,6 +100,7 @@ class EmpTemplateManagement
     # console.log @packages
     if !@packages[name]
       tmp_package = new CbbPackage(templates_store_path, {name:name, desc:desc, logo:logo, type:type})
+      tmp_package.creat_pack()
       @store_package(tmp_package)
       tmp_package
     else

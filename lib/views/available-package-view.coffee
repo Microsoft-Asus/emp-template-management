@@ -2,6 +2,7 @@
 emp = require '../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
+path = require 'path'
 
 logo_image_size = '48px'
 logo_image_big_size = '156px'
@@ -18,7 +19,10 @@ class AvailablePackageView extends View
     # owner = "jcrom"
     # description ?= ''
     # console.log emp.get_default_logo()
-    unless tmp_logo= @package_obj.logo
+    temp_path = atom.project.templates_path
+    if tmp_logo= @package_obj.logo
+      tmp_logo = path.join temp_path,tmp_logo
+    else
       tmp_logo= emp.get_default_logo()
 
     unless tmp_desc = @package_obj.desc

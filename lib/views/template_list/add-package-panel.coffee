@@ -20,7 +20,7 @@ class AddPackagePanel extends View
 
 
   @content: ->
-    logo_img = emp.get_default_logo()
+    # logo_img = emp.get_default_logo()
 
     @section outlet:'add_package_panel', class: 'sub-section installed-packages', style:"display: none;", =>#none
       @div class: 'section-container', =>
@@ -135,7 +135,7 @@ class AddPackagePanel extends View
 
   #用于编辑时设置初始值
   set_edit_state: (tmp_obj)->
-    console.log tmp_obj
+    # console.log tmp_obj
     @initial_input()
 
     @set_add_flag(false)
@@ -151,7 +151,11 @@ class AddPackagePanel extends View
       tmp_opt.selected = "selected"
       # tmp_opt.attr('selected', true)
       @logo_select.append tmp_opt
-      @logo_image.attr("src", tmp_obj.logo)
+      temp_path = atom.project.templates_path
+      # console.log temp_path
+      tmp_logo = path.join temp_path,tmp_obj.logo
+      # console.log tmp_logo
+      @logo_image.attr("src", tmp_logo)
 
     type_list = tmp_obj.type_list
 
@@ -183,8 +187,10 @@ class AddPackagePanel extends View
       emp.show_warnning emp.EMP_NO_EMPTY
     tmp_desc = @package_desc.getText()?.trim()
     tmp_logo = null
-    if @logo_select.val() isnt emp.EMP_NAME_DEFAULT
-      tmp_logo = @logo_select.val()
+    # if @logo_select.val() isnt emp.EMP_NAME_DEFAULT
+      # tmp_logo = @logo_select.val()
+    tmp_logo = @logo_image.attr("src")
+    console.log tmp_logo
 
     type_list = []
     for tmp_type of @type_view
@@ -203,6 +209,7 @@ class AddPackagePanel extends View
     else if @cbb_management.check_exist_cbb()
       emp.show_warnning emp.EMP_EXIST
       return
+
     else
       tmp_obj = @cbb_management.create_new_package(tmp_name, tmp_desc, tmp_logo, type_list)
       emp.show_info emp.EMP_ADD_SUCCESS
@@ -282,7 +289,7 @@ class AddPackagePanel extends View
           tmp_opt = document.createElement 'option'
           tmp_opt.text = path.basename logo_path[0]
           tmp_opt.value = logo_path[0]
-          console.log tmp_opt
+          # console.log tmp_opt
           tmp_opt.selected = "selected"
           # tmp_opt.attr('selected', true)
           @logo_select.append tmp_opt

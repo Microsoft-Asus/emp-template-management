@@ -90,14 +90,16 @@ class EmpCbbPackage
       @cbb_management.refresh_package(this)
 
   edit_detail: (new_obj)->
+    # console.log new_obj
 
     @logo = new_obj.logo
     @desc = new_obj.desc
 
-    @obj_json.logo = @logo
+
     @obj_json.desc = @desc
     @obj_json.type = new_obj.type
     @type_list = new_obj.type
+
 
     if @name isnt new_obj.name
       @name = new_obj.name
@@ -132,8 +134,31 @@ class EmpCbbPackage
           fs.mkdir tmp_new_type, (err) ->
             console.log err unless !err
 
+    if @logo
+      console.log @logo
+      @logo = @copy_content_ch @logo
+    @obj_json.logo = @logo
     if fs.existsSync @template_json
       @refresh()
+
+  creat_pack: ->
+    # console.log @package_path
+    # console.log @logo
+    @logo = @copy_content_ch @logo
+
+
+  copy_content_ch: (f_path, add_path="") ->
+    to_path = path.join @package_path, add_path
+    to_path_rel = path.join @name, add_path
+    # console.log to_path
+    emp.mkdir_sync(to_path)
+    f_name = path.basename f_path
+    f_con = fs.readFileSync f_path
+    re_file = path.join to_path, f_name
+    re_file_rel = path.join to_path_rel, f_name
+    # force copy
+    fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
+    re_file_rel
 
   # 添加子元素
   add_element: (ccb_obj) ->
