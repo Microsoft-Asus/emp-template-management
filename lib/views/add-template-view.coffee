@@ -214,6 +214,8 @@ class InstalledTemplatePanel extends ScrollView
 
   refresh_detail: ->
     console.log 'refresh_detail'
+    @source_files={}
+    @image_detail={}
     @packs = @cbb_management.get_pacakges()
     @pack_select.empty()
     unless default_pack = atom.config.get emp.EMP_ADD_TEMP_STORE_PACK

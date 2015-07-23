@@ -1,7 +1,7 @@
 emp = require '../exports/emp'
 fs = require 'fs'
 path = require 'path'
-
+fs_plus = require 'fs-plus'
 tmp_alert_title = "提示"
 tmp_alert_msg = "插件侦测到存在之前参与的模板配置, 是否使用之前的模板配置?"
 
@@ -70,8 +70,6 @@ class EmpCbbEle
       @name = re_cbb.join ' '
     # {root:root_name, name:re_name}
 
-
-
   create: (@package_path, @own_package)->
         # {name:cbb_name, version:emp.EMP_DEFAULT_VER, path:null, desc: cbb_desc,
         # type: cbb_type, logo:{type:emp.EMP_FILE_TYPE, con:cbb_logo}, html:{type:emp.EMP_CON_TYPE, con:ccb_con}, css:null, lua:null, available:true}
@@ -120,9 +118,17 @@ class EmpCbbEle
     @element_path_rel = path.join @own_package, @type, @name
     @template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
     @template_json_rel = path.join @element_path_rel, emp.EMP_TEMPLATE_JSON
+    @del_files()
     @format_template()
-
     @refresh()
+
+  del_files:() ->
+    console.log @del_source_files
+    console.log @del_image_detail
+    for tmp_file in @del_source_files
+      fs_plus.removeSync(tmp_file) unless !fs.existsSync tmp_file
+    for tmp_file in @del_image_detail
+      fs_plus.removeSync(tmp_file) unless !fs.existsSync tmp_file
 
   format_template_edit: () ->
 
@@ -210,6 +216,9 @@ class EmpCbbEle
       when emp.EMP_QHTML then @html = tmp_obj
       when emp.EMP_QCSS then @css = tmp_obj
       when emp.EMP_QLUA then @lua = tmp_obj
+
+  set_del_files: (@del_source_files, @del_image_detail)->
+
 
   new_con_obj:(tmp_con) ->
     {type:emp.EMP_CON_TYPE, body:tmp_con}

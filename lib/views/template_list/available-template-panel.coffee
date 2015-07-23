@@ -64,7 +64,7 @@ class AvailableTemplatePanel extends View
           @div outlet:'detail_div', style:"display:none;", class: 'meta_detail', =>
             for tmp_img in detail_img
               tmp_img_path = path.join temp_path, tmp_img
-              @img outlet: 'logo_img', class: 'avatar', src: "#{tmp_img_path}", click:'image_format'
+              @img outlet: 'detail_img', class: 'avatar', src: "#{tmp_img_path}"
 
 
   initialize: (@element, @fa_view, @pack, @type) ->
