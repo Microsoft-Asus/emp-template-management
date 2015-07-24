@@ -398,7 +398,7 @@ class CbbDetailView extends View
         #   else
         #     result_lua_path = path.join fa_chi_ext, fa_path_ext, result_lua_path
         # console.log result_lua_path
-
+        tmp_editor = atom.workspace.getActiveTextEditor()
         unless !@insert_html.prop('checked')
           atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
         # 插入外联脚本 样式
