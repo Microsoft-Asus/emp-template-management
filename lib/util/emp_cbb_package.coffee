@@ -20,7 +20,7 @@ class EmpCbbPackage
     @cbb_management = atom.project.cbb_management
     @templates_path = atom.project.templates_path
     @name = @obj_json.name
-    @logo = @obj_json.logo
+    @logo = @obj_json.logo or path.join __dirname, "..", "..", emp.EMP_DEFAULT_LOGO
     @desc = @obj_json.desc
 
     @package_path = path.join @store_path, @name
