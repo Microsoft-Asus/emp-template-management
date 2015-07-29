@@ -160,8 +160,10 @@ class CbbDetailView extends View
       if e.which is emp.ESCAPEKEY
         @detach()
 
-    @on 'core:cancel', (e) =>
-      console.log "cancel"
+    # escapeKeyCode = 27
+    # @on 'keydown', (event) =>
+    #   if event.which == escapeKeyCode
+    #     @detach()
 
     editor = atom.workspace.getActiveTextEditor()
     if editor

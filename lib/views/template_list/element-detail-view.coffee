@@ -523,7 +523,8 @@ class ElementDetailPanel extends View
         # @store_info(tmp_editor, tmp_body)
                       tmp_editor.onDidSave (event) =>
                         # console.log event
-                        tmp_body = fs.readFileSync event.path, 'utf-8'
+                        # tmp_body = fs.readFileSync event.path, 'utf-8'
+                        tmp_body = tmp_editor.getText()
                         @snippet_obj.css.body = tmp_body
                         @css_body.empty()
                         re_body = new ExampleView(tmp_body)
@@ -557,7 +558,8 @@ class ElementDetailPanel extends View
         # @store_info(tmp_editor, tmp_body)
                   tmp_editor.onDidSave (event) =>
                     # console.log event
-                    tmp_body = fs.readFileSync event.path, 'utf-8'
+                    # tmp_body = fs.readFileSync event.path, 'utf-8'
+                    tmp_body = tmp_editor.getText()
                     @snippet_obj.lua.body = tmp_body
                 ,tmp_body)
 
