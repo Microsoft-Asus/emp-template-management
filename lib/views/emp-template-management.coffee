@@ -34,6 +34,8 @@ class EmpTemplateManagement
     # if !templates_store_path = atom.project.templates_path
     templates_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
     atom.project.templates_path = templates_store_path
+    # 基础控件存储路径
+    atom.project.snippets_path = path.join __dirname, '../../snippets/'
       # atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
     # templates_store_path = atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"

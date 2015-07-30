@@ -1,11 +1,8 @@
-# _ = require 'underscore-plus'
 {$$, TextEditorView, View} = require 'atom-space-pen-views'
 path = require 'path'
 fs = require 'fs'
 emp = require '../exports/emp'
-EmpAddPackPanel = require './template_list/add-package-panel'
-AvailablePackageView = require './available-package-view'
-templates_json = null
+AvailableTypeView = require './ui_snippet/avaliable-ui-type-view'
 
 module.exports =
 class InstalledTemplatePanel extends View
@@ -13,22 +10,13 @@ class InstalledTemplatePanel extends View
     @div =>
       @section class: 'section', =>
         @div class: 'section-container', =>
-          @div class: 'section-heading icon icon-code', 'Snippets'
-          @table class: 'package-snippets-table table native-key-bindings text', tabindex: -1, =>
-            @thead =>
-              @tr =>
-                @th 'Trigger'
-                @th 'Name'
-                @th 'Body'
-            @tbody outlet: 'snippets'
+          @div class: 'block section-heading icon icon-package','Installed Packages'
+
+      @section class: 'section', =>
+        @div outlet:"section_container", class: 'section-container'
 
   initialize: () ->
     @packageViews = []
-    # @add_package_panel = new EmpAddPackPanel(this)
-    # @package_list.after @add_package_panel
-    # @cbb_management = atom.project.cbb_management
-    # @loadTemplates1()
-
     @cbb_management = atom.project.cbb_management
     @templates_store_path = atom.project.templates_path
     @snippet_sotre_path = path.join __dirname, '../../snippets/'
@@ -36,25 +24,20 @@ class InstalledTemplatePanel extends View
     emp.mkdir_sync_safe @snippet_sotre_path
     emp.mkdir_sync_safe @snippet_css_path
 
-  matchPackages: () ->
-    # console.log @filterEditor
-    # console.log @filterEditor.getText()
-    console.log "matchPackagesmatchPackagesmatchPackages"
-
   refresh_detail:() ->
-    # console.log "do refresh"
-    # @cbb_management.do_initialize()
-    # @cancel_add_panel()
-    # @loadTemplates1()
+    @load_snippets()
 
-  loadTemplates1: ->
-    @templatePackages.empty()
-    packages = @cbb_management.get_pacakges()
-    for ccb_name,ccb_obj of packages
-      tempRow = $$ -> @div class: 'row'
-      @templatePackages.append tempRow
-      tempView = new AvailablePackageView(this, ccb_obj)
-      tempRow.append tempView
+  load_snippets: ->
+    fs.readdir @snippet_sotre_path, (err, files) =>
+      if err
+        console.error err
+      else
+        @section_container.empty()
+        console.log files
+        for tmp_file in files
+          if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
+            tmp_type_panel = new AvailableTypeView(@snippet_sotre_path, tmp_file)
+            @section_container.append tmp_type_panel
 
   # 添加新的 package 类别
   show_add_panel: ->
@@ -73,6 +56,3 @@ class InstalledTemplatePanel extends View
 
   success_add_panel: ->
     @refresh_detail()
-
-  detached: ->
-    # @unsubscribe()
