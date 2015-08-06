@@ -4,14 +4,14 @@
 		body: '''
 			<?xml version="1.0" encoding="UTF-8" ?>
 			<content>
-				<head> 
-					<link ref="${0:ert_ui.css}" type="text/css"/> 
-					<script type="text/x-lua" src="RYTL.lua"></script> 
+				<head>
+					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<script type="text/x-lua" src="RYTL.lua"></script>
 					<script type="text/x-lua">
-						<![CDATA[ 
+						<![CDATA[
 							ryt = RYTL:new{};
 						]]>
-					</script> 
+					</script>
 				</head>
 				<body>
 				$1
@@ -24,17 +24,16 @@
 			<?xml version="1.0" encoding="UTF-8" ?>
 			<content>
 				<head>
-					<style> 
-					<link ref="${0:ert_ui.css}" type="text/css"/> 
-			
+					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<style>
 					</style>
-					<script type="text/x-lua" src="RYTL.lua"></script> 
+					<script type="text/x-lua" src="RYTL.lua"></script>
 					<script type="text/x-lua">
-						<![CDATA[ 
-						]]> 
+						<![CDATA[
+						]]>
 					</script>
 				</head>
-			
+
 				<body>
 				$1
 				</body>
@@ -43,9 +42,9 @@
 	"EMP Lua Script":
 		prefix: "lua"
 		body: '''
-						
+
 			<script type="text/x-lua">
-				<![CDATA[ 
+				<![CDATA[
 					ryt = RYTL:new{};$1
 				]]>
 			</script>
@@ -60,14 +59,14 @@
 	"EMP 选择控件":
 		prefix: "seg"
 		body: '''
-			<input type='segment' value='$1' checked='checked'></input> 
+			<input type='segment' value='$1' checked='checked'></input>
 			<input type='segment' value='$2'></input>
 			$0
 		'''
 	"EMP 开关控件":
 		prefix: "swi"
 		body: '''
-			<input type='switch' value='$1' checked='checked'/> 
+			<input type='switch' value='$1' checked='checked'/>
 			<input type='switch' value='$2'/>
 			$0
 		'''
@@ -164,7 +163,7 @@
 		prefix: "doctype"
 		body: '''
 			<!DOCTYPE html>
-			
+
 		'''
 	Data:
 		prefix: "data"
@@ -650,7 +649,7 @@
 	"Ert Snippet Temp":
 		prefix: "esnip"
 		body: '''
-			'${1:Snippet Name}': 
+			'${1:Snippet Name}':
 				'prefix': '${2:hello}'
 				'body': '${3:Hello World!}'
 		'''
