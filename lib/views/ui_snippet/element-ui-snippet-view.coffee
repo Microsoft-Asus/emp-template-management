@@ -30,7 +30,7 @@ class UiSnippetElementView extends View
 
   do_edit: (e, element) ->
     console.log "do_edit"
-    @parents('.emp-ui-snippets-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
 
   do_del: (e, element) ->
     @snippet_sotre_path = atom.project.snippets_path
