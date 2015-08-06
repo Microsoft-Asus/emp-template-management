@@ -80,4 +80,4 @@ class AvailablePackageView extends View
 
 
   show_detail:->
-    @parents('.emp-ui-snippets-management').view()?.showPanel(emp.EMP_SNIPPET_DETAIL, {back: emp.EMP_SHOW_UI_LIB}, [@snippet_path, @snippet_file, @snippet_pack])
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_SNIPPET_DETAIL, {back: emp.EMP_SHOW_UI_LIB}, [@snippet_path, @snippet_file, @snippet_pack])
