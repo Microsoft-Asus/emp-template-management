@@ -2,7 +2,8 @@
 path = require 'path'
 fs = require 'fs'
 emp = require '../exports/emp'
-AvailableTypeView = require './ui_snippet/avaliable-ui-type-view'
+# AvailableTypeView = require './ui_snippet/avaliable-ui-type-view'
+AvailableSnippetView = require './ui_snippet/avaliable-ui-snippet-view'
 
 module.exports =
 class InstalledTemplatePanel extends View
@@ -10,10 +11,15 @@ class InstalledTemplatePanel extends View
     @div =>
       @section class: 'section', =>
         @div class: 'section-container', =>
-          @div class: 'block section-heading icon icon-package','Installed Packages'
+          @div class: 'block section-heading icon icon-package','Installed Snippets'
 
-      @section class: 'section', =>
-        @div outlet:"section_container", class: 'section-container'
+          @section class: 'sub-section installed-packages', =>
+            @h3 class: 'sub-section-heading icon icon-package', =>
+              @text 'Installed Snippets'
+
+            @div outlet: 'section_container', class: 'container package-container', =>
+              @div class: 'alert alert-info loading-area icon icon-hourglass', "Loading packages…"
+
 
   initialize: () ->
     @packageViews = []
@@ -36,7 +42,7 @@ class InstalledTemplatePanel extends View
         console.log files
         for tmp_file in files
           if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
-            tmp_type_panel = new AvailableTypeView(@snippet_sotre_path, tmp_file)
+            tmp_type_panel = new AvailableSnippetView(@snippet_sotre_path, tmp_file)
             @section_container.append tmp_type_panel
 
   # 添加新的 package 类别

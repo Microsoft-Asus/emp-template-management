@@ -15,6 +15,7 @@ CbbPackImportView = require './cbb-pack-import-view'
 CbbConfigView = require './cbb-config-view'
 CbbAddUiSnippetsView = require './add-ui-snippets-view'
 CbbShowUiSnippetsView = require './cbb-show-ui-snippets-view'
+SnippetDetailView = require './cbb-ui-snippet-detail-view'
 
 module.exports =
 class EmpTmpManagementView extends ScrollView
@@ -71,6 +72,7 @@ class EmpTmpManagementView extends ScrollView
 
     @addOtherPanel emp.EMP_CCB_PACK_DETAIL, -> new PackageDetailView()
     @addOtherPanel emp.EMP_CBB_ELE_DETAIL, -> new ElementDetailView()
+    @addOtherPanel emp.EMP_SNIPPET_DETAIL, -> new SnippetDetailView()
     # @cbb_management = atom.project.cbb_management
     # packages = @cbb_management.get_pacakges()
     #

@@ -1,11 +1,10 @@
 {$, $$, ScrollView,TextEditorView} = require 'atom-space-pen-views'
 path = require 'path'
+CSON = require 'cson'
 fs = require 'fs'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 emp = require '../exports/emp'
-default_select_pack = emp.EMP_DEFAULT_PACKAGE
-default_select_type = emp.EMP_DEFAULT_TYPE
 
 module.exports =
 class InstalledTemplatePanel extends ScrollView
@@ -71,18 +70,9 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'info-label', "模板名称*"
                   @div class: 'setting-description', "模板名称(描述)(Snippets  Name),不要重复."
                 # @div class: 'editor-container', =>
+              @div class: 'controls', =>
                 @subview "snippet_name", new TextEditorView(mini: true,attributes: {id: 'snippet_name', type: 'string'},  placeholderText: ' Snippets  Name')
 
-          # snippet 生效的文件
-          @div outlet:'snippet_scope_div', class: 'section-body', =>
-            @div class: 'control-group', =>
-              @div class: 'controls', =>
-                @label class: 'control-label', =>
-                  @div class: 'info-label', "模板生效范围选择器*"
-                  @div class: 'setting-description', "新添加模板类别是添加.(Snippet scope selector).默认为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}"
-              @div class: 'controls', =>
-                # @div class: 'editor-container', =>
-                @subview "snippet_scope", new TextEditorView(mini: true,attributes: {id: 'snippet_scope', type: 'string'},  placeholderText: 'Snippet scope selector (ex: `.source.js`)')
 
           # snippet 触发标示
           @div class: 'section-body', =>
@@ -95,6 +85,17 @@ class InstalledTemplatePanel extends ScrollView
                 # @div class: 'editor-container', =>
                 @subview "snippet_tab", new TextEditorView(mini: true,attributes: {id: 'snippet_tab', type: 'string'},  placeholderText: 'Snippets Tab Activation')
 
+          # snippet 生效的文件
+          @div outlet:'snippet_scope_div', class: 'section-body', =>
+            @div class: 'control-group', =>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'info-label', "模板生效范围选择器*"
+                  @div class: 'setting-description', "新添加模板的识别类别, 通过范围选择器來选择 snippet
+                  的生效范围.(Snippet scope selector).例如想要添加一段 Erlang 代码内生效的 Snippet, 那么 选择器应该谢伟 `.source.erlang`, 如果是 lua 的,则为`.source.lua`, 同理,如果为 Emp 的页面, 则可以写为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}.默认为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}"
+              @div class: 'controls', =>
+                # @div class: 'editor-container', =>
+                @subview "snippet_scope", new TextEditorView(mini: true,attributes: {id: 'snippet_scope', type: 'string'},  placeholderText: 'Snippet scope selector (ex: `.source.js`)')
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -104,18 +105,18 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'setting-description', "Snippets Body"
                 # @subview "snippet_body", new TextEditorView(mini: true,attributes: {id: 'snippet_body', type: 'string'},  placeholderText: ' Snippet Body')
                 @textarea "", class: "snippet_area native-key-bindings editor-colors", rows: 8, outlet: "snippet_body", placeholder: "Snippet Body"
-                @button class: 'control-btn btn btn-info', click:'create_body',' Create File '
-                @button class: 'control-btn btn btn-info', click:'edit_body',' Edit File '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
                   @div class: 'info-label', "模板样式*"
-                  @div class: 'setting-description', "Snippets Body"
+                  @div class: 'setting-description', "Snippets Css"
                 # @subview "snippet_body", new TextEditorView(mini: true,attributes: {id: 'snippet_body', type: 'string'},  placeholderText: ' Snippet Body')
-                @textarea "", class: "snippet_area native-key-bindings editor-colors", rows: 8, outlet: "snippet_css", placeholder: "Snippet Css"
-
+                # @textarea "", class: "snippet_area native-key-bindings editor-colors", rows: 8, outlet: "snippet_css", placeholder: "Snippet Css"
+                # @button class: 'control-btn btn btn-info', click:'create_body',' Create File '
+              @div class: 'controls', =>
+                @button class: 'control-btn btn btn-info', click:'edit_css',' Edit Common Css File '
 
 
       @div class: 'footer-div', =>
@@ -130,12 +131,15 @@ class InstalledTemplatePanel extends ScrollView
     @templates_store_path = atom.project.templates_path
     @snippet_sotre_path = atom.project.snippets_path
     @snippet_css_path = path.join __dirname, '../../css/'
+
+    console.log @snippet_sotre_path
+    console.log @snippet_css_path
     emp.mkdir_sync_safe @snippet_sotre_path
     emp.mkdir_sync_safe @snippet_css_path
 
     @snippet_pack.getModel().getBuffer().onDidStopChanging =>
-      console.log "modified text"
-      console.log @snippet_pack.getText()
+      # console.log "modified text"
+      # console.log @snippet_pack.getText()
       if @snippet_pack.getText()
         @snippet_pack_sel_div.hide()
         # @snippet_scope_div.show()
@@ -144,7 +148,7 @@ class InstalledTemplatePanel extends ScrollView
         # @snippet_scope_div.hide()
 
   refresh_detail: (edit_data)->
-    console.log 'refresh_detail'
+    # console.log 'refresh_detail'
     snippet_def_pack = emp.EMP_NAME_DEFAULT
     @edit_flag = false
     if edit_data
@@ -159,7 +163,7 @@ class InstalledTemplatePanel extends ScrollView
       @snippet_tab.setText(@edit_prefix)
       @snippet_scope.setText(@edit_source)
       @snippet_body.context.value = @edit_body
-      @snippet_css.context.value = @edit_css
+      # @snippet_css.context.value = @edit_css
       # console.log snippet_body
       snippet_def_pack = @edit_pack
       @snippet_pack.setText("")
@@ -172,22 +176,27 @@ class InstalledTemplatePanel extends ScrollView
         console.error err
       else
         @snippet_pack_sel.empty()
-        if snippet_def_pack is emp.EMP_NAME_DEFAULT
-          tmp_sel_option = @new_selected_option(emp.EMP_NAME_DEFAULT)
-          @snippet_pack_sel.append tmp_sel_option
-        else
-          tmp_sel_option = @new_option(emp.EMP_NAME_DEFAULT)
-          @snippet_pack_sel.append tmp_sel_option
+
         console.log files
+        selected_flag = false
         for tmp_file in files
           if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
             tmp_option_val = path.basename tmp_file, emp.DEFAULT_SNIPPET_FILE_EXT
             if tmp_option_val is snippet_def_pack
+              selected_flag = true
               tmp_option = @new_selected_option(tmp_option_val)
               @snippet_pack_sel.append tmp_option
             else
               tmp_option = @new_option(tmp_option_val)
               @snippet_pack_sel.append tmp_option
+
+        unless selected_flag
+          if snippet_def_pack is emp.EMP_NAME_DEFAULT
+            tmp_sel_option = @new_selected_option(emp.EMP_NAME_DEFAULT)
+            @snippet_pack_sel.append tmp_sel_option
+          else
+            tmp_sel_option = @new_option(emp.EMP_NAME_DEFAULT)
+            @snippet_pack_sel.append tmp_sel_option
 
   # do create  -----------------------------------------------------------------
   create_snippet: ->
@@ -215,26 +224,39 @@ class InstalledTemplatePanel extends ScrollView
       emp.show_error "模板选择器不能为空!"
       return
     snippet_body = @snippet_body.context.value
-    snippet_css = @snippet_css.context.value
-    console.log snippet_body
+    # snippet_css = @snippet_css.context.value
+    # console.log snippet_body
 
     file_name = @snippet_sotre_path + snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
-    snippet_json = {}
-    snippet_json[snippet_source] = {}
+    snippet_obj = {}
+    snippet_obj[snippet_source] = {}
+    file_ext = path.extname file_name
     if fs.existsSync file_name
-      json_data = fs.readFileSync file_name
-      snippet_json = JSON.parse json_data
-      if snippet_json[snippet_source]?[snippet_name]
+      if file_ext is emp.JSON_SNIPPET_FILE_EXT
+        json_data = fs.readFileSync file_name
+        snippet_obj = JSON.parse json_data
+      else
+        snippet_obj = CSON.parseCSONFile(file_name)
+
+      if snippet_obj[snippet_source]?[snippet_name]
         ck_flag = emp.show_alert "Warnning", "该代码段已经存在,是否要覆盖原有代码段."
         if !ck_flag
           return
+        else
+          delete snippet_obj[snippet_source]?[snippet_name]
     # console.log file_name
-    snippet_json[snippet_source]?[snippet_name] = {
+    snippet_obj[snippet_source]?[snippet_name] = {
       'prefix': snippet_tab
       'body':snippet_body
-      'css': snippet_css
+      # 'css': snippet_css
     }
-    fs.writeFile(file_name, JSON.stringify(snippet_json, null, '\t') , (error) ->
+    snippet_cson_str = ''
+    if file_ext is emp.JSON_SNIPPET_FILE_EXT
+      snippet_cson_str = JSON.stringify(snippet_obj, null, '\t')
+    else
+      snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
+
+    fs.writeFile(file_name, snippet_cson_str, (error) ->
         if error
           console.log error
         else
@@ -269,7 +291,7 @@ class InstalledTemplatePanel extends ScrollView
       emp.show_error "模板选择器不能为空!"
       return
     snippet_body = @snippet_body.context.value
-    snippet_css = @snippet_css.context.value
+    # snippet_css = @snippet_css.context.value
     console.log snippet_body
 
     if snippet_pack isnt @edit_pack
@@ -277,22 +299,33 @@ class InstalledTemplatePanel extends ScrollView
     # else if snippet_source isnt @edit_source
 
     file_name = @snippet_sotre_path + snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
-    snippet_json = {}
-    snippet_json[snippet_source] = {}
+    snippet_obj = {}
+    snippet_obj[snippet_source] = {}
 
+    file_ext = path.extname file_name
     if fs.existsSync file_name
-      json_data = fs.readFileSync file_name
-      snippet_json = JSON.parse json_data
+      if file_ext is emp.JSON_SNIPPET_FILE_EXT
+        json_data = fs.readFileSync file_name
+        snippet_obj = JSON.parse json_data
+      else
+        snippet_obj = CSON.parseCSONFile(file_name)
       if (snippet_source isnt @edit_source) or (snippet_name isnt @edit_name)
-        delete snippet_json[@edit_source]?[@edit_name]
+        delete snippet_obj[@edit_source]?[@edit_name]
 
     # console.log file_name
-    snippet_json[snippet_source]?[snippet_name] = {
+    snippet_obj[snippet_source]?[snippet_name] = {
       'prefix': snippet_tab
       'body':snippet_body
-      'css': snippet_css
+      # 'css': snippet_css
     }
-    fs.writeFile(file_name, JSON.stringify(snippet_json, null, '\t') , (error) ->
+
+    snippet_cson_str = ''
+    if file_ext is emp.JSON_SNIPPET_FILE_EXT
+      snippet_cson_str = JSON.stringify(snippet_obj, null, '\t')
+    else
+      snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
+
+    fs.writeFile(file_name, snippet_cson_str, (error) ->
         if error
           console.log error
         else
@@ -308,24 +341,34 @@ class InstalledTemplatePanel extends ScrollView
 
   delete_element: ()->
     edit_file = @snippet_sotre_path + @edit_pack + emp.DEFAULT_SNIPPET_FILE_EXT
+    snippet_cson_str = ''
     if fs.existsSync edit_file
-      json_data = fs.readFileSync edit_file
-      snippet_json = JSON.parse json_data
-      delete snippet_json[@edit_source]?[@edit_name]
+      snippet_obj = {}
+      file_ext = path.extname edit_file
+      if file_ext is emp.JSON_SNIPPET_FILE_EXT
+        json_data = fs.readFileSync edit_file
+        snippet_obj = JSON.parse json_data
+        delete snippet_obj[@edit_source]?[@edit_name]
+        snippet_cson_str = JSON.stringify(snippet_obj, null, '\t')
+      else
+        snippet_obj = CSON.parseCSONFile(edit_file)
+        delete snippet_obj[@edit_source]?[@edit_name]
+        snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
 
-    fs.writeFile(edit_file, JSON.stringify(snippet_json, null, '\t') , (error) ->
+    fs.writeFile(edit_file,  snippet_cson_str, (error) ->
         if error
           console.log error
         else
           console.log 'the old snippet was deleted. '
       )
 
+
   cleanup: ->
     @snippet_name.setText('')
     @snippet_tab.setText('')
     @snippet_scope.setText('')
     @snippet_body.context.value = ''
-    @snippet_css.context.value = ''
+    # @snippet_css.context.value = ''
     @snippet_pack.setText("")
     @snippet_scope.setText(emp.DEFAULT_SNIPPET_SOURE_TYPE)
 
@@ -363,6 +406,26 @@ class InstalledTemplatePanel extends ScrollView
                       # @snippet_body_text = tmp_body
                       @snippet_body.context.value = tmp_body
                   ," ")
+
+  edit_css: ->
+    tmp_file = @initial_css_file()
+    @create_editor(tmp_file, emp.EMP_GRAMMAR_CSS)
+    # , (tmp_editor) =>
+                    # do nothing
+                    # console.log "nothing"
+                    # tmp_editor.onDidSave (event) =>
+                    #   # console.log event
+                    #   tmp_body = tmp_editor.getText()
+                      # @snippet_body_text = tmp_body
+                      # @snippet_body.context.value = tmp_body
+                  # ," ")
+
+  initial_css_file: ->
+    snippet_pack = ''
+    unless snippet_pack = @snippet_pack.getText()?.trim()
+      snippet_pack = @snippet_pack_sel.val()
+    tmp_path = path.join @snippet_css_path, snippet_pack+".css"
+
 
 
   edit_body: ->

@@ -17,7 +17,9 @@
     "emp-template-management:temp-management",
     "emp-template-management:cbb-panel",
     "emp-template-management:quick-add-cbb",
-    "emp-template-management:quick-add-cbb-css"
+    "emp-template-management:quick-add-cbb-css",
+    "emp-template-management:snippets-management",
+    "emp-template-management:show-guide"
   ],
   "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",
@@ -31,6 +33,7 @@
     "moxie-zip": "*",
     "adm-zip": "*",
     "js-beautify": "^1.4.0",
+    "cson":"*",
     "coffee-script": "~1.8.0"
   }
 }

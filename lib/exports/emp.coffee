@@ -14,6 +14,9 @@ module.exports =
   # 默认的 source 类型
   DEFAULT_SNIPPET_SOURE_TYPE:'.source.xhtml'
   DEFAULT_SNIPPET_FILE_EXT: '.cson'
+  JSON_SNIPPET_FILE_EXT: '.json'
+
+  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "emp-view.cson"]
 
   EMP_ALL_TYPE : "All Type"
 
@@ -74,10 +77,12 @@ module.exports =
   EMP_EXI:'Export/Inport'
   EMP_CONFIG:'Config'
 
+  EMP_SNIPPET_DETAIL:'show_snippet_detail'
+
   EMP_CCB_PACK_DETAIL:'Cbb_pack_detail'
   EMP_CBB_ELE_DETAIL:'Cbb_ele_detail'
 
-  EMP_NAME_DEFAULT: 'default'
+  EMP_NAME_DEFAULT: 'emp-view'
   EMP_DEFAULT_VER: '0.1'
   EMP_TEMPLATES_PATH:'templates'
   EMP_TEMPLATES_JSON: 'templates.json'

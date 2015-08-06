@@ -24,8 +24,10 @@
     'submenu': [
         {type: 'separator'}
         { 'label': 'Template Management', 'command': 'emp-template-management:temp-management' }
-        {type: 'separator'}
         {'label': 'CBB Panel', 'command': 'emp-template-management:cbb-panel'}
+        {type: 'separator'}
+        {'label': 'UI Snippets Management', 'command': 'emp-template-management:snippets-management' }
+        { 'label': 'ERT UI Guide', 'command': 'emp-template-management:show-guide' }
     ]
   }
 ]

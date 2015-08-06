@@ -150,7 +150,7 @@ class EmpTemplateManagement
     @delete_package(name)
 
   refresh: ->
-    temp_str = JSON.stringify @templates_obj
+    temp_str = JSON.stringify @templates_obj, null, '\t'
     # console.log template_json
     # console.log temp_str
     fs.writeFileSync @templates_json, temp_str

@@ -1,5 +1,6 @@
 {$, View} = require 'atom-space-pen-views'
 emp = require '../../exports/emp'
+CSON = require 'cson'
 path = require 'path'
 fs = require 'fs'
 
@@ -29,17 +30,27 @@ class UiSnippetElementView extends View
 
   do_edit: (e, element) ->
     console.log "do_edit"
-    @parents('.emp-template-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
+    @parents('.emp-ui-snippets-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
 
   do_del: (e, element) ->
     @snippet_sotre_path = atom.project.snippets_path
     file_name = @snippet_sotre_path + @snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
-    if fs.existsSync file_name
-      json_data = fs.readFileSync file_name
-      snippet_json = JSON.parse json_data
-      delete snippet_json[@snippet_source]?[@name]
 
-    fs.writeFile(file_name, JSON.stringify(snippet_json, null, '\t') , (error) ->
+    snippet_cson_str = ''
+    if fs.existsSync file_name
+      snippet_obj = {}
+      file_ext = path.extname file_name
+      if file_ext is emp.JSON_SNIPPET_FILE_EXT
+        json_data = fs.readFileSync file_name
+        snippet_obj = JSON.parse json_data
+        delete snippet_obj[@snippet_source]?[@name]
+        snippet_cson_str = JSON.stringify(snippet_obj, null, '\t')
+      else
+        snippet_obj = CSON.parseCSONFile(file_name)
+        delete snippet_obj[@snippet_source]?[@name]
+        snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
+
+    fs.writeFile(file_name,  snippet_cson_str, (error) ->
         if error
           console.log error
         else
