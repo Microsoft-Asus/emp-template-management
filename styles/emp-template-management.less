@@ -919,3 +919,14 @@
     width: 100%;
   }
 }
+
+.snippet_area {
+    border: none;
+    font-size: 15px;
+    width: 100%;
+    min-width: 100%;
+    max-width: 100%;
+    margin-bottom: @component-padding/2;
+    // this makes sure the textarea doesn't resize when the .invalid or .valid border is added
+    border: 1px solid rgba(0, 0, 0, 0);
+}

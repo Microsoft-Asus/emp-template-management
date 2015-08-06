@@ -11,6 +11,13 @@ module.exports =
   TOOL_THIRD: "3"
   TOOL_FOURTH: "4"
 
+  # 默认的 source 类型
+  DEFAULT_SNIPPET_SOURE_TYPE:'.source.xhtml'
+  DEFAULT_SNIPPET_FILE_EXT: '.cson'
+  JSON_SNIPPET_FILE_EXT: '.json'
+
+  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "emp-view.cson"]
+
   EMP_ALL_TYPE : "All Type"
 
   # 创建模板临时文件路径
@@ -18,6 +25,7 @@ module.exports =
   EMP_TMP_TEMP_HTML:'tmp.xhtml'
   EMP_TMP_TEMP_CSS:'tmp.css'
   EMP_TMP_TEMP_LUA:'tmp.lua'
+  EMP_TMP_TEMP_CSON:'tmp.cson'
   EMP_GRAMMAR_XHTML:'Emp View'
   EMP_GRAMMAR_CSS:'CSS'
   EMP_GRAMMAR_LUA:'LUA'
@@ -64,13 +72,17 @@ module.exports =
   EMP_UPLOAD:'Add Template'
   EMP_DOWNLOAD:'Download'
   EMP_Setting:'Cbb Tool Setting'
+  EMP_SHOW_UI_LIB:'Show UI Snippets'
+  EMP_UI_LIB:'Add UI Snippets'
   EMP_EXI:'Export/Inport'
   EMP_CONFIG:'Config'
+
+  EMP_SNIPPET_DETAIL:'show_snippet_detail'
 
   EMP_CCB_PACK_DETAIL:'Cbb_pack_detail'
   EMP_CBB_ELE_DETAIL:'Cbb_ele_detail'
 
-  EMP_NAME_DEFAULT: 'default'
+  EMP_NAME_DEFAULT: 'emp-view'
   EMP_DEFAULT_VER: '0.1'
   EMP_TEMPLATES_PATH:'templates'
   EMP_TEMPLATES_JSON: 'templates.json'
@@ -216,6 +228,16 @@ module.exports.show_alert = (text_title, text_msg) ->
     buttons:
       '否': -> return 0
       '是': -> return 1
+
+module.exports.show_alert_cancel = (text_title, text_msg) ->
+  atom.confirm
+    message: "#{text_title}"
+    detailedMessage: "#{text_msg}"
+    buttons:
+      '是': -> return 1
+      '否': -> return 0
+      '取消': -> return 2
+
 
 
 

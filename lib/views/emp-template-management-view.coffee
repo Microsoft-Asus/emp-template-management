@@ -13,6 +13,9 @@ ElementDetailView = require './template_list/element-detail-view'
 CbbToolSettingPanel = require './cbb-tool-setting-view'
 CbbPackImportView = require './cbb-pack-import-view'
 CbbConfigView = require './cbb-config-view'
+CbbAddUiSnippetsView = require './add-ui-snippets-view'
+CbbShowUiSnippetsView = require './cbb-show-ui-snippets-view'
+SnippetDetailView = require './cbb-ui-snippet-detail-view'
 
 module.exports =
 class EmpTmpManagementView extends ScrollView
@@ -61,12 +64,15 @@ class EmpTmpManagementView extends ScrollView
     @addCorePanel emp.EMP_UPLOAD, 'plus', -> new AddTemplateView("3")
     @addCorePanel emp.EMP_Setting, 'keyboard', -> new CbbToolSettingPanel("4")
     @addCorePanel emp.EMP_EXI, 'cloud-download', -> new CbbPackImportView("5")
-    @addCorePanel emp.EMP_CONFIG, 'gear', -> new CbbConfigView("6")
+    @addCorePanel emp.EMP_SHOW_UI_LIB, 'package', -> new CbbShowUiSnippetsView("6")
+    @addCorePanel emp.EMP_UI_LIB, 'plus', -> new CbbAddUiSnippetsView("7")
+    @addCorePanel emp.EMP_CONFIG, 'gear', -> new CbbConfigView("8")
 
     # @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
 
     @addOtherPanel emp.EMP_CCB_PACK_DETAIL, -> new PackageDetailView()
     @addOtherPanel emp.EMP_CBB_ELE_DETAIL, -> new ElementDetailView()
+    @addOtherPanel emp.EMP_SNIPPET_DETAIL, -> new SnippetDetailView()
     # @cbb_management = atom.project.cbb_management
     # packages = @cbb_management.get_pacakges()
     #

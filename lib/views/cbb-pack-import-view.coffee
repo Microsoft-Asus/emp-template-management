@@ -217,7 +217,7 @@ class CbbPackImportView extends View
         zip.addFile(tmp_file.show_path, tmp_file.dest_path)
 
       tmp_dir = path.join base_export_name,emp.EMP_ZIP_DETAIL
-      temp_str = JSON.stringify zip_detail
+      temp_str = JSON.stringify zip_detail, null, '\t'
       zip.addData tmp_dir, temp_str
 
 

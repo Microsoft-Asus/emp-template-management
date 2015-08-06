@@ -40,7 +40,7 @@ class EmpCbbEle
     @template_path = atom.project.templates_path
 
   refresh: ->
-    temp_str = JSON.stringify @get_json()
+    temp_str = JSON.stringify @get_json(), null, '\t'
     fs.writeFileSync @template_json, temp_str
 
   # element information

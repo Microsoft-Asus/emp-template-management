@@ -58,7 +58,7 @@ class EmpCbbPackage
 
   refresh: ->
     # console.log @get_json()
-    temp_str = JSON.stringify @get_json()
+    temp_str = JSON.stringify @get_json(), null, '\t'
     # console.log temp_str
     # console.log @template_json
     fs.writeFileSync @template_json, temp_str

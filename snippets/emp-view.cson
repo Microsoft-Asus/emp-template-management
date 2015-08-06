@@ -1,0 +1,655 @@
+".source.xhtml":
+	"EMP Content":
+		prefix: "xml"
+		body: '''
+			<?xml version="1.0" encoding="UTF-8" ?>
+			<content>
+				<head>
+					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<script type="text/x-lua" src="RYTL.lua"></script>
+					<script type="text/x-lua">
+						<![CDATA[
+							ryt = RYTL:new{};
+						]]>
+					</script>
+				</head>
+				<body>
+				$1
+				</body>
+			</content>
+		'''
+	"EMP Details Content":
+		prefix: "xmld"
+		body: '''
+			<?xml version="1.0" encoding="UTF-8" ?>
+			<content>
+				<head>
+					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<style>
+					</style>
+					<script type="text/x-lua" src="RYTL.lua"></script>
+					<script type="text/x-lua">
+						<![CDATA[
+						]]>
+					</script>
+				</head>
+
+				<body>
+				$1
+				</body>
+			</content>
+		'''
+	"EMP Lua Script":
+		prefix: "lua"
+		body: '''
+
+			<script type="text/x-lua">
+				<![CDATA[
+					ryt = RYTL:new{};$1
+				]]>
+			</script>
+		'''
+	"EMP Lua Frame":
+		prefix: "luad"
+		body: '''
+			<![CDATA[
+							ryt = RYTL:new{};$1
+						]]>
+		'''
+	"EMP 选择控件":
+		prefix: "seg"
+		body: '''
+			<input type='segment' value='$1' checked='checked'></input>
+			<input type='segment' value='$2'></input>
+			$0
+		'''
+	"EMP 开关控件":
+		prefix: "swi"
+		body: '''
+			<input type='switch' value='$1' checked='checked'/>
+			<input type='switch' value='$2'/>
+			$0
+		'''
+	"EMP WebView":
+		prefix: "web"
+		body: "<div type='webview' name='$1' class='$2' url='$3'>$0</div>"
+	Anchor:
+		prefix: "a"
+		body: "<a href=\"${1:#}\">$2</a>$0"
+	Abbreviation:
+		prefix: "abbr"
+		body: "<abbr title=\"$1\">$2</abbr>$0"
+	Address:
+		prefix: "address"
+		body: '''
+			<address ${1:id="$2"}>
+				$3
+			</address>
+		'''
+	Area:
+		prefix: "area"
+		body: "<area ${1:shape=\"${2:default}\"} coords=\"$3\" ${4:href=\"${5:#}\"} />$0"
+	Article:
+		prefix: "article"
+		body: '''
+			<article id="$1">
+				$2
+			</article>
+		'''
+	Aside:
+		prefix: "aside"
+		body: '''
+			<aside id="$1">
+				$2
+			</aside>
+		'''
+	Audio:
+		prefix: "audio"
+		body: '''
+			<audio src="$1">
+				$2
+			</audio>
+		'''
+	Bold:
+		prefix: "b"
+		body: "<b>$1</b>$0"
+	Base:
+		prefix: "base"
+		body: "<base href=\"${1:#}\" target=\"${2:_blank}\" />$0"
+	"Bi-Directional Isolation":
+		prefix: "bdi"
+		body: "<bdi dir=\"${1:auto}\">$2</bdi>$0"
+	"Bi-Directional Override":
+		prefix: "bdo"
+		body: "<bdo dir=\"${1:auto}\">$2</bdo>$0"
+	Blockquote:
+		prefix: "blockquote"
+		body: '''
+			<blockquote cite="${1:http://}">
+				$2
+			</blockquote>
+		'''
+	"Line Breaker":
+		prefix: "br"
+		body: "<br>"
+	Button:
+		prefix: "button"
+		body: "<button name=\"${1:button}\">$2</button>$0"
+	Canvas:
+		prefix: "canvas"
+		body: "<canvas id=\"${1:canvas}\" width=\"${2:300}\" height=\"${3:300}\">$4</canvas>$0"
+	Caption:
+		prefix: "caption"
+		body: "<caption>$1</caption>$0"
+	Citation:
+		prefix: "cite"
+		body: "<cite>$1</cite>$0"
+	Code:
+		prefix: "code"
+		body: "<code>$1</code>$0"
+	Column:
+		prefix: "col"
+		body: "<col>$1</col>$0"
+	"Column Group":
+		prefix: "colgroup"
+		body: "<colgroup>$1</colgroup>$0"
+	Content:
+		prefix: "content"
+		body: "<content select=\"$1\">$2</content>$0"
+	Comment:
+		prefix: "--"
+		body: "<!-- $1 -->$0"
+	"HTML — 5":
+		prefix: "doctype"
+		body: '''
+			<!DOCTYPE html>
+
+		'''
+	Data:
+		prefix: "data"
+		body: "<data value=\"$1\">$2</data>$0"
+	"Data List":
+		prefix: "datalist"
+		body: '''
+			<datalist id="$1">
+				$2
+			</datalist>
+		'''
+	Description:
+		prefix: "dd"
+		body: "<dd>$1</dd>$0"
+	"Deleted Text":
+		prefix: "del"
+		body: "<del>$1</del>$0"
+	Details:
+		prefix: "details"
+		body: "<details ${1:open}>$2</details>$0"
+	Definition:
+		prefix: "dfn"
+		body: "<dfn>$1</dfn>$0"
+	"Description List":
+		prefix: "dl"
+		body: '''
+			<dl id="$1">
+				$2
+			</dl>
+		'''
+	"Definition Term":
+		prefix: "dt"
+		body: "<dt>$1</dt>$0"
+	Div:
+		prefix: "div"
+		body: '''
+			<div${1: id="${2:name}"}>
+				$3
+			</div>
+		'''
+	Emphasis:
+		prefix: "em"
+		body: "<em>$1</em>$0"
+	Embed:
+		prefix: "embed"
+		body: "<embed type=\"${1:video/quicktime}\" src=\"${2:#}\" width=\"${3:300}\" height=\"${4:300}\">$0"
+	Fieldset:
+		prefix: "fieldset"
+		body: "<fieldset>$1</fieldset>$0"
+	"Figure Caption":
+		prefix: "figcaption"
+		body: "<figcaption>$1</figcaption>$0"
+	Figure:
+		prefix: "figure"
+		body: "<figure>$1</figure>$0"
+	Footer:
+		prefix: "footer"
+		body: "<footer>$1</footer>$0"
+	Form:
+		prefix: "form"
+		body: '''
+			<form id="${1:form_id}" action="${2:index.html}" method="${3:post}">
+				$4
+			</form>
+		'''
+	"Heading 1":
+		prefix: "h1"
+		body: "<h1>$1</h1>$0"
+	"Heading 2":
+		prefix: "h2"
+		body: "<h2>$1</h2>$0"
+	"Heading 3":
+		prefix: "h3"
+		body: "<h3>$1</h3>$0"
+	"Heading 4":
+		prefix: "h4"
+		body: "<h4>$1</h4>$0"
+	"Heading 5":
+		prefix: "h5"
+		body: "<h5>$1</h5>$0"
+	"Heading 6":
+		prefix: "h6"
+		body: "<h6>$1</h6>$0"
+	Head:
+		prefix: "head"
+		body: '''
+			<head>
+				$1
+			</head>
+		'''
+	Header:
+		prefix: "header"
+		body: '''
+			<header>
+				$1
+			</header>
+		'''
+	"Horizontal Rule":
+		prefix: "hr"
+		body: "<hr>"
+	HTML:
+		prefix: "html"
+		body: '''
+			<html>
+				<head>
+					<title>$1</title>
+				</head>
+				<body>
+					$2
+				</body>
+			</html>
+		'''
+	Italic:
+		prefix: "i"
+		body: "<i>$1</i>$0"
+	"Inline Frame":
+		prefix: "iframe"
+		body: "<iframe src=\"$1\" width=\"$2\" height=\"$3\">$4</iframe>$0"
+	Input:
+		prefix: "input"
+		body: "<input type=\"${1:button}\" name=\"${2:some_name}\" value=\"$3\">$0"
+	Image:
+		prefix: "img"
+		body: "<img src=\"$1\" alt=\"$2\" />$0"
+	"Inserted Text":
+		prefix: "ins"
+		body: "<ins>$1</ins>$0"
+	"Keyboard Input":
+		prefix: "kbd"
+		body: "<kbd>$1</kbd>$0"
+	Keygen:
+		prefix: "keygen"
+		body: "<keygen name=\"${1:name}\" challenge=\"${2:string}\" keytype=\"${3:RSA}\" keyparams=\"${4:medium}\">$0"
+	Label:
+		prefix: "label"
+		body: "<label ${1:for=\"$2\"}></label>$0"
+	Legend:
+		prefix: "legend"
+		body: "<legend>$1</legend>$0"
+	"List Item":
+		prefix: "li"
+		body: "<li>$1</li>$0"
+	Link:
+		prefix: "link"
+		body: "<link ref=\"${1:ert_ui.css}\" type=\"text/css\"/>$0"
+	Main:
+		prefix: "main"
+		body: '''
+			<main>
+				$1
+			</main>
+		'''
+	Map:
+		prefix: "map"
+		body: '''
+			<map>
+				$1
+			</map>
+		'''
+	Mark:
+		prefix: "mark"
+		body: "<mark>$1</mark>$0"
+	Menu:
+		prefix: "menu"
+		body: '''
+			<menu>
+				$1
+			</menu>
+		'''
+	"Menu Item":
+		prefix: "menuitem"
+		body: "<menuitem type=\"${1:command}\" label=\"${2:Save}\">$0"
+	Meter:
+		prefix: "meter"
+		body: "<meter min=\"${1:200}\" max=\"${2:500}\" value=\"${3:350}\">$0"
+	"Mail Anchor":
+		prefix: "mailto"
+		body: "<a href=\"mailto:${1:joe@example.com}?subject=${2:feedback}\">${3:email me}</a>$0"
+	Meta:
+		prefix: "meta"
+		body: "<meta name=\"${1:name}\" content=\"${2:content}\">$0"
+	Navigation:
+		prefix: "nav"
+		body: '''
+			<nav>
+				$1
+			</nav>
+		'''
+	Noscript:
+		prefix: "noscript"
+		body: '''
+			<noscript>
+				$1
+			</noscript>
+		'''
+	Object:
+		prefix: "object"
+		body: "<object data=\"${1:http://}\" type=\"${2:mimetype}\">$3</object>$0"
+	"Ordered List":
+		prefix: "ol"
+		body: '''
+			<ol>
+				$1
+			</ol>
+		'''
+	"Option Group":
+		prefix: "optgroup"
+		body: '''
+			<optgroup label="${1:Group 1}">
+				$2
+			</optgroup>
+		'''
+	Option:
+		prefix: "opt"
+		body: "<option${1: value=\"${2:option}\"}>${3:option}</option>$0"
+	Output:
+		prefix: "output"
+		body: "<output name=\"${1:result}\">$2</output>$0"
+	Paragraph:
+		prefix: "p"
+		body: '''
+			<p>
+				$1
+			</p>
+		'''
+	Parameter:
+		prefix: "param"
+		body: "<param name=\"${1:foo}\" value=\"${2:bar}\">$0"
+	"Preformatted Text":
+		prefix: "pre"
+		body: '''
+			<pre>
+				$1
+			</pre>
+		'''
+	Progress:
+		prefix: "progress"
+		body: "<progress value=\"${1:50}\" max=\"${2:100}\">${3:50%}</progress>$0"
+	Quote:
+		prefix: "q"
+		body: "<q cite=\"$1\">$2</q>$0"
+	"Ruby Parenthesis":
+		prefix: "rp"
+		body: "<rp>$1</rp>$0"
+	"Ruby Pronunciation":
+		prefix: "rt"
+		body: "<rt>$1</rt>$0"
+	"Ruby Annotation":
+		prefix: "ruby"
+		body: "<ruby>$1</ruby>$0"
+	Strikethrough:
+		prefix: "s"
+		body: "<s>$1</s>$0"
+	"Sample Output":
+		prefix: "samp"
+		body: "<samp>$1</samp>$0"
+	Script:
+		prefix: "script"
+		body: '''
+			<script type="text/x-lua"><![CDATA[
+				$1
+			]]></script>
+		'''
+	"Script With External Source":
+		prefix: "scriptsrc"
+		body: "<script type=\"text/x-lua\" src=\"$1ert.lua\" ></script>$0"
+	Section:
+		prefix: "section"
+		body: '''
+			<section>
+				$1
+			</section>
+		'''
+	Select:
+		prefix: "select"
+		body: '''
+			<select id="$1" name="$2">
+				$3
+			</select>
+		'''
+	Small:
+		prefix: "small"
+		body: "<small>$1</small>$0"
+	Source:
+		prefix: "source"
+		body: "<source src=\"${1:http://}\" type=\"${2:mimetype}\">$0"
+	Span:
+		prefix: "span"
+		body: "<span>$1</span>$0"
+	Strong:
+		prefix: "strong"
+		body: "<strong>$1</strong>$0"
+	Style:
+		prefix: "style"
+		body: '''
+			<style media="screen">
+				$1
+			</style>
+		'''
+	Subscript:
+		prefix: "sub"
+		body: "<sub>$1</sub>$0"
+	Summary:
+		prefix: "summary"
+		body: "<summary>$1</summary>$0"
+	Superscript:
+		prefix: "sup"
+		body: "<sup>$1</sup>$0"
+	Table:
+		prefix: "table"
+		body: '''
+			<table>
+				$1
+			</table>
+		'''
+	"Table Body":
+		prefix: "tbody"
+		body: '''
+			<tbody>
+				$1
+			</tbody>
+		'''
+	"Table Cell":
+		prefix: "td"
+		body: '''
+			<td>
+				$1
+			</td>
+		'''
+	Template:
+		prefix: "template"
+		body: '''
+			<template id="$1">
+				$2
+			</template>
+		'''
+	"Text Area":
+		prefix: "textarea"
+		body: "<textarea name=\"${1:Name}\" rows=\"${2:8}\" cols=\"${3:40}\">$4</textarea>$0"
+	"Table Foot":
+		prefix: "tfoot"
+		body: '''
+			<tfoot>
+				$1
+			</tfoot>
+		'''
+	"Table Header Cell":
+		prefix: "th"
+		body: '''
+			<th>
+				$1
+			</th>
+		'''
+	"Table Head":
+		prefix: "thead"
+		body: '''
+			<thead>
+				$1
+			</thead>
+		'''
+	Time:
+		prefix: "time"
+		body: "<time>$1</time>$0"
+	"Table Row":
+		prefix: "tr"
+		body: '''
+			<tr>
+				$1
+			</tr>
+		'''
+	Track:
+		prefix: "track"
+		body: "<track kind=\"${1:subtitles}\" src=\"${2:sampleSubtitles_en.srt}\" srclang=\"${3:en}\">$0"
+	Underline:
+		prefix: "u"
+		body: "<u>$1</u>$0"
+	"Unordered List":
+		prefix: "ul"
+		body: '''
+			<ul>
+				$1
+			</ul>
+		'''
+	Variable:
+		prefix: "var"
+		body: "<var>$1</var>$0"
+	Video:
+		prefix: "video"
+		body: '''
+			<video src="${1:videofile.ogg}" ${2:autoplay} ${3:poster="${4:posterimage.jpg}"}>
+				$5
+			</video>
+		'''
+	"Word Break Opportunity":
+		prefix: "wbr"
+		body: "<wbr>"
+	"普通select控件":
+		prefix: "e_select"
+		body: '''
+			<select class="font_16_white">
+			    <option>${1:我是下拉框}</option>
+			    <option>${2:我是下拉框}</option>
+			    <option>${3:我是下拉框}</option>
+			</select>
+		'''
+		css: ".font_16_white{color:#FFFFFF;font-size:16px;}"
+	"普通输入框":
+		prefix: "e_text"
+		body: "<input class=\"font_16_white\" type=\"text\" name=\"${1:some_name}\" value=\"\" hold=\"${2:请输入}\" border=\"0\"/>"
+		css: ""
+	"实数输入框":
+		prefix: "e_text_n"
+		body: "<input class=\"font_16_white\" type=\"text\" name=\"${1:some_name}\" style=\"-wap-input-format:'n'\" value=\"\" hold=\"${2:请输入}\" border=\"0\"/>"
+		css: ""
+	"整数输入框":
+		prefix: "e_text_N"
+		body: "<input class=\"font_16_white\" type=\"text\" name=\"${1:some_name}\" style=\"-wap-input-format:'N'\" value=\"\" hold=\"${2:请输入}\" border=\"0\"/>"
+		css: ""
+	"电话号码输入框":
+		prefix: "e_text_phone"
+		body: "<input class=\"font_16_white\" type=\"text\" name=\"${1:some_name}\" style=\"-wap-input-format:'phone'\" value=\"\" hold=\"${2:请输入}\" maxleng=\"11\" minleng=\"11\" border=\"0\" />"
+		css: ""
+	"日期输入框，显示：2015-07-15,上传：20150715":
+		prefix: "e_text_date"
+		body: "<input class=\"font_16_white\" type=\"text\" name=\"${1:date}\" value=\"\" hold=\"${2:请输入}\" border=\"0\" style=\"-wap-input-format:'date'\" showFormat=\"yyyy-MM-dd\" valueFormat=\"yyyyMMdd\" />"
+		css: ""
+	"普通密码输入框":
+		prefix: "e_password"
+		body: "<input class=\"font_16_white\" type=\"password\" name=\"${1:some_name}\" value=\"\" hold=\"${2:请输入密码}\" border=\"0\"/>"
+		css: ""
+	"数字密码输入框 控制输入为6位":
+		prefix: "e_password_N"
+		body: "<input class=\"font_16_white\" type=\"password\" name=\"${1:some_name}\" style=\"-wap-input-format:'N'\" value=\"\" hold=\"${2:请输入密码}\" border=\"0\" maxleng=\"6\" minleng=\"6\"/>"
+		css: ""
+	"红色按钮块":
+		prefix: "e_btn_b_red"
+		body: "<input class=\"bg_red,font_16_white\" type=\"button\" name=\"${1:some_name}\" value=\"${2:我是按钮块}\" />"
+		css: ""
+	"绿色按钮块":
+		prefix: "e_btn_b_green"
+		body: "<input class=\"bg_green,font_16_white\" type=\"button\" name=\"${1:some_name}\" value=\"${2:我是按钮块}\" />"
+		css: ""
+	"白色按钮块":
+		prefix: "e_btn_b_white"
+		body: "<input class=\"bg_white,font_16_black\" type=\"button\" name=\"${1:some_name}\" value=\"${2:我是按钮块}\" />"
+		css: ""
+	"蓝色按钮块":
+		prefix: "e_btn_b_blue"
+		body: "<input class=\"bg_blue,font_16_white\" type=\"button\" name=\"${1:some_name}\" value=\"${2:我是按钮块}\" />"
+		css: ""
+	"灰色按钮块":
+		prefix: "e_btn_b_grew"
+		body: "<input class=\"bg_grew,font_16_black\" type=\"button\" name=\"${1:some_name}\" value=\"${2:我是按钮块}\" />"
+		css: ""
+	"普通radio":
+		prefix: "e_radio"
+		body: "<input class=\"font_16_white\" type=\"radio\" name=\"${1:some_name}\" value=\"\">${2:radio}</input>"
+		css: ""
+	"普通checkbox":
+		prefix: "e_checkbox"
+		body: "<input class=\"font_16_white\" type=\"checkbox\" name=\"${1:some_name}\" value=\"\">${2:checkbox}</input>"
+		css: ""
+	"普通segment":
+		prefix: "e_segment"
+		body: '''
+			<input  class="font_16_white" type="segment" name="${1:segment1}"  value="${4:seg1}">${7:search}</input>
+			<input type="segment" name="${2:segment1}"  value="${5:seg2}">${8:find}</input>
+			<input type="segment" name="${3:segment1}"  value="${6:seg3}">${9:look}</input>
+		'''
+		css: ""
+	"普通switch":
+		prefix: "e_switch"
+		body: '''
+			<input type="switch" name="${1:switch1}">${3:yes}</input>
+			<input type="switch" name="${2:switch1}" checked="checked">${4:no}</input>
+		'''
+		css: ""
+	"普通链接":
+		prefix: "e_link"
+		body: "<a class=\"font_16_black\" href=\"${1:http://www.w3school.com.cn}\">${2:W3School}</a>"
+		css: ""
+".source.coffee":
+	"Ert Snippet Temp":
+		prefix: "esnip"
+		body: '''
+			'${1:Snippet Name}':
+				'prefix': '${2:hello}'
+				'body': '${3:Hello World!}'
+		'''
