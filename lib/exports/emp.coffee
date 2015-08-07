@@ -20,6 +20,11 @@ module.exports =
 
   EMP_ALL_TYPE : "All Type"
 
+
+  EMP_HTML_GRAMMAR:"source.xhtml"
+  EMP_CSS_GRAMMAR:"source.css"
+  EMP_LUA_GRAMMAR:"source.lua"
+
   # 创建模板临时文件路径
   EMP_TMP_TEMP_FILE_PATH:'tmp_file'
   EMP_TMP_TEMP_HTML:'tmp.xhtml'
