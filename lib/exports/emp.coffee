@@ -5,20 +5,35 @@ os = require 'os'
 
 module.exports =
 
+  #  在 Cnfig 中保存数据
+  EMP_APP_EXPORT_UI_PATH :'emp-template-management.Store-UI-Snippet-Export-Path'
+  EMP_APP_IMPORT_UI_PATH :'emp-template-management.Store-UI-Snippet-Import-Path'
+
   PACKAGE_NAME:"emp-template-management"
   TOOL_FIRST:"1"
   TOOL_SECOND: "2"
   TOOL_THIRD: "3"
   TOOL_FOURTH: "4"
 
+  # 默认的 snippet 保存导出/导入路径
+  DEFAULT_SNIPPET_EXPORT_PATH:'snippets'
+  DEFAULT_CSS_EXPORT_PATH:'css'
+
   # 默认的 source 类型
   DEFAULT_SNIPPET_SOURE_TYPE:'.source.xhtml'
   DEFAULT_SNIPPET_FILE_EXT: '.cson'
+  DEFAULT_CSS_FILE_EXT: '.css'
   JSON_SNIPPET_FILE_EXT: '.json'
 
   EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "emp-view.cson"]
 
   EMP_ALL_TYPE : "All Type"
+
+
+
+  EMP_HTML_GRAMMAR:"source.xhtml"
+  EMP_CSS_GRAMMAR:"source.css"
+  EMP_LUA_GRAMMAR:"source.lua"
 
   # 创建模板临时文件路径
   EMP_TMP_TEMP_FILE_PATH:'tmp_file'
@@ -52,6 +67,7 @@ module.exports =
   EMP_EDIT_SUCCESS: "编辑成功!"
   EMP_SAVE_SUCCESS: "保存成功!"
   EMP_EXP_SUCCESS: "导出成功!"
+  EMP_IMPORT_SUCCESS: "导入成功!"
   EMP_NO_EMPTY_PATH: "输入地址项不能为空!"
 
   EMP_SRC_ELE_VIEW:"1"

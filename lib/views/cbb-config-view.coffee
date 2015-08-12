@@ -22,7 +22,7 @@ class CbbConfigView extends View
             @div class: 'control-group',=>
               @div class: 'controls', =>
                 @label class: 'control-label', =>
-                  @div class: 'setting-title', "模板存储路径"
+                  @div class: 'setting-title', "CBB 模板存储路径"
                   @div class: 'setting-description', "设置模板存储路径"
               @div class: 'controls', =>
                 @subview "store_path", new TextEditorView(mini: true,attributes: {id: 'store_path', type: 'string'},  placeholderText: ' Sotre Path')

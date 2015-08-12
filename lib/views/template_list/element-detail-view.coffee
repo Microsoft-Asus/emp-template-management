@@ -205,7 +205,7 @@ class ElementDetailPanel extends View
       tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
     @html_body.empty()
-    re_body = new ExampleView(tmp_body)
+    re_body = new ExampleView(tmp_body, emp.EMP_HTML_GRAMMAR)
 
     # console.log re_body
     @html_body.append re_body
@@ -222,7 +222,7 @@ class ElementDetailPanel extends View
         tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
       @css_body.empty()
-      re_body = new ExampleView(tmp_body)
+      re_body = new ExampleView(tmp_body, emp.EMP_CSS_GRAMMAR)
 
       # console.log re_body
       @css_body.append re_body
@@ -238,7 +238,7 @@ class ElementDetailPanel extends View
       tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
     @lua_body.empty()
-    re_body = new ExampleView(tmp_body)
+    re_body = new ExampleView(tmp_body, emp.EMP_LUA_GRAMMAR)
 
     # console.log re_body
     @lua_body.append re_body
@@ -494,7 +494,7 @@ class ElementDetailPanel extends View
                     tmp_body = tmp_editor.getText()
                     @snippet_obj.html.body = tmp_body
                     @html_body.empty()
-                    re_body = new ExampleView(tmp_body)
+                    re_body = new ExampleView(tmp_body, emp.EMP_HTML_GRAMMAR)
                     @html_body.append(re_body)
                 ,tmp_body)
 
@@ -506,7 +506,7 @@ class ElementDetailPanel extends View
                   # console.log event
                   tmp_body = tmp_editor.getText()
                   @html_body.empty()
-                  re_body = new ExampleView(tmp_body)
+                  re_body = new ExampleView(tmp_body, emp.EMP_HTML_GRAMMAR)
                   @html_body.append(re_body)
               )
 
@@ -527,7 +527,7 @@ class ElementDetailPanel extends View
                         tmp_body = tmp_editor.getText()
                         @snippet_obj.css.body = tmp_body
                         @css_body.empty()
-                        re_body = new ExampleView(tmp_body)
+                        re_body = new ExampleView(tmp_body, emp.EMP_CSS_GRAMMAR)
                         @css_body.append(re_body)
                   ,tmp_body)
 
@@ -538,7 +538,7 @@ class ElementDetailPanel extends View
                     tmp_editor.onDidSave (e) =>
                       tmp_body = tmp_editor.getText()
                       @css_body.empty()
-                      re_body = new ExampleView(tmp_body)
+                      re_body = new ExampleView(tmp_body,emp.EMP_CSS_GRAMMAR)
                       @css_body.append(re_body)
                   )
     else

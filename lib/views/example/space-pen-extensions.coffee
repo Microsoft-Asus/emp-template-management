@@ -2,13 +2,14 @@ _ = require 'underscore-plus'
 {$, $$, $$$, View} = require 'atom-space-pen-views'
 coffee = require 'coffee-script'
 beautifyHtml = require('js-beautify').html
-# Highlights = require 'highlights'
+path = require 'path'
+Highlights = require path.join(atom.packages.resolvePackagePath('styleguide'),"../highlights")
 ExampleSelectListView = require './example-select-list-view'
 
 highlighter = null
 
 _.extend View,
-  exampleHtml: (html) ->
+  exampleHtml: (html, spec_grammar) ->
     # console.log beautifyHtml(html)
     # @colorizedCodeBlock 'example-html', 'text.xml', beautifyHtml(html)
     # @div class: 'example', =>
@@ -16,7 +17,7 @@ _.extend View,
     #   #   @raw html
     #
     @div class: 'example-code show-example-html', =>
-      @colorizedCodeBlock 'example-html', 'text.xml', html
+      @colorizedCodeBlock 'example-html', spec_grammar, html
 
   exampleOverlaySelectList: ->
     selectList = new ExampleSelectListView(['one', 'two', 'three'])
@@ -53,17 +54,17 @@ _.extend View,
       code = html
     # console.log code
     code
-    # highlighter ?= new Highlights(registry: atom.grammars)
-    # highlightedHtml = highlighter.highlightSync
-    #   fileContents: code
-    #   scopeName: grammarScopeName
-    #
-    # # console.log highlightedHtml
-    # highlightedBlock = $(highlightedHtml)
-    # # The `editor` class messes things up as `.editor` has absolutely positioned lines
-    # highlightedBlock.removeClass('editor')
-    # highlightedBlock.addClass(cssClass)
-    # # console.log highlightedBlock
-    # if fontFamily = atom.config.get('editor.fontFamily')
-    #   highlightedBlock.css('font-family', fontFamily)
-    @subview '__', code
+    highlighter ?= new Highlights(registry: atom.grammars)
+    highlightedHtml = highlighter.highlightSync
+      fileContents: code
+      scopeName: grammarScopeName
+
+    # console.log highlightedHtml
+    highlightedBlock = $(highlightedHtml)
+    # The `editor` class messes things up as `.editor` has absolutely positioned lines
+    highlightedBlock.removeClass('editor')
+    highlightedBlock.addClass(cssClass)
+    # console.log highlightedBlock
+    if fontFamily = atom.config.get('editor.fontFamily')
+      highlightedBlock.css('font-family', fontFamily)
+    @subview '__', highlightedBlock
