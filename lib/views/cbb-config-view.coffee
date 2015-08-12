@@ -32,6 +32,23 @@ class CbbConfigView extends View
               @button class: 'control-btn btn btn-info', click:'set_default',' 恢复默认路径 '
               @button outlet:'set_btn', class:'control-btn btn btn-info', click:'do_set', "设为默认模板存储路径"
 
+      @section class: 'section settings-panel', =>
+        @div class: 'section-container', =>
+          @div class: "block section-heading icon icon-gear", "UI Snippets Config"
+          @div class: 'section-body', =>
+
+            @div class: 'control-group',=>
+              @div class: 'controls', =>
+                @label class: 'control-label', =>
+                  @div class: 'setting-title', "UI Snippets存储路径"
+                  @div class: 'setting-description', "设置 UI Snippets 同步存储路径"
+              @div class: 'controls', =>
+                @subview "ui_lib_path", new TextEditorView(mini: true,attributes: {id: 'ui_lib_path', type: 'string'},  placeholderText: ' UI Lib Path')
+
+            @div class:'control-btn-m', =>
+              @button class: 'control-btn btn btn-info', click:'select_snippet_path',' Chose Path '
+              @button class: 'control-btn btn btn-info', click:'set_snippet_default',' 恢复默认路径 '
+              @button outlet:'set_btn', class:'control-btn btn btn-info', click:'do_set_snippet', "设为默认模板存储路径"
 
 
   initialize: (msg)->
@@ -58,6 +75,13 @@ class CbbConfigView extends View
     @default_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
     console.log @default_store_path
     @store_path.setText @default_store_path
+    # 设置 ui snippet 存储路径
+    @default_snippet_store_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    unless @default_snippet_store_path
+      @default_snippet_store_path = emp.get_default_snippet_path()
+      console.log @default_snippet_store_path
+    @ui_lib_path.setText @default_snippet_store_path
 
   # 设置模板存储路径为初始默认路径
   set_default: ->
@@ -74,36 +98,70 @@ class CbbConfigView extends View
     @cbb_management.do_initialize()
 
   do_set: ->
-    tmp_conf_path = @store_path.getText()
-    if tmp_conf_path is @default_store_path
-      emp.show_warnning "修改路径与原路径相同,改变取消"
-      return
-    # console.log tmp_conf_path
-    return unless @show_set_alert(tmp_conf_path)
+    if tmp_conf_path = @store_path.getText()?.trim()
+      if tmp_conf_path is @default_store_path
+        emp.show_warnning "修改路径与原路径相同,改变取消"
+        return
+      # console.log tmp_conf_path
+      return unless @show_set_alert(tmp_conf_path)
 
-    # console.log "do set"
-    unless fs.existsSync tmp_conf_path
-      if @show_exist_path_alert(tmp_conf_path)
-        emp.mkdir_sync_safe tmp_conf_path
-      else
-        return
-    tmp_json = path.join tmp_conf_path, emp.EMP_TEMPLATE_JSON
-    unless fs.existsSync tmp_json
-      if @show_exist_temp_alert(tmp_conf_path)
-        console.log " do copy"
-        console.log @default_store_path
-        console.log tmp_conf_path
-        fs_plus.copySync  @default_store_path, tmp_conf_path
-      else
-        return
-    atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, tmp_conf_path
-    @cbb_management.do_initialize()
+      # console.log "do set"
+      unless fs.existsSync tmp_conf_path
+        if @show_exist_path_alert(tmp_conf_path)
+          emp.mkdir_sync_safe tmp_conf_path
+        else
+          return
+      tmp_json = path.join tmp_conf_path, emp.EMP_TEMPLATE_JSON
+      unless fs.existsSync tmp_json
+        if @show_exist_temp_alert(tmp_conf_path)
+          console.log " do copy"
+          console.log @default_store_path
+          console.log tmp_conf_path
+          fs_plus.copySync  @default_store_path, tmp_conf_path
+        else
+          return
+      atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, tmp_conf_path
+      @cbb_management.do_initialize()
+      emp.show_info "修改默认路径成功"
+    else
+      emp.show_error "路径不能为空!"
+
+  # 设置 snippet 默认路径
+  set_snippet_default: ->
+    def_path = emp.get_default_snippet_path()
+    atom.config.set(emp.EMP_APP_STORE_UI_PATH, def_path)
+    @ui_lib_path.setText def_path
+    # @refresh_snippets()
+    @cbb_management.check_ui_snippet_link()
     emp.show_info "修改默认路径成功"
 
+  do_set_snippet: ->
+    if snippet_path = @ui_lib_path.getText()?.trim()
+      def_path = emp.get_default_snippet_path()
+      # store_path = emp.get_snippet_store_path()
+      if fs.existsSync snippet_path
+        atom.config.set(emp.EMP_APP_STORE_UI_PATH, snippet_path)
+        # @refresh_snippets()
+        @cbb_management.check_ui_snippet_link()
+        emp.show_info "修改路径成功"
+      else
+        emp.show_error "该路径不存在,请另行选择!"
+    else
+      emp.show_error "路径不能为空!"
+
+  # refresh_snippets: ->
+  #   @cbb_management.check_ui_snippet_link()
+  #   snippets = require atom.packages.activePackages.snippets.mainModulePath
+  #   snippets.loadAll()
 
   select_temp_path: ->
     tmp_conf_path = @store_path.getText()
     @do_select_path(@store_path, tmp_conf_path)
+
+  # 选择 snippet 路径
+  select_snippet_path: ->
+    tmp_conf_path = @ui_lib_path.getText()
+    @do_select_path(@ui_lib_path, tmp_conf_path)
 
   do_select_path: (view, def_path)->
     dialog.showOpenDialog title: 'Select', defaultPath:def_path, properties: ['openDirectory'], (logo_path) => # 'openDirectory'

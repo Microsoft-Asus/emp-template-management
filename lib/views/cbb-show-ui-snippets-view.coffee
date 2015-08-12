@@ -25,12 +25,16 @@ class InstalledTemplatePanel extends View
     @packageViews = []
     @cbb_management = atom.project.cbb_management
     @templates_store_path = atom.project.templates_path
-    @snippet_sotre_path = path.join __dirname, '../../snippets/'
-    @snippet_css_path = path.join __dirname, '../../css/'
-    emp.mkdir_sync_safe @snippet_sotre_path
-    emp.mkdir_sync_safe @snippet_css_path
+    # [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+
+    # @snippet_sotre_path = path.join __dirname, '../../snippets/'
+    # @snippet_css_path = path.join __dirname, '../../css/'
+    # emp.mkdir_sync_safe @snippet_sotre_path
+    # emp.mkdir_sync_safe @snippet_css_path
 
   refresh_detail:() ->
+    # 设置 ui snippet 存储路径
+    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
     @load_snippets()
 
   load_snippets: ->
