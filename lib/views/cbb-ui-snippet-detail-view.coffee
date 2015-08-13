@@ -32,7 +32,7 @@ class InstalledTemplatePanel extends View
     # @snippet_sotre_path = path.join __dirname, '../../snippets/'
 
   refresh_detail:([@snippet_path, @snippet_file, @snippet_pack]) ->
-    console.log @snippet_path, @snippet_file
+    # console.log @snippet_path, @snippet_file
     @snippet_file_name = path.join @snippet_path , @snippet_file
 
     snippet_obj = {}

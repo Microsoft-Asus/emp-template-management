@@ -43,7 +43,7 @@ class InstalledTemplatePanel extends View
         console.error err
       else
         @section_container.empty()
-        console.log files
+        # console.log files
         for tmp_file in files
           if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
             tmp_type_panel = new AvailableSnippetView(@snippet_sotre_path, tmp_file)

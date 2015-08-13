@@ -71,16 +71,16 @@ class CbbConfigView extends View
 
   # callback for show panel
   refresh_detail: ->
-    console.log "refresh_detail"
+    # console.log "refresh_detail"
     @default_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
-    console.log @default_store_path
+    # console.log @default_store_path
     @store_path.setText @default_store_path
     # 设置 ui snippet 存储路径
     @default_snippet_store_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
-    console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
     unless @default_snippet_store_path
       @default_snippet_store_path = emp.get_default_snippet_path()
-      console.log @default_snippet_store_path
+      # console.log @default_snippet_store_path
     @ui_lib_path.setText @default_snippet_store_path
 
   # 设置模板存储路径为初始默认路径
