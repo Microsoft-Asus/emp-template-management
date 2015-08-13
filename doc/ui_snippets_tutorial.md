@@ -428,12 +428,12 @@ __代码片段__
 ```
 <div class="ert_w320_w" border="0">
     <div class="ert_h30_l10" border="0" valign="middle">
-      <label class="ert_f16g">Radio</label>
+      <label class="ert_f16g">${1:Radio}</label>
       <input type="radio" class="ert_r10"></input>
       </div>
     <label class="ert_rline_w310"></label>
     <div class="ert_h30_l10" border="0" valign="middle">
-      <label class="ert_f16g">Radio</label>
+      <label class="ert_f16g">${2:Radio}</label>
       <input type="radio" class="ert_r10"></input>
     </div>
 </div>
@@ -457,8 +457,8 @@ __图例__
 __代码片段__
 
 ```
-<input type="switch" name="switch1" class="ert_switch_w60" onTintColor="#FAA105" checked="checked" >yes</input>
-<input type="switch" name="switch1" >no</input>
+<input type="switch" name="switch1" class="ert_switch_w60" onTintColor="#FAA105" checked="checked" >${1: yes}</input>
+<input type="switch" name="switch1" >${2:no}</input>
 ```
 
 ### switch-2
@@ -499,9 +499,9 @@ __代码片段__
 ```
 <div class="ert_div_select" valign="middle" align="center" border="0">
       <select class="ert_select_w260">
-        <option class="ert_option" >622226790365742151(工资卡)</option>
-        <option class="ert_option" >622226790365776109(工资卡)</option>
-        <option class="ert_option" >622226092470367081(账户)</option>
+        <option class="ert_option" >${1:622226790365742151(工资卡)}</option>
+        <option class="ert_option" >${2:622226790365776109(工资卡)}</option>
+        <option class="ert_option" >${3:622226092470367081(账户)}</option>
       </select>
       <div class="ert_w20_inline" valign="middle" align="center" border="0" >
         <img name="select_img" src="down_1.png" class="ert_w12_h8"></img>
@@ -530,7 +530,7 @@ __代码片段__
 <div class="ert_w320_h50" align="center" valign="middle" border="0" onclick="onclick_add()">
     <img src="add_bank.png" class="ert_w15_h15"></img>
     <div border="0" class="ert_div_w10"></div>
-    <label class="ert_f16g">添加常用收款人</label>
+    <label class="ert_f16g">${1:添加常用收款人}</label>
 </div>
 ```
 ### button-1
@@ -549,9 +549,9 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50" border="0" align="center" valign="middle">
-    <input type="button" class="ert_btn_red_w100" border="0" value="确定" onclick="()"/>
+    <input type="button" class="ert_btn_red_w100" border="0" value="${1:确定}" onclick="()"/>
     <label class="ert_vline_h40_g"></label>
-    <input type="button" class="ert_btn_red_w100" border="0" value="确定" onclick="()"/>
+    <input type="button" class="ert_btn_red_w100" border="0" value="${2:确定}" onclick="()"/>
 </div>
 ```
 
@@ -572,9 +572,9 @@ __图例__
 __代码片段__  
 ```
 <div border="0" class="ert_w320_h50" align="center" valign="middle">
-    <input type="button" class="ert_btn_red_w100" value="下一步" border="0"/>
+    <input type="button" class="ert_btn_red_w100" value="${1:下一步}" border="0"/>
     <div class="ert_div_w30" border="0"></div>
-    <input type="button" class="ert_btn_red_w100" value="下一步" border="0"/>
+    <input type="button" class="ert_btn_red_w100" value="${2:下一步}" border="0"/>
 </div>
 ```
 ### button-3
@@ -593,11 +593,11 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50" border="0" align="center" valign="middle">
-  <input type="button" class="ert_btn_red_w100" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w100" border="0" value="${1:确定}" onclick="()"/>
   <div class="ert_div_w10" border="0"></div>
-  <input type="button" class="ert_btn_red_w100" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w100" border="0" value="${2:确定}" onclick="()"/>
   <div class="ert_div_w10" border="0"></div>
-  <input type="button" class="ert_btn_red_w100" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w100" border="0" value="${3:确定}" onclick="()"/>
 </div>
 ```
 
@@ -617,13 +617,13 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50" border="0">
-  <input type="button" class="ert_btn_red_w79" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w79" border="0" value="${1:确定}" onclick="()"/>
   <label class="ert_vline_h40_g"></label>
-  <input type="button" class="ert_btn_red_w79" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w79" border="0" value="${2:确定}" onclick="()"/>
   <label class="ert_vline_h40_g"></label>
-  <input type="button" class="ert_btn_red_w79" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w79" border="0" value="${3:确定}" onclick="()"/>
   <label class="ert_vline_h40_g"></label>
-  <input type="button" class="ert_btn_red_w79" border="0" value="确定" onclick="()"/>
+  <input type="button" class="ert_btn_red_w79" border="0" value="${4:确定}" onclick="()"/>
 </div>
 ```
 
@@ -647,7 +647,7 @@ __代码片段__
 <div class="ert_menu_div_row" border="0" valign="middle">
     <label class="ert_rline_w320_t0"></label>
     <img class="ert_menu_img_l20" src="poc_finance.png"></img>
-    <label class="ert_f16b_l70">国债计算器</label>
+    <label class="ert_f16b_l70">${1:国债计算器}</label>
     <img class="ert_menu_img_r15" src="right_arrow.png"></img>
     <label class="ert_rline_w320_b0"></label>
 </div>
@@ -673,24 +673,24 @@ __代码片段__
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img class="ert_menu_img_l20" src="poc_finance.png"></img>
         <div border="0" class="ert_menu_div_w250" align="left" valign="middle">
-          <label class="ert_f16b">汇率换算</label> <br/>
-          <label class="ert_f14g">出国从此乐无忧</label>
+          <label class="ert_f16b">${1:汇率换算}</label> <br/>
+          <label class="ert_f14g">${2:出国从此乐无忧}</label>
           <label class="ert_rline_w250"></label>
         </div>
     </div>
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img class="ert_menu_img_l20" src="poc_finance.png"></img>
         <div border="0" class="ert_menu_div_w250" align="left" valign="middle">
-          <label class="ert_f16b">存款计算</label> <br/>
-          <label class="ert_f14g">精打细算就靠你</label>
+          <label class="ert_f16b">${3:存款计算}</label> <br/>
+          <label class="ert_f14g">${4:精打细算就靠你}</label>
           <label class="ert_rline_w250"></label>
         </div>
     </div>
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img class="ert_menu_img_l20" src="company_cash.png"></img>
         <div border="0" class="ert_menu_div_w250" align="left" valign="middle">
-          <label class="ert_f16b">房贷计算</label> <br/>
-          <label class="ert_f14g">购房计划更合理</label>
+          <label class="ert_f16b">${5:房贷计算}</label> <br/>
+          <label class="ert_f14g">${6:购房计划更合理}</label>
           <label class="ert_rline_w250"></label>
         </div>
     </div>
@@ -721,8 +721,8 @@ __代码片段__
             </div>
         </div>
         <div border="0" class="ert_menu_div_w250" align="left" valign="middle">
-            <label class="ert_f16b">服务窗推荐</label> <br/>
-            <label class="ert_f14g">招财宝,北京联通,交通银行微银行</label>
+            <label class="ert_f16b">${1:服务窗推荐}</label> <br/>
+            <label class="ert_f14g">${2:招财宝,北京联通,交通银行微银行}</label>
         </div>
         <label class="ert_rline_w320_b0"></label>
     </div>
@@ -734,8 +734,8 @@ __代码片段__
             </div>
         </div>
         <div border="0" class="ert_menu_div_w250" align="left" valign="middle">
-          <label class="ert_f16b">支付宝服务中心</label> <br/>
-          <label class="ert_f14g">给新支付宝用户的一份安全报告</label>
+          <label class="ert_f16b">${3:支付宝服务中心}</label> <br/>
+          <label class="ert_f14g">${4:给新支付宝用户的一份安全报告}</label>
         </div>
         <label class="ert_rline_w320_b0"></label>
     </div>
@@ -760,22 +760,22 @@ __代码片段__
 <div border="0" name="ert_menu_div">
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img src="contact.png" class="ert_menu_img_l20"></img>
-        <label class="ert_f16b_l70">淘宝电影</label>
+        <label class="ert_f16b_l70">${1:淘宝电影}</label>
         <img src="right_arrow.png" class="ert_menu_img_r15"></img>
         <label class="ert_rline_w250"></label>
     </div>
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img src="finance_wait.png" class="ert_menu_img_l20"></img>
-        <label class="ert_f16b_l70">快抢</label>
+        <label class="ert_f16b_l70">${2:快抢}</label>
         <div class="ert_div_w10" border="0"></div>
         <img src="foreign_exc.png" class="ert_w15_h15"></img>
-        <label class="ert_f14g_r30">吃货折扣券疯抢</label>
+        <label class="ert_f14g_r30">${3:吃货折扣券疯抢}</label>
         <img src="right_arrow.png" class="ert_menu_img_r15"></img>
         <label class="ert_rline_w250"></label>
     </div>
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img src="flight.png" class="ert_menu_img_l20"></img>
-        <label class="ert_f16b_l70">快的打车</label>
+        <label class="ert_f16b_l70">${4:快的打车}</label>
         <img src="right_arrow.png" class="ert_menu_img_r15"></img>
         <label class="ert_rline_w250"></label>
     </div>
@@ -801,8 +801,8 @@ __代码片段__
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img class="ert_menu_img_l20" src="mobile_pay.png"></img>
         <div border="0" class="ert_menu_div_w230" align="left" valign="middle">
-              <label class="ert_f16b">话费充值</label> <br/>
-              <label class="ert_f14g">充100享97折，每天1000名</label>
+              <label class="ert_f16b">${1:话费充值}</label> <br/>
+              <label class="ert_f14g">${2:充100享97折，每天1000名}</label>
         </div>
         <img src="right_arrow.png" class="ert_menu_img_r15"></img>
         <label class="ert_rline_w300"></label>
@@ -810,8 +810,8 @@ __代码片段__
     <div class="ert_menu_div_row" border="0" valign="middle">
         <img class="ert_menu_img_l20" src="mobile_pay.png"></img>
         <div border="0" class="ert_menu_div_w230" align="left" valign="middle">
-          <label class="ert_f16b">游戏充值</label> <br/>
-          <label class="ert_f14g">游戏礼包2折起，百款优惠等您抢</label>
+          <label class="ert_f16b">${3:游戏充值}</label> <br/>
+          <label class="ert_f14g">${4:游戏礼包2折起，百款优惠等您抢}</label>
         </div>
         <img src="right_arrow.png" class="ert_menu_img_r15"></img>
         <label class="ert_rline_w300"></label>
@@ -837,8 +837,8 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50_w"  valign="middle" border="0">
-  <label class="ert_f16g_l10">账号</label>
-  <label class="ert_f16b_r10">工资卡 1234 5678 9008 0934 894</label>
+  <label class="ert_f16g_l10">${1:账号}</label>
+  <label class="ert_f16b_r10">${2:工资卡 1234 5678 9008 0934 894}</label>
 </div>
 ```
 
@@ -860,7 +860,7 @@ __代码片段__
 <div class="ert_w320_h50_b8_blue" border="1" valign="middle">
   <img src="transfer_fail_1.png" class="ert_w26_h26_l20" />
   <div class="ert_div_w10" border="0"></div>
-  <label class="ert_f16w">提示信息等说明解释提醒</label>
+  <label class="ert_f16w">${1:提示信息等说明解释提醒}</label>
   <img src="transfer_fail_1.png" class="ert_w26_h26_r20" />
 </div>
 ```
@@ -883,7 +883,7 @@ __代码片段__
 <div class="ert_w320_h50_b8_red" border="1" valign="middle">
     <img src="transfer_fail_1.png" class="ert_w26_h26_l20" />
     <div class="ert_div_w10" border="0"></div>
-    <label class="ert_f16w">网络连接错误提示信息</label>
+    <label class="ert_f16w">${1:网络连接错误提示信息}</label>
     <img src="transfer_fail_1.png" class="ert_w26_h26_r20" />
 </div>
 ```
@@ -906,7 +906,7 @@ __代码片段__
 <div class="ert_w320_h50_b8_gre" border="1" valign="middle">
     <img src="transfer_success.png" class="ert_w26_h26_l20" />
     <div class="ert_div_w10" border="0"></div>
-    <label class="ert_f16w">成功提示信息</label>
+    <label class="ert_f16w">${1:成功提示信息}</label>
     <img src="transfer_fail_1.png" class="ert_w26_h26_r20" />
 </div>
 ```
@@ -918,7 +918,7 @@ __说明__
 常见div由文本和图片组成,背景为黄色.
 
 __关键字__
-`e_div_label_img_green`
+`e_div_label_img_yellow`
 
 __图例__
 
@@ -929,7 +929,7 @@ __代码片段__
 <div class="ert_w320_h50_b8_y" border="1" valign="middle">
     <img src="transfer_fail_1.png" class="ert_w26_h26_l20" />
     <div class="ert_div_w10" border="0"></div>
-    <label class="ert_f16w">警告</label>
+    <label class="ert_f16w">${1:警告}</label>
     <img src="transfer_fail_1.png" class="ert_w26_h26_r20" />
 </div>
 ```
@@ -941,7 +941,7 @@ __说明__
 常见div由文本和多个图片组成.
 
 __关键字__
-`e_div_label_img_img`
+`e_div_label_imgs`
 
 __图例__
 
@@ -953,13 +953,13 @@ __代码片段__
   <img src="gs.png" class="ert_w20_h20_l10" />
   <div class="ert_div_w10" border="0"></div>
   <div class="ert_div_w80_h50_in" border="0" align="left" valign="middle">
-      <label class="ert_f14g">工商银行</label><br/>
-      <label class="ert_f14g">尾号：8809</label>
+      <label class="ert_f14g">${1:工商银行}</label><br/>
+      <label class="ert_f14g">${2:尾号：8809}</label>
   </div>
   <div class="ert_div_w50" border="0"></div>
   <div class="ert_div_w80_h50_in" border="0" align="left" valign="middle">
-      <i class="ert_f12gre">小额</i>
-      <i class="ert_w20_h12_red">支付</i>
+      <i class="ert_f12gre">${3:小额}</i>
+      <i class="ert_w20_h12_red">${4:支付}</i>
   </div>
   <img src="right_arrow.png" class="ert_w20_h20_r10" />
 </div>
@@ -981,9 +981,9 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50" border="0" valign="middle">
-  <label class="ert_f16b_l10">转入金额</label>
+  <label class="ert_f16b_l10">${1:转入金额}</label>
   <div class="ert_div_w10" border="0"></div>
-  <input type="text" class="ert_w200_h40_f14r" style="-wap-input-format'n'"  border="0" hold="请输入转入金额" value="2000"/>
+  <input type="text" class="ert_w200_h40_f14r" style="-wap-input-format'n'"  border="0" hold="${2:请输入转入金额}" value="${3:2000}"/>
   <img src="right_arrow.png" class="ert_w8_h14_r10" />
 </div>
 ```
@@ -1004,9 +1004,9 @@ __图例__
 __代码片段__  
 ```
 <div class="ert_w320_h50" border="0" valign="middle">
-  <label class="ert_f16b_l10">转账金额</label>
+  <label class="ert_f16b_l10">${1:转账金额}</label>
   <div class="ert_div_w10" border="0"></div>
-  <input type="text" class="ert_w200_h40_f14g" style="-wap-input-format'n'"  border="0" hold="请输入转账金额"/>
+  <input type="text" class="ert_w200_h40_f14g" style="-wap-input-format'n'"  border="0" hold="${2:请输入转账金额}"/>
 </div>
 ```
 
@@ -1032,8 +1032,8 @@ __代码片段__
     <img class="ert_w20_h20" src="contact.png"/>
   </td>
   <td class="ert_w240" align="left">
-    <label class="ert_f16b">动产品01动产品01动产品01</label><br/>
-    <label class="ert_f16b">（H12390）</label>
+    <label class="ert_f16b">${1:动产品01动产品01动产品01}</label><br/>
+    <label class="ert_f16b">${2:（H12390）}</label>
   </td>
   <td class="ert_w40" align="center">
       <img class="ert_w20_h20" src="contact.png"/>
@@ -1058,20 +1058,20 @@ __代码片段__
 ```
 <tr class="ert_h50">
   <td >
-    <label class="ert_f16b_w80_left">转出卡号</label>
-    <label class="ert_f14g_w220_right">2345 3456 4567 5435</label>
+    <label class="ert_f16b_w80_left">${1:转出卡号}</label>
+    <label class="ert_f14g_w220_right">${2:2345 3456 4567 5435}</label>
   </td>
 </tr>
 <tr class="ert_h50" >
   <td >
-    <label class="ert_f16b_w160_left">人民币境内可用余额</label>
-    <label class="ert_f14r_w140_right">￥1，000.00</label>
+    <label class="ert_f16b_w160_left">${3:人民币境内可用余额}</label>
+    <label class="ert_f14r_w140_right">${4:￥1，000.00}</label>
   </td>
 </tr>
 <tr class="ert_h50" >
   <td>
-    <label class="ert_f16b_w160_left">人民币境外可用余额</label>
-    <label class="ert_f14g_w140_right">￥1，000.00</label>
+    <label class="ert_f16b_w160_left">${5:人民币境外可用余额}</label>
+    <label class="ert_f14g_w140_right">${6:￥1，000.00}</label>
   </td>
 </tr>
 ```
@@ -1093,22 +1093,22 @@ __代码片段__
 ```
 <tr class="ert_h50" valign="middle">
     <td class="ert_w80" align="left">
-        <label class="ert_f16b">收款人姓名</label>
+        <label class="ert_f16b">${1:收款人姓名}</label>
     </td>
     <td class="ert_w230" align="right">
         <div class="ert_w220_r10" border="0" align="right">
-            <input class="ert_w180_f14g" type="text" hold="收款人姓名" border="0" value="" />
+            <input class="ert_w180_f14g" type="text" hold="${2:收款人姓名}" border="0" value="" />
             <img class="ert_w20_h20" src="contact.png"/>
         </div>
     </td>
 </tr>
 <tr class="ert_h50" valign="middle">
     <td class="ert_w80" align="left">
-        <label class="ert_f16b">收款账户</label>
+        <label class="ert_f16b">${3:收款账户}</label>
     </td>
     <td  class="ert_w230" align="right">
         <div class="ert_w220_r10" border="0" align="right">
-            <input class="ert_w180_f14g" type="text" hold="卡号/手机号/企业帐号" border="0"/>
+            <input class="ert_w180_f14g" type="text" hold="${4:卡号/手机号/企业帐号}" border="0"/>
             <img class="ert_w20_h20" src="camera.png" />
         </div>
     </td>
@@ -1135,19 +1135,19 @@ __代码片段__
 <div class="ert_footer_div" valign="middle" border="0">
    <div class="ert_div_w80_h50_in" align="center" border="0">
              <img src="home.png" class="ert_w30_h30"></img><br/>
-             <label class="ert_f14g">首页</label>
+             <label class="ert_f14g">${1:首页}</label>
    </div>
         <div class="ert_div_w80_h50_in" align="center" border="0">
             <img src="life.png" class="ert_w30_h30"></img><br/>
-            <label class="ert_f14g">生活</label>
+            <label class="ert_f14g">${2:生活}</label>
         </div>
         <div class="ert_div_w80_h50_in" align="center" border="0">
             <img src="banking.png" class="ert_w30_h30"></img><br/>
-            <label class="ert_f14g">金融</label>
+            <label class="ert_f14g">${3:金融}</label>
         </div>
         <div class="ert_div_w80_h50_in" align="center" border="0">
             <img src="me.png" class="ert_w30_h30"></img><br/>
-            <label class="ert_f14g">我</label>
+            <label class="ert_f14g">${4:我}</label>
         </div>
 </div>
 ```
@@ -1171,25 +1171,25 @@ __代码片段__
 <div class="ert_footer_div" valign="middle" border="0">
     <div class="ert_div_w80_h50_in" align="center" border="0" >
          <img src="home.png" class="ert_w30_h30"></img><br/>
-         <label name="footer_label" class="ert_f14g">支付宝</label>
+         <label name="footer_label" class="ert_f14g">${1:支付宝}</label>
     </div>
     <div class="ert_div_w80_h50_in" align="center" border="0" >
         <img src="life.png" class="ert_w30_h30"></img>
         <div class="ert_div_badge_w20" valign="middle" align="center" border="1">
-            <label class="ert_f10ww">2</label>
+            <label class="ert_f10ww">${2:2}</label>
         </div>
-        <label class="ert_f14g">服务窗</label>
+        <label class="ert_f14g">${3:服务窗}</label>
     </div>
     <div class="ert_div_w80_h50_in" align="center" border="0" >
         <img src="banking.png" class="ert_w30_h30"></img>
         <div class="ert_div_badge_w20" valign="middle" align="center" border="1">
-            <label class="ert_f10ww">惠</label>
+            <label class="ert_f10ww">${4:惠}</label>
         </div>
-        <label name="footer_label" class="ert_f14g">探索</label>
+        <label name="footer_label" class="ert_f14g">${5:探索}</label>
     </div>
     <div class="ert_div_w80_h50_in" align="center" border="0" >
         <img src="me.png" class="ert_w30_h30"></img><br/>
-        <label class="ert_f14g">财富</label>
+        <label class="ert_f14g">${6:财富}</label>
     </div>
 </div>
 ```

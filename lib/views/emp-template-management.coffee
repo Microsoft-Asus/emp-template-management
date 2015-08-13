@@ -336,6 +336,14 @@ class EmpTemplateManagement
           else
             snippets = require atom.packages.activePackages.snippets.mainModulePath
             snippets.loadAll()
+    else
+      fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
+        if err
+          console.error err
+          fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
+        else
+          snippets = require atom.packages.activePackages.snippets.mainModulePath
+          snippets.loadAll()
 
 
 

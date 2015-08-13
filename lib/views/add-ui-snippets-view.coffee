@@ -149,7 +149,7 @@ class InstalledTemplatePanel extends ScrollView
     @edit_flag = false
     if edit_data
       # console.log edit_data
-      if edit_data.length <= 2 
+      if edit_data.length <= 2
         @cancel_btn.show()
         [@edit_pack, @edit_source] = edit_data
         snippet_def_pack = @edit_pack
@@ -180,8 +180,7 @@ class InstalledTemplatePanel extends ScrollView
         console.error err
       else
         @snippet_pack_sel.empty()
-
-        console.log files
+        # console.log files
         selected_flag = false
         for tmp_file in files
           if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
@@ -231,7 +230,7 @@ class InstalledTemplatePanel extends ScrollView
     # snippet_css = @snippet_css.context.value
     # console.log snippet_body
 
-    file_name = @snippet_sotre_path + snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
+    file_name = path.join @snippet_sotre_path, snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
     snippet_obj = {}
     snippet_obj[snippet_source] = {}
     file_ext = path.extname file_name
@@ -260,6 +259,7 @@ class InstalledTemplatePanel extends ScrollView
     else
       snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
 
+    # console.log file_name
     fs.writeFile(file_name, snippet_cson_str, (error) ->
         if error
           console.log error
@@ -302,7 +302,7 @@ class InstalledTemplatePanel extends ScrollView
       @delete_element()
     # else if snippet_source isnt @edit_source
 
-    file_name = @snippet_sotre_path + snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
+    file_name = path.join @snippet_sotre_path, snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
     snippet_obj = {}
     snippet_obj[snippet_source] = {}
 
@@ -344,7 +344,7 @@ class InstalledTemplatePanel extends ScrollView
 
 
   delete_element: ()->
-    edit_file = @snippet_sotre_path + @edit_pack + emp.DEFAULT_SNIPPET_FILE_EXT
+    edit_file = path.join @snippet_sotre_path, @edit_pack + emp.DEFAULT_SNIPPET_FILE_EXT
     snippet_cson_str = ''
     if fs.existsSync edit_file
       snippet_obj = {}
