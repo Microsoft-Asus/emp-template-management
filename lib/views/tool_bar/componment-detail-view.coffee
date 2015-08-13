@@ -9,6 +9,7 @@ SniEle = require './snippet-ele-view'
 fs = require 'fs'
 path = require 'path'
 head_parser = require '../../head-parser/index'
+ExampleView = require '../example/example_view'
 # css = require 'css'
 # cheerio = require 'cheerio'
 # templates_store_path = null
@@ -29,14 +30,12 @@ class CbbDetailView extends View
           @button class: 'btn-warning btn  inline-block-tight btn_right', click: 'do_cancel', 'Cancel'
 
       @div class: 'cbb_detail_info', =>
-
         @div class:'div_box_r', =>
           @label class:'lab text-highlight',"模板名称:#{@ele_obj.name}"
 
         @div class:'div_box_bor', =>
           @label class:'text-highlight', "模板描述:"
           @label class:'', "#{@ele_obj.desc}"
-
 
         @div class: 'div_box_check',  =>
           @div class: 'checkbox_ucolumn', =>
@@ -45,9 +44,11 @@ class CbbDetailView extends View
           @div class:'control-ol', =>
             @table class:'control-tab',outlet:'html_tree'
 
+          @div =>
+            @button "Show Html Snippet Detail", outlet:'btn_show_html', class:"btn", click:"show_html_detail"
+            @button "Hide Html Snippet Detail", outlet:'btn_hide_html', style:"display:none;", class:"btn", click:"hide_html_detail"
 
-          @div outlet:'snippet_html', =>
-            @button "Show Html Snippet Detail", class:"btn", click:"show_html_detail"
+          @div outlet:'snippet_html'
 
         # @div outlet:'css_div',class: 'div_box_check',  =>
         #   @div class: 'checkbox_ucolumn', =>
@@ -105,10 +106,8 @@ class CbbDetailView extends View
         # @button "test", class: "createSnippetButton btn-warning btn btn-primary", click:'do_test'
 
   initialize: (@com, @pack_name) ->
-    # @handle_event()
-    # console.log @com
-    # console.log @pack_name
-    # pack_select
+    console.log @com
+    console.log @pack_name
     @cbb_management = atom.project.cbb_management
     @templates_path = atom.project.templates_path
     @css_com_file = @cbb_management.get_common_css(@pack_name)
@@ -167,18 +166,8 @@ class CbbDetailView extends View
 
     editor = atom.workspace.getActiveTextEditor()
     if editor
-      # 判断 project 有多个的情况
-
-      project_path_list = atom.project.getPaths()
       html_path = editor.getPath?()
-      @project_path = project_path_list[0]
-      if project_path_list.length > 1
-        for tmp_path in project_path_list
-          relate_path = path.relative tmp_path, html_path
-          if relate_path.match(/^\.\..*/ig) isnt null
-            @project_path = tmp_path
-            break
-
+      @project_path = emp.get_project_path()
       # console.log @project_path
       tmp_common_path = path.join @project_path, emp.EMP_RESOURCE_PATH
 
@@ -294,7 +283,6 @@ class CbbDetailView extends View
   do_input_snippet: ->
     # console.log @com
     editor = atom.workspace.getActiveTextEditor()
-
     if editor
       try
         project_path = atom.project.getPaths()[0]
@@ -428,6 +416,8 @@ class CbbDetailView extends View
       catch err
         console.error "insert snippets error "
         console.error err
+    else
+      emp.show_error "没有可供插入的文本域!请打开一个文件进行后续操作."
 
 
         # console.log escape edit_text
@@ -452,9 +442,18 @@ class CbbDetailView extends View
         return fs.readFileSync tmp_path, 'utf-8'
     else
       return null
-
+  # 在 cbb 界面显示 html 代码
   show_html_detail: ->
-    console.log "show_html_detail"
+    @btn_hide_html.show()
+    @btn_show_html.hide()
+    re_body = new ExampleView(@html_snippet, emp.EMP_HTML_GRAMMAR)
+    @snippet_html.append re_body
+
+  # 隐藏显示的 html 代码
+  hide_html_detail: ->
+    @snippet_html.empty()
+    @btn_hide_html.hide()
+    @btn_show_html.show()
 
   show_css_detail: ->
     console.log "show_css_detail"
