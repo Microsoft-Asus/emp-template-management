@@ -31,7 +31,10 @@ class AvailablePackageView extends View
 
   initialize: (@snippet_path, @snippet_file) ->
     @snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
-    @snippet_css_path = path.join __dirname, '../../../css/'
+    # @snippet_css_path = path.join __dirname, '../../../css/'
+    @cbb_management = atom.project.cbb_management
+    # 设置 ui snippet 存储路径
+    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
 
   do_uninstall: ->
     tmp_flag = @show_alert()
@@ -46,11 +49,9 @@ class AvailablePackageView extends View
         emp.show_info "删除成功！"
       else return
 
-  edit_css:->
-    console.log 'do_edit'
-    @fa_view.show_edit_panel(@package_obj)
   edit_css: ->
     tmp_file = path.join @snippet_css_path, @snippet_pack+".css"
+    # console.log tmp_file
     @create_editor(tmp_file, emp.EMP_GRAMMAR_CSS)
 
   create_editor:(tmp_file_path, tmp_grammar, callback, content) ->

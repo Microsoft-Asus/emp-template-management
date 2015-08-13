@@ -306,6 +306,7 @@ class CbbDetailView extends View
         # console.log dest_path
         # fs_plus.copySync  @css_com_file, dest_dir
         # console.info "add link #{@css_com_file}"
+        console.log @css_com_file
         if fs.existsSync @css_com_file
           css_con = fs.readFileSync @css_com_file, 'utf8'
           fs.writeFileSync(dest_path, css_con, 'utf8')

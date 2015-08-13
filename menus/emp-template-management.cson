@@ -28,6 +28,7 @@
         {type: 'separator'}
         {'label': 'UI Snippets Management', 'command': 'emp-template-management:snippets-management' }
         { 'label': 'ERT UI Guide', 'command': 'emp-template-management:show-guide' }
+        { 'label': 'Reload Snippets', 'command': 'emp-template-management:reload-snippets' }
     ]
   }
 ]

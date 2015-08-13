@@ -14,8 +14,8 @@ class UiSnippetElementView extends View
 
     @tr =>
       @td =>
-        @button class: 'control-btn btn btn-error', click:'do_del',' Del'
-        @button class: 'control-btn btn btn-info', click:'do_edit',' Edit'
+        @button class: 'control-btn-wl btn btn-error', click:'do_del',' Del'
+        @button class: 'control-btn-wl btn btn-info', click:'do_edit',' Edit'
       @td class: 'snippet-prefix', prefix
       @td name
       @td class: 'snippet-body', body
