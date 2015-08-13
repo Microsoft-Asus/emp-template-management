@@ -54,7 +54,7 @@ class CbbConfigView extends View
   initialize: (msg)->
     @loadingElement.remove()
     @cbb_management = atom.project.cbb_management
-    @packs = @cbb_management.get_pacakges()
+    # @packs = @cbb_management.get_pacakges()
     # @cbb_tools = @cbb_management.get_tool_detail()
     # project_path = atom.project.getPath()
     # tmp_export_store_path = path.join project_path,"tmp"
@@ -62,7 +62,7 @@ class CbbConfigView extends View
     templates_store_path =atom.project.templates_path
     # console.log tmp_export_store_path
     # emp.mkdir_sync_safe tmp_export_store_path
-    console.log atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
+    # console.log atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
     @default_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
     @store_path.setText @default_store_path
 

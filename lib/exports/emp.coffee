@@ -26,7 +26,7 @@ module.exports =
   DEFAULT_CSS_FILE_EXT: '.css'
   JSON_SNIPPET_FILE_EXT: '.json'
 
-  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "emp-view.cson"]
+  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "eui.cson"]
 
   EMP_ALL_TYPE : "All Type"
 
@@ -99,7 +99,7 @@ module.exports =
   EMP_CCB_PACK_DETAIL:'Cbb_pack_detail'
   EMP_CBB_ELE_DETAIL:'Cbb_ele_detail'
 
-  EMP_NAME_DEFAULT: 'emp-view'
+  EMP_NAME_DEFAULT: 'eui'
   EMP_DEFAULT_VER: '0.1'
   EMP_TEMPLATES_PATH:'templates'
   EMP_TEMPLATES_JSON: 'templates.json'
