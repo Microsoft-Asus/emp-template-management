@@ -118,8 +118,7 @@ class CbbPackImportView extends View
     templates_store_path =atom.project.templates_path
     @cbb_management = atom.project.cbb_management
     # ui snippet 保存路径
-    @snippet_sotre_path = path.join __dirname, '../../snippets/'
-    @snippet_css_path = path.join __dirname, '../../css/'
+
     # console.log @cbb_tools
     # @do_initial()
     # @do_initial_ui_snippet()
@@ -140,6 +139,9 @@ class CbbPackImportView extends View
         @type_select.empty()
 
   refresh_detail:() ->
+    # ui snippet 存储路径
+    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+
     @do_initial()
     @do_initial_ui_snippet()
 

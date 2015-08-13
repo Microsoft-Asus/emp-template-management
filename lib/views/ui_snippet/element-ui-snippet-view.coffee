@@ -22,6 +22,7 @@ class UiSnippetElementView extends View
 
   initialize: (@name, @tmp_obj, @snippet_source, @snippet_pack) ->
     {@body, @css, @prefix} = @tmp_obj
+    @cbb_management = atom.project.cbb_management
     @name ?= ''
     @body ?= ''
     @css ?= ''
@@ -33,7 +34,9 @@ class UiSnippetElementView extends View
     @parents('.emp-template-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
 
   do_del: (e, element) ->
-    @snippet_sotre_path = atom.project.snippets_path
+    # ui snippet 存储路径
+    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+    # @snippet_sotre_path = atom.project.snippets_path
     file_name = @snippet_sotre_path + @snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
 
     snippet_cson_str = ''

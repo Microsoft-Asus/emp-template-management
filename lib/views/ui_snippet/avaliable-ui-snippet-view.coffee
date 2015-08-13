@@ -18,7 +18,7 @@ class AvailablePackageView extends View
           @span class: 'icon icon-versions'
       @div class: 'body', =>
         @h4 class: 'card-name', =>
-          @a outlet: 'packageName', snippet_pack
+          @a outlet: 'packageName', click:'show_detail', snippet_pack
         # @span outlet: 'packageDescription', class: 'package-description', tmp_desc
 
       @div class: 'meta', =>
@@ -26,8 +26,8 @@ class AvailablePackageView extends View
           @div outlet: 'buttons', class: 'btn-group', =>
             if emp.EMP_DEFAULT_SNIPPETS.indexOf(snippet_file) < 0
               @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
-            @button type: 'button', class: 'btn icon icon-repo', outlet: 'detail_utton', click:'edit_css', 'Edit Css File'
-            @button type: 'button', class: 'btn icon icon-repo', outlet: 'detail_utton', click:'show_detail', 'Detail'
+            @button type: 'button', class: 'btn icon icon-repo', click:'edit_css', 'Edit Css File'
+            @button type: 'button', class: 'btn icon icon-repo', click:'show_detail', 'Detail'
 
   initialize: (@snippet_path, @snippet_file) ->
     @snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT

@@ -8,6 +8,7 @@ module.exports =
   #  在 Cnfig 中保存数据
   EMP_APP_EXPORT_UI_PATH :'emp-template-management.Store-UI-Snippet-Export-Path'
   EMP_APP_IMPORT_UI_PATH :'emp-template-management.Store-UI-Snippet-Import-Path'
+  EMP_APP_STORE_UI_PATH :'emp-template-management.Store-UI-Snippet-Path'
 
   PACKAGE_NAME:"emp-template-management"
   TOOL_FIRST:"1"
@@ -25,7 +26,7 @@ module.exports =
   DEFAULT_CSS_FILE_EXT: '.css'
   JSON_SNIPPET_FILE_EXT: '.json'
 
-  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "emp-view.cson"]
+  EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "eui.cson"]
 
   EMP_ALL_TYPE : "All Type"
 
@@ -98,7 +99,7 @@ module.exports =
   EMP_CCB_PACK_DETAIL:'Cbb_pack_detail'
   EMP_CBB_ELE_DETAIL:'Cbb_ele_detail'
 
-  EMP_NAME_DEFAULT: 'emp-view'
+  EMP_NAME_DEFAULT: 'eui'
   EMP_DEFAULT_VER: '0.1'
   EMP_TEMPLATES_PATH:'templates'
   EMP_TEMPLATES_JSON: 'templates.json'
@@ -183,6 +184,32 @@ module.exports =
   get_default_path: () ->
     path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME), this.EMP_TEMPLATES_PATH
 
+  DEFAULT_SNIPPET_STORE_PATH:"store_snippet"
+  get_default_snippet_path: () ->
+    path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME),this.DEFAULT_SNIPPET_STORE_PATH
+
+  get_snippet_load_path: () ->
+    path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME),this.DEFAULT_SNIPPET_EXPORT_PATH
+
+  get_pack_path: () ->
+    path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME)
+
+  create_editor:(tmp_file_path, tmp_grammar, callback, content) ->
+    changeFocus = true
+    tmp_editor = atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
+      gramers = @getGrammars()
+      # console.log content
+      unless content is undefined
+        tmp_editor.setText(content) #unless !content
+      tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
+      callback(tmp_editor)
+
+  # set the opened editor grammar, default is HTML
+  getGrammars: (grammar_name)->
+    grammars = atom.grammars.getGrammars().filter (grammar) ->
+      (grammar isnt atom.grammars.nullGrammar) and
+      grammar.name is 'CoffeeScript'
+    grammars
 
 
 module.exports.mk_node_name = (node_name="") ->
@@ -255,8 +282,6 @@ module.exports.show_alert_cancel = (text_title, text_msg) ->
       '取消': -> return 2
 
 
-
-
 module.exports.isEmpty = (obj) ->
     for key,name of obj
         false;
@@ -314,32 +339,6 @@ mk_dirs_sync = (p, made) ->
           unless stat.isDirectory()
             throw err0
   made
-
-
-# show_msg_cb: ->
-#   tmp_flag = @show_alert()
-#   console.log tmp_flag
-#   switch tmp_flag
-#     when 1
-#       console.log "1"
-#       @cbb_management.delete_package_detail(@package_obj.name)
-#       emp.show_info "删除成功！"
-#       @fa_view.refresh_detail()
-#     when 2
-#       console.log "2"
-#       @cbb_management.delete_package(@package_obj.name)
-#       emp.show_info "删除成功！"
-#       @fa_view.refresh_detail()
-#     else return
-#
-# show_alert: (replace_con, relative_path, editor) ->
-#   atom.confirm
-#     message: '警告'
-#     detailedMessage: '是否确定要删除该模板集?'
-#     buttons:
-#       '同时删除文件': -> return 1
-#       '是': -> return 2
-#       '否': -> return 3
 
 
 valid_ip = (ip_add)->

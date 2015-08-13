@@ -8,6 +8,7 @@ emp = require '../exports/emp'
 
 module.exports =
 class InstalledTemplatePanel extends ScrollView
+  # EMP_UI_LIB:'Add UI Snippets'
   @content: ->
     @div =>
       @section class: 'section', =>
@@ -129,13 +130,6 @@ class InstalledTemplatePanel extends ScrollView
     @packageViews = []
     @cbb_management = atom.project.cbb_management
     @templates_store_path = atom.project.templates_path
-    @snippet_sotre_path = atom.project.snippets_path
-    @snippet_css_path = path.join __dirname, '../../css/'
-
-    console.log @snippet_sotre_path
-    console.log @snippet_css_path
-    emp.mkdir_sync_safe @snippet_sotre_path
-    emp.mkdir_sync_safe @snippet_css_path
 
     @snippet_pack.getModel().getBuffer().onDidStopChanging =>
       # console.log "modified text"
@@ -149,24 +143,34 @@ class InstalledTemplatePanel extends ScrollView
 
   refresh_detail: (edit_data)->
     # console.log 'refresh_detail'
+    # 设置 ui snippet 存储路径
+    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
     snippet_def_pack = emp.EMP_NAME_DEFAULT
     @edit_flag = false
     if edit_data
-      console.log edit_data
-      @cancel_btn.show()
-      @edit_flag = true
+      # console.log edit_data
+      if edit_data.length <= 2 
+        @cancel_btn.show()
+        [@edit_pack, @edit_source] = edit_data
+        snippet_def_pack = @edit_pack
+        @snippet_pack.setText("")
+        unless !@edit_source
+          @snippet_scope.setText(@edit_source)
+      else
+        @cancel_btn.show()
+        @edit_flag = true
 
-      [@edit_name, @edit_body, @edit_css, @edit_prefix,
-      @edit_source, @edit_pack] = edit_data
+        [@edit_name, @edit_body, @edit_css, @edit_prefix,
+        @edit_source, @edit_pack] = edit_data
 
-      @snippet_name.setText(@edit_name)
-      @snippet_tab.setText(@edit_prefix)
-      @snippet_scope.setText(@edit_source)
-      @snippet_body.context.value = @edit_body
-      # @snippet_css.context.value = @edit_css
-      # console.log snippet_body
-      snippet_def_pack = @edit_pack
-      @snippet_pack.setText("")
+        @snippet_name.setText(@edit_name)
+        @snippet_tab.setText(@edit_prefix)
+        @snippet_scope.setText(@edit_source)
+        @snippet_body.context.value = @edit_body
+        # @snippet_css.context.value = @edit_css
+        # console.log snippet_body
+        snippet_def_pack = @edit_pack
+        @snippet_pack.setText("")
     else
       @cancel_btn.hide()
       @cleanup()

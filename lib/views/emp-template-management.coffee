@@ -29,24 +29,30 @@ class EmpTemplateManagement
     @do_initial()
     # 以 Package 为单位合并所有的模板 UI, 生成公共的 Css 文件
     @initialize_common_ui_css_merge()
+    @check_ui_snippet_link()
 
   do_initial: ->
     # if !templates_store_path = atom.project.templates_path
     templates_store_path = atom.config.get emp.EMP_TEMPLATES_DEFAULT_KEY
     atom.project.templates_path = templates_store_path
     # 基础控件存储路径
-    atom.project.snippets_path = path.join __dirname, '../../snippets/'
+    # atom.project.snippets_path = path.join __dirname, '../../snippets/'
       # atom.project.templates_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME) , emp.EMP_TEMPLATES_PATH
     # templates_store_path = atom.project.templates_path
     # console.log "stsore_path: #{templates_store_path}"
     emp.mkdir_sync templates_store_path
     @templates_json = path.join templates_store_path, emp.EMP_TEMPLATE_JSON
     @packages = {}
-    if fs.existsSync @templates_json
-      json_data = fs.readFileSync @templates_json
-      @templates_obj = JSON.parse json_data
-      @initial_package()
-    else
+    try
+      if fs.existsSync @templates_json
+        json_data = fs.readFileSync @templates_json
+        @templates_obj = JSON.parse json_data
+        @initial_package()
+      else
+        @initialize_default()
+    catch err
+      console.error err
+      emp.show_error "导入插件描述文件失败,请检查描述文件格式是否正确.(package.json)"
       @initialize_default()
     # console.log @templates_obj
 
@@ -288,11 +294,48 @@ class EmpTemplateManagement
     result_css
 
 
-
-
+  get_snippet_path: ->
+    # 设置 ui snippet 存储路径
+    default_snippet_store_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    unless default_snippet_store_path
+      default_snippet_store_path = emp.get_default_snippet_path()
+    # console.log default_snippet_store_path
+    snippet_sotre_path = path.join default_snippet_store_path, 'snippets'
+    snippet_css_path = path.join default_snippet_store_path, 'css'
+    [snippet_sotre_path, snippet_css_path]
     # template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
 
 
+  check_ui_snippet_link: ->
+    snippet_src_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+    unless snippet_src_path
+      snippet_src_path = emp.get_default_snippet_path()
+      atom.config.set(emp.EMP_APP_STORE_UI_PATH, snippet_src_path)
+
+    pack_snippet_src_path = path.join snippet_src_path, 'snippets'
+    pack_path = emp.get_pack_path()
+    pack_snippet_dest_path = path.join pack_path, 'snippets'
+    # console.log pack_snippet_src_path
+    # console.log pack_snippet_dest_path
+    # console.log "----------+++++++++++++ "
+    # console.log fs.existsSync pack_snippet_dest_path
+
+    if fs.existsSync pack_snippet_dest_path
+      fs.lstat pack_snippet_dest_path, (err, stats) =>
+        if stats.isSymbolicLink()
+          fs.unlinkSync pack_snippet_dest_path
+        else
+          fs_plus.removeSync(pack_snippet_dest_path)
+
+        fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
+          if err
+            console.error err
+            fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
+          else
+            snippets = require atom.packages.activePackages.snippets.mainModulePath
+            snippets.loadAll()
 
 
 
