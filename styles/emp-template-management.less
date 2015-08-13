@@ -7,7 +7,7 @@
 @import "octicon-mixins";
 @import "ui-variables";
 
-@section-padding: 4 * @component-padding;
+@section-padding: 2 * @component-padding;
 @breadcrumb-padding: 2 * @component-padding;
 @font-family: 'sans regular','思源黑体 CN',sans-serif ;
 
@@ -461,7 +461,7 @@
   // }
 
   .control-btn {
-    margin: @component-padding;
+    // margin: @component-padding;
     margin: @component-padding/2 @component-padding 0 @component-padding/2;
     min-width:6em;
   }
@@ -472,6 +472,11 @@
     min-width:6em;
   }
 
+  .control-btn-wl {
+    // margin: @component-padding;
+    margin: 0 @component-padding/4 0 @component-padding/4;
+    min-width:6em;
+  }
 
   .setting-title {
     -webkit-user-select: none;
@@ -801,8 +806,8 @@
     }
 
     td, th {
-      padding-left: 1%;
-      padding-right: 1%;
+      padding-left: @component-padding/2;
+      padding-right: @component-padding/2;
       white-space: nowrap;
       overflow: hidden;
       border-color: @base-border-color;

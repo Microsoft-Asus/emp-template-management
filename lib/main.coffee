@@ -63,10 +63,13 @@ module.exports =
           open_panel(panel_name, uri)
         empTmpManagementView
 
-
+    snippets = require atom.packages.activePackages.snippets.mainModulePath
     atom.commands.add "atom-workspace",
       "emp-template-management:temp-management": -> atom.workspace.open(default_uri)
       "emp-template-management:snippets-management": -> atom.workspace.open(default_uri+"/"+emp.EMP_SHOW_UI_LIB)
+      "emp-template-management:reload-snippets": ->
+        snippets.loadAll()
+        emp.show_info "刷新 Snippets 成功!"
 
     @emp_temp_management = new EmpTempManagement()
     atom.project.cbb_management = @emp_temp_management

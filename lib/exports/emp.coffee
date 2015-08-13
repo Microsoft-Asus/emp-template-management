@@ -211,6 +211,21 @@ module.exports =
       grammar.name is 'CoffeeScript'
     grammars
 
+  get_project_path: ->
+    project_path_list = atom.project.getPaths()
+    project_path = project_path_list[0]
+    editor = atom.workspace.getActiveTextEditor()
+    if editor
+      # 判断 project 有多个的情况
+      efile_path = editor.getPath?()
+      if project_path_list.length > 1
+        for tmp_path in project_path_list
+          relate_path = path.relative tmp_path, efile_path
+          if relate_path.match(/^\.\..*/ig) isnt null
+            project_path = tmp_path
+            break
+    project_path
+
 
 module.exports.mk_node_name = (node_name="") ->
   default_name = " -sname "

@@ -19,7 +19,8 @@
     "emp-template-management:quick-add-cbb",
     "emp-template-management:quick-add-cbb-css",
     "emp-template-management:snippets-management",
-    "emp-template-management:show-guide"
+    "emp-template-management:show-guide",
+    "emp-template-management:reload-snippets"
   ],
   "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",
