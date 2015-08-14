@@ -12,19 +12,11 @@ class AvailablePackageView extends View
 
   @content: (@fa_view, @package_obj) ->
     # console.log @package_obj
-    # stars, downloads
-    # lol wat
-    # owner = AvailablePackageView::ownerFromRepository(repository)
-    # console.log name, description, version, repository
-    # owner = "jcrom"
-    # description ?= ''
-    # console.log emp.get_default_logo()
     temp_path = atom.project.templates_path
     if tmp_logo= @package_obj.logo
       tmp_logo = path.join temp_path,tmp_logo
     else
       tmp_logo= emp.get_default_logo()
-
     unless tmp_desc = @package_obj.desc
       tmp_desc = emp.EMP_DEF_DESC
 

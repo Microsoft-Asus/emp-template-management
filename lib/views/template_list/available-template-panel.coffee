@@ -21,12 +21,6 @@ class AvailableTemplatePanel extends View
     else
       logo = path.join(temp_path, logo)
 
-    # stars, downloads
-    # lol wat
-    # owner = AvailablePackageView::ownerFromRepository(repository)
-    # console.log name, description, version, repository
-    # owner = "jcrom"
-    # description ?= ''
     @div class: 'row', =>
       @div class: 'available-package-view col-lg-8', =>
         @div class: 'stats pull-right', =>

@@ -60,9 +60,6 @@ class CbbToolSettingPanel extends View
     for tool_view in @tool_views
       @section_container_detail.append tool_view
 
-
-
-
   do_save_all:  ->
     # console.log "do save all"
     for tool_view in @tool_views
@@ -71,7 +68,6 @@ class CbbToolSettingPanel extends View
       @cbb_tools[tmp_name] = result.val
     @cbb_management.refresh_tool_detail @cbb_tools
     emp.show_info(emp.EMP_SAVE_SUCCESS)
-
 
   # check_diff: (new_obj)->
   #   # console.log new_obj
