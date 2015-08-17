@@ -35,6 +35,7 @@
     "adm-zip": "*",
     "js-beautify": "^1.4.0",
     "cson": "*",
-    "coffee-script": "~1.8.0"
+    "coffee-script": "~1.8.0",
+    "fuzzaldrin":"^2.1.0"
   }
 }

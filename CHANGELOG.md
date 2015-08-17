@@ -1,3 +1,7 @@
+## 0.1.31
+1. 为 template 管理添加查找功能
+2. 为 snippets 管理添加查找功能
+
 ## 0.1.30
 1. 更新页面样式, 使页面内容更加紧凑
 2. 添加一个 snippets 主动出发按键.(EMP-> Reload Snippets)
