@@ -5,7 +5,7 @@
 			<?xml version="1.0" encoding="UTF-8" ?>
 			<content>
 				<head>
-					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<link ref="${0:eui.css}" type="text/css"/>
 					<script type="text/x-lua" src="RYTL.lua"></script>
 					<script type="text/x-lua">
 						<![CDATA[
@@ -24,7 +24,7 @@
 			<?xml version="1.0" encoding="UTF-8" ?>
 			<content>
 				<head>
-					<link ref="${0:ert_ui.css}" type="text/css"/>
+					<link ref="${0:eui.css}" type="text/css"/>
 					<style>
 					</style>
 					<script type="text/x-lua" src="RYTL.lua"></script>
@@ -308,7 +308,7 @@
 		body: "<li>$1</li>$0"
 	Link:
 		prefix: "link"
-		body: "<link ref=\"${1:ert_ui.css}\" type=\"text/css\"/>$0"
+		body: "<link ref=\"${1:eui.css}\" type=\"text/css\"/>$0"
 	Main:
 		prefix: "main"
 		body: '''
