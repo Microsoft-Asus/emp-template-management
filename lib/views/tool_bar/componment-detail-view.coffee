@@ -394,12 +394,12 @@ class CbbDetailView extends View
           atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
         # 插入外联脚本 样式
         # console.log @css_com_file_name
-        # tmp_editor = atom.workspace.getActiveTextEditor()
-        # if tmp_editor
-        #   debug_text = tmp_editor.getText()
-        #   re_text = head_parser.insert debug_text, @css_com_file_name, "    "
-        #   re_text = head_parser.insert re_text, result_lua_path, "    "
-        #   tmp_editor.setText(re_text)
+        tmp_editor = atom.workspace.getActiveTextEditor()
+        if tmp_editor
+          debug_text = tmp_editor.getText()
+          re_text = head_parser.insert debug_text, @css_com_file_name, "    "
+          re_text = head_parser.insert re_text, result_lua_path, "    "
+          tmp_editor.setText(re_text)
           # console.log re_text
         # unless !@insert_html.prop('checked')
         #   atom.packages.activePackages.snippets?.mainModule?.insert @html_snippet, tmp_editor
