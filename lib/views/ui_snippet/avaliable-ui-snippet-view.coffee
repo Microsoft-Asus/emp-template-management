@@ -4,13 +4,14 @@ remote = require 'remote'
 dialog = remote.require 'dialog'
 path = require 'path'
 fs_plus = require 'fs-plus'
+fs = require 'fs'
 # AvailableTypeView = require './ui_snippet/avaliable-ui-type-view'
 
 
 module.exports =
 class AvailablePackageView extends View
 
-  @content: (snippet_path, snippet_file) ->
+  @content: (fa_view, snippet_path, snippet_file) ->
     snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
     @div class: 'available-package-view col-lg-8', =>
       @div class: 'stats pull-right', =>
@@ -29,7 +30,7 @@ class AvailablePackageView extends View
             @button type: 'button', class: 'btn icon icon-repo', click:'edit_css', 'Edit Css File'
             @button type: 'button', class: 'btn icon icon-repo', click:'show_detail', 'Detail'
 
-  initialize: (@snippet_path, @snippet_file) ->
+  initialize: (@fa_view,@snippet_path, @snippet_file) ->
     @snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
     # @snippet_css_path = path.join __dirname, '../../../css/'
     @cbb_management = atom.project.cbb_management
@@ -46,6 +47,7 @@ class AvailablePackageView extends View
         fs_plus.removeSync(@snippet_file_name) unless !fs.existsSync @snippet_file_name
         snippets = require atom.packages.activePackages.snippets.mainModulePath
         snippets.loadAll()
+        @fa_view.refresh_detail()
         emp.show_info "删除成功！"
       else return
 

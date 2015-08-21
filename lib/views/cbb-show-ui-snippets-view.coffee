@@ -46,7 +46,7 @@ class InstalledTemplatePanel extends View
         # console.log files
         for tmp_file in files
           if path.extname(tmp_file) is emp.DEFAULT_SNIPPET_FILE_EXT
-            tmp_type_panel = new AvailableSnippetView(@snippet_sotre_path, tmp_file)
+            tmp_type_panel = new AvailableSnippetView(this, @snippet_sotre_path, tmp_file)
             @section_container.append tmp_type_panel
 
   # 添加新的 package 类别

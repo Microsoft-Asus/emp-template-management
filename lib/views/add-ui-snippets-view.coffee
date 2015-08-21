@@ -93,7 +93,7 @@ class InstalledTemplatePanel extends ScrollView
                 @label class: 'control-label', =>
                   @div class: 'info-label', "模板生效范围选择器*"
                   @div class: 'setting-description', "新添加模板的识别类别, 通过范围选择器來选择 snippet
-                  的生效范围.(Snippet scope selector).例如想要添加一段 Erlang 代码内生效的 Snippet, 那么 选择器应该谢伟 `.source.erlang`, 如果是 lua 的,则为`.source.lua`, 同理,如果为 Emp 的页面, 则可以写为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}.默认为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}"
+                  的生效范围.(Snippet scope selector).例如想要添加一段 Erlang 代码内生效的 Snippet, 那么 选择器应该写为 `.source.erlang`, 如果是 lua 的,则为`.source.lua`, 同理,如果为 Emp 的页面, 则可以写为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}.默认为#{emp.DEFAULT_SNIPPET_SOURE_TYPE}"
               @div class: 'controls', =>
                 # @div class: 'editor-container', =>
                 @subview "snippet_scope", new TextEditorView(mini: true,attributes: {id: 'snippet_scope', type: 'string'},  placeholderText: 'Snippet scope selector (ex: `.source.js`)')
