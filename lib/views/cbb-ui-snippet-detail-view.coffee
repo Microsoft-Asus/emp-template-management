@@ -97,7 +97,7 @@ class InstalledTemplatePanel extends View
 
   do_edit_css: ->
     # 设置 ui snippet 存储路径
-    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+    [@snippet_sotre_path, @snippet_css_path, @snippet_img_path] = @cbb_management.get_snippet_path()
     tmp_path = path.join @snippet_css_path, @snippet_pack+".css"
     emp.create_editor(tmp_path, emp.EMP_GRAMMAR_CSS)
 

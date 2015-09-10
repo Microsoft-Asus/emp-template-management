@@ -1,7 +1,9 @@
-# macro defined
+#cs macro defined
 fs = require 'fs'
 path = require 'path'
 os = require 'os'
+remote = require 'remote'
+dialog = remote.require 'dialog'
 
 module.exports =
 
@@ -25,6 +27,10 @@ module.exports =
   DEFAULT_SNIPPET_FILE_EXT: '.cson'
   DEFAULT_CSS_FILE_EXT: '.css'
   JSON_SNIPPET_FILE_EXT: '.json'
+
+  # 默认代码段传参类型
+  DEFAULT_SNIPPET_TYPE: '.emp.parameter'
+  DEFAULT_SNIPPET_TYPE_KEY: 'type_list'
 
   EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "eui.cson"]
 
@@ -354,6 +360,22 @@ mk_dirs_sync = (p, made) ->
           unless stat.isDirectory()
             throw err0
   made
+
+# 添加资源描述图片
+module.exports.chose_detail_f = (callback)->
+  @chose_detail(['openFile'], callback)
+
+module.exports.chose_detail_d = (callback)->
+  @chose_detail(['openFile', 'openDirectory'], callback)
+
+module.exports.chose_detail = (opts=['openFile', "openDirectory"], callback)->
+  dialog.showOpenDialog title: 'Select', properties: opts, (img_path) =>
+    if img_path
+      if callback
+        callback(img_path[0])
+
+module.exports.get_random = (range) ->
+  Math.round(Math.random()*range)
 
 
 valid_ip = (ip_add)->

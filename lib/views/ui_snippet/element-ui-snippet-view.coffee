@@ -31,11 +31,11 @@ class UiSnippetElementView extends View
 
   do_edit: (e, element) ->
     console.log "do_edit"
-    @parents('.emp-template-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @body, @css, @prefix, @snippet_source, @snippet_pack])
+    @parents('.emp-template-management').view()?.showPanel(emp.EMP_UI_LIB, {}, [@name, @snippet_source, @snippet_pack, @tmp_obj])
 
   do_del: (e, element) ->
     # ui snippet 存储路径
-    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+    [@snippet_sotre_path, @snippet_css_path, @snippet_img_path] = @cbb_management.get_snippet_path()
     # @snippet_sotre_path = atom.project.snippets_path
     file_name = @snippet_sotre_path + @snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
 
