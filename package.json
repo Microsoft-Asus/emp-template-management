@@ -1,7 +1,7 @@
 {
   "name": "emp-template-management",
   "main": "./lib/main",
-  "version": "0.1.33",
+  "version": "0.1.34",
   "description": "Emp 模板管理工具",
   "maintainers": [
     {
@@ -42,9 +42,9 @@
     "cson": "*",
     "coffee-script": "~1.8.0",
     "fuzzaldrin": "^2.1.0",
-    "markdown-toc":"*",
-    "open":"*",
-    "highlight":"*",
-    "marked":"*"
+    "markdown-toc": "*",
+    "open": "*",
+    "highlight": "*",
+    "marked": "*"
   }
 }
