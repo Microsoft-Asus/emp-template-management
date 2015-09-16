@@ -27,8 +27,29 @@
         {'label': 'CBB Panel', 'command': 'emp-template-management:cbb-panel'}
         {type: 'separator'}
         {'label': 'UI Snippets Management', 'command': 'emp-template-management:snippets-management' }
-        { 'label': 'ERT UI Guide', 'command': 'emp-template-management:show-guide' }
+        {
+          'label': 'Help'
+          'submenu':[
+            {
+              'label': 'ERT UI Guide'
+              'submenu':[
+                { 'label': 'Show in Atom', 'command': 'emp-template-management:show-guide' }
+                { 'label': 'Show in Browser', 'command': 'emp-template-management:show-guide-brw' }
+
+              ]
+            }
+            {
+              'label': 'CBB Guide'
+              'submenu':[
+                { 'label': 'Show in Atom', 'command': 'emp-template-management:show-cbb-guide' }
+                { 'label': 'Show in Browser', 'command': 'emp-template-management:show-cbb-guide-brw' }
+              ]
+            }
+            { 'label': 'Refresh Guide', 'command': 'emp-template-management:refresh-guide' }
+          ]
+        }
         { 'label': 'Reload Snippets', 'command': 'emp-template-management:reload-snippets' }
+        # { 'label': 'Test', 'command': 'emp-template-management:test' }
     ]
   }
 ]

@@ -303,7 +303,8 @@ class EmpTemplateManagement
     # console.log default_snippet_store_path
     snippet_sotre_path = path.join default_snippet_store_path, 'snippets'
     snippet_css_path = path.join default_snippet_store_path, 'css'
-    [snippet_sotre_path, snippet_css_path]
+    snippet_img_path = path.join default_snippet_store_path, 'images'
+    [snippet_sotre_path, snippet_css_path, snippet_img_path]
     # template_json = path.join @element_path, emp.EMP_TEMPLATE_JSON
 
 

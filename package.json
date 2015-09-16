@@ -20,7 +20,12 @@
     "emp-template-management:quick-add-cbb-css",
     "emp-template-management:snippets-management",
     "emp-template-management:show-guide",
-    "emp-template-management:reload-snippets"
+    "emp-template-management:show-cbb-guide",
+    "emp-template-management:show-guide-brw",
+    "emp-template-management:show-cbb-guide-brw",
+    "emp-template-management:refresh-guide",
+    "emp-template-management:reload-snippets",
+    "emp-template-management:test"
   ],
   "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",
@@ -36,6 +41,10 @@
     "js-beautify": "^1.4.0",
     "cson": "*",
     "coffee-script": "~1.8.0",
-    "fuzzaldrin": "^2.1.0"
+    "fuzzaldrin": "^2.1.0",
+    "markdown-toc":"*",
+    "open":"*",
+    "highlight":"*",
+    "marked":"*"
   }
 }

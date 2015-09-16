@@ -35,7 +35,7 @@ class AvailablePackageView extends View
     # @snippet_css_path = path.join __dirname, '../../../css/'
     @cbb_management = atom.project.cbb_management
     # 设置 ui snippet 存储路径
-    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+    [@snippet_sotre_path, @snippet_css_path, @snippet_img_path] = @cbb_management.get_snippet_path()
 
   do_uninstall: ->
     tmp_flag = @show_alert()

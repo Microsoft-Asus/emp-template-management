@@ -140,7 +140,7 @@ class CbbPackImportView extends View
 
   refresh_detail:() ->
     # ui snippet 存储路径
-    [@snippet_sotre_path, @snippet_css_path] = @cbb_management.get_snippet_path()
+    [@snippet_sotre_path, @snippet_css_path, @snippet_img_path] = @cbb_management.get_snippet_path()
 
     @do_initial()
     @do_initial_ui_snippet()
