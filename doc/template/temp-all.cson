@@ -1,0 +1,27 @@
+"cbb-temp":
+  "head": "\n\n# 公共控件 API\n\n
+## 注意事项\n\n
+文档中所列基础控件使用5.3版本客户端调试，代码片段中包含slt代码以及ios7适配效果代码，在使用此基础控件时请注意此点。
+另外需要注意一点为，调试此基础控件列表时客户端将控件间默认间距为0。\n"
+
+  "package": "\n## $name 公共控件集合\n$logo  $desc\n"
+  "type": "\n### $name 公共控件子类型\n ---"
+  "template":"#### $name\n\n  __logo__\n\n
+$logo\n\n__说明__\n\n$desc\n\n__代码片段__\n```xml\n$body\n```\n\n
+__样式__\n```css\n$css\n```\n\n
+__脚本__\n```lua\n$lua\n```\n\n
+__图例__\n\n$details\n"
+
+  "img":"![]($img)\n"
+
+  "ui_head":"\n# 基础控件 API\n\n
+## 注意事项\n
+文档中所列基础控件使用5.3版本客户端调试，代码片段中包含slt代码以及ios7适配效果代码，在使用此基础控件时请注意此点。
+另外需要注意一点为，调试此基础控件列表时客户端将控件间默认间距为0。\n"
+
+  "ui_body":"### $name\n\n
+__说明__\n$desc\n\n
+__关键字__\n`$prefix`\n\n
+__代码片段__\n``` xml\n$body\n```\n\n
+__图例__\n$imgs\n\n"
+  "ui_type":"\n## $type 基础控件\n"
