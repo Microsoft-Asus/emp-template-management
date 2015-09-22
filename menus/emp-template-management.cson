@@ -45,7 +45,8 @@
                 { 'label': 'Show in Browser', 'command': 'emp-template-management:show-cbb-guide-brw' }
               ]
             }
-            { 'label': 'Refresh Guide', 'command': 'emp-template-management:refresh-guide' }
+            { 'label': 'Refresh API Guide', 'command': 'emp-template-management:refresh-guide' }
+            { 'label': 'Key Bindings', 'command': 'emp-template-management:set-keymaps' }
           ]
         }
         { 'label': 'Reload Snippets', 'command': 'emp-template-management:reload-snippets' }

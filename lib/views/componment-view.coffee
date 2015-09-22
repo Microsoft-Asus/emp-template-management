@@ -50,7 +50,6 @@ module.exports = class EmpDebugAdpPackageView extends View
 
   load_default_componment: (tab_index)->
     @list.empty()
-
     # console.log tab_index
     tool_setting = @cbb_management.get_tool_detail()
     tab_setting = tool_setting[tab_index]

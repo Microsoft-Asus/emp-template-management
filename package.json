@@ -25,7 +25,9 @@
     "emp-template-management:show-cbb-guide-brw",
     "emp-template-management:refresh-guide",
     "emp-template-management:reload-snippets",
-    "emp-template-management:test"
+    "emp-template-management:set-keymaps",
+    "emp-template-management:test",
+    "emp-template-management:test-keymaps"
   ],
   "repository": "https://github.com/RYTong/emp-template-management",
   "license": "MIT",

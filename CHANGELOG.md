@@ -1,3 +1,12 @@
+## 0.2.0
+1. 添加 Keymaps 管理, 位置为 EMP/Help/Key Bindings.目前只能修改用户安装的 package 中的热键.
+2. 重定义 CBB 使用流程,现在CSS 样式使用,统一修改一个文件,有开发人员来控制版本与合并.
+
+## 0.1.34
+1. 添加 EMP/Help 菜单, 主要内容为帮助文档
+2. 现在会根据 UI Snippet 和 CBB 的内容自动构成 API 文档,可以通过 `EMP/Help` 下的
+子菜单来查看.
+
 ## 0.1.31
 1. 为 template 管理添加查找功能
 2. 为 snippets 管理添加查找功能

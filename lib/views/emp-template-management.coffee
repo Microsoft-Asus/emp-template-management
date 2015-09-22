@@ -19,17 +19,13 @@ class EmpTemplateManagement
 
   constructor: ->
     # console.log "constructor"
-
-    # atom.project.package_path = path.join  atom.packages.resolvePackagePath(emp.PACKAGE_NAME)
-    # console.log atom.config.get emp.EMP_TEMPLATES_KEY
-    # console.log atom.project.templates_path
     @do_initialize()
 
   do_initialize: ->
     @do_initial()
     # 以 Package 为单位合并所有的模板 UI, 生成公共的 Css 文件
     @initialize_common_ui_css_merge()
-    @check_ui_snippet_link()
+    # @check_ui_snippet_link()
 
   do_initial: ->
     # if !templates_store_path = atom.project.templates_path
@@ -255,23 +251,24 @@ class EmpTemplateManagement
 
   do_writer_file:(pack_name, pack_obj) ->
     tmp_result_name = emp.EMP_TEMPLATE_CSS_NAME_HEAD + pack_name+"."+emp.EMP_CSS_DIR
-    tmp_dir = path.join templates_store_path, emp.EMP_TMP_TEMP_FILE_PATH
-    if !fs.existsSync tmp_dir
-      emp.mkdir_sync_safe tmp_dir
-    tmp_result_file = path.join tmp_dir,tmp_result_name
-    @default_common_css[pack_name]= tmp_result_file
-    # console.log "tmp_result_file: #{tmp_result_file}"
-    tmp_type_list = pack_obj.type_list
-    tmp_obj_json = pack_obj.obj_json
-    fs.open tmp_result_file, "w+", (err, fd) =>
-      fs.writeSync fd, emp.EMP_TEMPLATE_CSS_HEAD, 'utf-8'
-      tmp_count = tmp_type_list?.length
-      for tmp_type in tmp_type_list
-        tmp_type_obj = tmp_obj_json[tmp_type]
-        css_arr = @merge_type_css(tmp_type_obj)
-        css_arr = css_arr.join "\r\n"
-        fs.writeSync fd, css_arr ,'utf-8'
-      fs.close(fd)
+    store_dir = path.join templates_store_path, pack_name #emp.EMP_TMP_TEMP_FILE_PATH
+    if !fs.existsSync store_dir
+      emp.mkdir_sync_safe store_dir
+    store_file = path.join store_dir,tmp_result_name
+    @default_common_css[pack_name]= store_file
+    if !fs.existsSync(store_file)
+      # console.log "tmp_result_file: #{tmp_result_file}"
+      tmp_type_list = pack_obj.type_list
+      tmp_obj_json = pack_obj.obj_json
+      fs.open store_file, "w+", (err, fd) =>
+        fs.writeSync fd, emp.EMP_TEMPLATE_CSS_HEAD, 'utf-8'
+        tmp_count = tmp_type_list?.length
+        for tmp_type in tmp_type_list
+          tmp_type_obj = tmp_obj_json[tmp_type]
+          css_arr = @merge_type_css(tmp_type_obj)
+          css_arr = css_arr.join "\r\n"
+          fs.writeSync fd, css_arr ,'utf-8'
+        fs.close(fd)
 
   merge_type_css: (type_obj_list) ->
     # console.log type_obj_list
@@ -344,9 +341,6 @@ class EmpTemplateManagement
 
         snippets = require atom.packages.activePackages.snippets.mainModulePath
         snippets.loadAll()
-
-
-
 
   # merge_package1: (fa_path, tmp_obj, tmp_entries) ->
   #

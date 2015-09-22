@@ -44,7 +44,7 @@ class ErtUiGuide
     # @temp_all = @get_con(temp_all)
     @temp_all_obj = CSON.parseCSONFile(temp_all_rel_path)
     @cbb_temp = @temp_all_obj["cbb-temp"]
-    console.log @temp_all_obj
+    # console.log @temp_all_obj
     @temp_head_con = @cbb_temp.ui_head
     @temp_body_con = @cbb_temp.ui_body
     @temp_type_title = @cbb_temp.ui_type
@@ -53,9 +53,7 @@ class ErtUiGuide
     @temp_cbb_type = @cbb_temp.type
     @temp_cbb_template = @cbb_temp.template
     @temp_img = @cbb_temp.img
-
-
-    console.log @temp_all_obj
+    # console.log @temp_all_obj
 
     @ui_md_file = path.join __dirname, ui_guide_md_file
     @ui_html_file = path.join __dirname, ui_guide_html_file
@@ -166,7 +164,6 @@ class ErtUiGuide
         if fs.existsSync md_file
           re_content = fs.readFileSync md_file, 'utf-8'
 
-
           # @md_renderer.toHTML re_content, html_file, "HTML", (error, html) =>
           #   if error
           #     console.warn('Copying Markdown as HTML failed', error)
@@ -190,6 +187,7 @@ class ErtUiGuide
             <div class=\"container\"><h1>#{top_head}</h1>
             <p class=\"lead\">#{top_subtitle}</p></div></header>"
     tmp_top = @html_top_part.replace(/\{\{header\}\}/ig, title_con).replace(/\{\{title\}\}/, "EMP API")
+    # tocHtml = '<div class="span3 bs-docs-sidebar"><ul class="nav nav-list bs-docs-sidenav" data-spy="affix">';
     re_content = tmp_top+html_con+@html_bottom_part
 
     fs.writeFileSync html_file, re_content, 'utf-8'
