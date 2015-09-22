@@ -38,7 +38,8 @@ class AvailablePackageView extends View
           # @div class: 'btn-group', =>
           #   @button type: 'button', class: 'btn btn-info icon icon-cloud-download install-button', outlet: 'installButton', 'Install'
           @div outlet: 'buttons', class: 'btn-group', =>
-            @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit', 'Edit'
+            @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit_css', 'Edit Css'
+            @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit', 'Edit Pack'
             if @package_obj.name isnt emp.EMP_DEFAULT_PACKAGE
               @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
             @button type: 'button', class: 'btn icon icon-repo', outlet: 'detail_utton', click:'show_detail', 'Detail'
@@ -84,6 +85,9 @@ class AvailablePackageView extends View
     console.log 'do_edit'
     @fa_view.show_edit_panel(@package_obj)
 
+  do_edit_css: ->
+    css_file = @cbb_management.get_common_css(@package_obj.name)
+    emp.create_editor(css_file, emp.EMP_GRAMMAR_CSS)
 
   show_alert: (replace_con, relative_path, editor) ->
     atom.confirm
@@ -93,7 +97,6 @@ class AvailablePackageView extends View
         '同时删除文件': -> return 1
         '是': -> return 2
         '否': -> return 3
-
 
   show_detail:->
     @parents('.emp-template-management').view()?.showPanel(emp.EMP_CCB_PACK_DETAIL, {back: emp.EMP_TEMPLATE}, @package_obj)

@@ -3,9 +3,11 @@ EmpTempManagement = require './views/emp-template-management'
 EmpCbbView = require './views/componment-view'
 QuickAddCbbView = require './views/quick-add-cbb-view'
 EMPUiGuide = require './guide/cbb-ui-snippets-guide'
+EmpKeymapsManView = require './help/emp-keymaps-management'
 # provider =  require './ac_html/ehtml_provider'
 
 empTmpManagementView = null
+empKeyMapsManagement = null
 emp = require './exports/emp'
 fs = require 'fs'
 path = require 'path'
@@ -26,8 +28,23 @@ temp_deserializer =
     console.log "emp template  deserialize"
     create_tmp_management(state) if state.constructor is Object
 
-atom.deserializers.add(temp_deserializer)
+# -------------------use for keymaps management -------------------------
+create_keymap_man = (params) ->
+  empKeyMapsManagement = new EmpKeymapsManView(params)
 
+open_keymap_panel = (panel_name, uri) ->
+  empKeyMapsManagement ?= create_keymap_man({uri: emp.EMP_KEYMAP_MAN})
+  empKeyMapsManagement.showPanel(panel_name, {uri})
+
+keymap_deserializer =
+  name: emp.KEYMAP_WIZARD_VIEW
+  version: 1
+  deserialize: (state) ->
+    console.log "emp keymap man  deserialize"
+    create_keymap_man(state) if state.constructor is Object
+
+atom.deserializers.add(temp_deserializer)
+atom.deserializers.add(keymap_deserializer)
 
 module.exports =
   config:
@@ -62,6 +79,9 @@ module.exports =
           # console.log panel_name
           open_panel(panel_name, uri)
         empTmpManagementView
+      else
+        if uri.startsWith emp.EMP_KEYMAP_MAN
+          create_keymap_man({uri})
 
     snippets = require atom.packages.activePackages.snippets.mainModulePath
     atom.commands.add "atom-workspace",
@@ -70,6 +90,11 @@ module.exports =
       "emp-template-management:reload-snippets": ->
         snippets.loadAll()
         emp.show_info "刷新 Snippets 成功!"
+      "emp-template-management:set-keymaps": ->
+        console.log "key mps"
+        atom.workspace.open emp.EMP_KEYMAP_MAN
+      "emp-template-management:test-keymaps": ->
+        emp.show_info "keymap  test!"
 
     @emp_temp_management = new EmpTempManagement()
     atom.project.cbb_management = @emp_temp_management

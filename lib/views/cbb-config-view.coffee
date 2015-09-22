@@ -30,7 +30,7 @@ class CbbConfigView extends View
             @div class:'control-btn-m', =>
               @button class: 'control-btn btn btn-info', click:'select_temp_path',' Chose Path '
               @button class: 'control-btn btn btn-info', click:'set_default',' 恢复默认路径 '
-              @button outlet:'set_btn', class:'control-btn btn btn-info', click:'do_set', "设为默认模板存储路径"
+              @button outlet:'set_btn', class:'control-btn btn btn-info', click:'set_cbb_store_path', "设为模板存储路径"
 
       @section class: 'section settings-panel', =>
         @div class: 'section-container', =>
@@ -48,7 +48,7 @@ class CbbConfigView extends View
             @div class:'control-btn-m', =>
               @button class: 'control-btn btn btn-info', click:'select_snippet_path',' Chose Path '
               @button class: 'control-btn btn btn-info', click:'set_snippet_default',' 恢复默认路径 '
-              @button outlet:'set_btn', class:'control-btn btn btn-info', click:'do_set_snippet', "设为默认模板存储路径"
+              @button outlet:'set_btn', class:'control-btn btn btn-info', click:'do_set_snippet', "设为模板存储路径"
 
 
   initialize: (msg)->
@@ -87,9 +87,9 @@ class CbbConfigView extends View
   set_default: ->
     reset_default_path = emp.get_default_path()
     tmp_conf_path = @store_path.getText()
-    if tmp_conf_path is reset_default_path
-      emp.show_warnning "修改路径与原路径相同,不做改变"
-      return
+    # if tmp_conf_path is reset_default_path
+    #   emp.show_warnning "修改路径与原路径相同,不做改变"
+    #   return
     unless @show_def_alert(reset_default_path, tmp_conf_path)
       return
 
@@ -97,11 +97,11 @@ class CbbConfigView extends View
     atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, reset_default_path
     @cbb_management.do_initialize()
 
-  do_set: ->
+  set_cbb_store_path: ->
     if tmp_conf_path = @store_path.getText()?.trim()
-      if tmp_conf_path is @default_store_path
-        emp.show_warnning "修改路径与原路径相同,改变取消"
-        return
+      # if tmp_conf_path is @default_store_path
+      #   emp.show_warnning "修改路径与原路径相同,改变取消"
+      #   return
       # console.log tmp_conf_path
       return unless @show_set_alert(tmp_conf_path)
 
@@ -114,9 +114,9 @@ class CbbConfigView extends View
       tmp_json = path.join tmp_conf_path, emp.EMP_TEMPLATE_JSON
       unless fs.existsSync tmp_json
         if @show_exist_temp_alert(tmp_conf_path)
-          console.log " do copy"
-          console.log @default_store_path
-          console.log tmp_conf_path
+          # console.log " do copy"
+          # console.log @default_store_path
+          # console.log tmp_conf_path
           fs_plus.copySync  @default_store_path, tmp_conf_path
         else
           return

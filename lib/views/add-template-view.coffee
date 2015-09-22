@@ -6,6 +6,7 @@ dialog = remote.require 'dialog'
 emp = require '../exports/emp'
 CbbEle = require '../util/emp_cbb_element'
 CbbSrcEleView = require './template_list/cbb-source-ele-view'
+ImgSourceElementPanel = require './template_list/img-detail-ele-view'
 default_select_pack = emp.EMP_DEFAULT_PACKAGE
 default_select_type = emp.EMP_DEFAULT_TYPE
 
@@ -99,11 +100,12 @@ class InstalledTemplatePanel extends ScrollView
                   @div class: 'info-label', "模板样式(Template Css)"
                   @div class: 'setting-description', "模板插入的样式实体"
                 # @div class: 'editor-container', =>
-                @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
+                # @subview "template_css", new TextEditorView(mini: true,attributes: {id: 'template_css', type: 'string'},  placeholderText: ' Template Css Style')
                 # @subview 'template_path', new TextEditorView(mini: true, placeholderText: ' Template Path')
-                @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
-                @button class: 'control-btn btn btn-info', click:'create_css',' Create File '
-                @button class: 'control-btn btn btn-info', click:'edit_css',' Edit File '
+                # @button class: 'control-btn btn btn-info', click:'select_css',' Chose File '
+                # @button class: 'control-btn btn btn-info', click:'create_css',' Create File '
+              @div class: 'controls', =>
+                @button class: 'control-btn btn btn-info', click:'edit_css',' Edit Css '
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -161,6 +163,8 @@ class InstalledTemplatePanel extends ScrollView
                   @button class:'btn btn-info', click:'chose_detail_f',"Chose File"
                   @button class:'btn btn-info', click:'chose_detail_d',"Chose Dir"
                   @button class:'btn btn-info', click:'add_image_detail_btn',"Add"
+                @div outlet:'detail_div', style:"display:none;",class: 'meta_detail', =>
+                  @img outlet:"detail_img", class: 'avatar', src:"#{logo_img}"
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>
@@ -177,6 +181,8 @@ class InstalledTemplatePanel extends ScrollView
                   @button class:'btn btn-info', click:'select_source_f',"Chose File"
                   @button class:'btn btn-info', click:'select_source_d',"Chose Dir"
                   @button class:'btn btn-info', click:'add_source_btn',"Add"
+                @div outlet:'src_div', style:"display:none;",class: 'meta_detail', =>
+                  @img outlet:"src_img", class: 'avatar', src:"#{logo_img}"
 
       @div class: 'footer-div', =>
         @div class: 'footer-detail', =>
@@ -264,11 +270,11 @@ class InstalledTemplatePanel extends ScrollView
     tmp_con = @template_html.getText()
     @prompt_for_file(@template_html, tmp_con)
 
-  select_css: (e, element)->
-    # console.log "select css"
-    # console.log element
-    tmp_con = @template_css.getText()
-    @prompt_for_file(@template_css, tmp_con)
+  # select_css: (e, element)->
+  #   # console.log "select css"
+  #   # console.log element
+  #   tmp_con = @template_css.getText()
+  #   @prompt_for_file(@template_css, tmp_con)
 
   select_lua: (e, element) ->
     tmp_con = @template_lua.getText()
@@ -325,7 +331,6 @@ class InstalledTemplatePanel extends ScrollView
     if !@template_name.getText()?.trim()
       emp.show_error "模板名称不能为空"
       return
-
     cbb_name = @template_name.getText()?.trim()
     cbb_obj = @new_template_obj(cbb_name)
     # console.log cbb_obj
@@ -340,7 +345,7 @@ class InstalledTemplatePanel extends ScrollView
     cbb_logo = @logo_select.val()
     # cbb_name = @cbb_name.getText()?.trim()
     cbb_html = @template_html.getText()?.trim()
-    cbb_css = @template_css.getText()?.trim()
+    # cbb_css = @template_css.getText()?.trim()
     cbb_lua = @template_lua.getText()?.trim()
     cbb_pack = @pack_select.val()
     cbb_type = @type_select.val()
@@ -359,7 +364,7 @@ class InstalledTemplatePanel extends ScrollView
     # console.log cbb_type
     cbb_obj = new CbbEle(cbb_name, cbb_desc, cbb_logo, cbb_type, cbb_pack, tmp_img_list, source_list)
     cbb_obj.set_file cbb_html, emp.EMP_QHTML
-    cbb_obj.set_file cbb_css, emp.EMP_QCSS
+    # cbb_obj.set_file cbb_css, emp.EMP_QCSS
     cbb_obj.set_file cbb_lua, emp.EMP_QLUA
     cbb_obj
 
@@ -377,7 +382,7 @@ class InstalledTemplatePanel extends ScrollView
 
         if stats?.isFile()
           unless @source_files[tmp_path]
-            tmp_view = new CbbSrcEleView(this, tmp_path)
+            tmp_view = new ImgSourceElementPanel(this, tmp_path)
             @source_files[tmp_path] = tmp_view
             @cbb_tree.append tmp_view
 
@@ -394,13 +399,9 @@ class InstalledTemplatePanel extends ScrollView
                 unless @source_files[tmp_name]
                   tmp_state = fs.statSync tmp_name
                   if tmp_state?.isFile()
-                    tmp_view = new CbbSrcEleView(this, tmp_name)
+                    tmp_view = new ImgSourceElementPanel(this, tmp_name)
                     @source_files[tmp_name] = tmp_view
                     @cbb_tree.append tmp_view
-
-  # remove  callback
-  remove_td_callback: (name)->
-    delete @source_files[name]
 
   select_source_f: ->
     @select_source(['openFile'])
@@ -435,7 +436,7 @@ class InstalledTemplatePanel extends ScrollView
 
         if stats?.isFile()
           unless @image_detail[tmp_path]
-            tmp_view = new CbbSrcEleView(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
+            tmp_view = new ImgSourceElementPanel(this, tmp_path, emp.EMP_DETAIL_ELE_VIEW)
             @image_detail[tmp_path] = tmp_view
             @image_detail_tree.append tmp_view
 
@@ -450,7 +451,7 @@ class InstalledTemplatePanel extends ScrollView
                 unless @image_detail[tmp_name]
                   tmp_state = fs.statSync tmp_name
                   if tmp_state?.isFile()
-                    tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
+                    tmp_view = new ImgSourceElementPanel(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW)
                     @image_detail[tmp_name] = tmp_view
                     @image_detail_tree.append tmp_view
 
@@ -470,13 +471,6 @@ class InstalledTemplatePanel extends ScrollView
         # @detail_image.attr("src", img_path[0])
         @detail_img_text.setText img_path[0]
 
-  remove_all_detail: ->
-    for tmp_name, tmp_view of @image_detail
-      tmp_view.destroy()
-    @image_detail ={}
-
-  remove_detail_callback: (name)->
-    delete @image_detail[name]
 
 # --------------------
   initial_create_tmp_file: ->
@@ -507,8 +501,12 @@ class InstalledTemplatePanel extends ScrollView
     @template_css.setText(tmp_file)
 
   edit_css: ->
-    @edit_temp_file(@template_css, emp.EMP_GRAMMAR_LUA)
-
+    cbb_pack = @pack_select.val()
+    css_file = @cbb_management.get_common_css(cbb_pack)
+    # tmp_path = @initial_create_tmp_file()
+    # tmp_file = path.join tmp_path, emp.EMP_TMP_TEMP_CSS
+    emp.create_editor(css_file, emp.EMP_GRAMMAR_CSS)
+    # @template_css.setText(tmp_file)
 
   # 创建 lua 模板
   create_lua: ->
@@ -532,7 +530,7 @@ class InstalledTemplatePanel extends ScrollView
   create_editor:(tmp_file_path, tmp_grammar, content) ->
     changeFocus = true
     tmp_editor = atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
-      gramers = @getGrammars()
+      gramers = @getGrammars(tmp_grammar)
       unless content is undefined
         tmp_editor.setText(content) #unless !content
       tmp_editor.setGrammar(gramers[0]) unless gramers[0] is undefined
@@ -541,7 +539,7 @@ class InstalledTemplatePanel extends ScrollView
   getGrammars: (grammar_name)->
     grammars = atom.grammars.getGrammars().filter (grammar) ->
       (grammar isnt atom.grammars.nullGrammar) and
-      grammar.name is 'Emp View'
+      grammar.name is grammar_name
     grammars
 
  # after create ,clean all the input
@@ -553,7 +551,7 @@ class InstalledTemplatePanel extends ScrollView
     @logo_select.val()
     # cbb_name = @cbb_name.getText()?.trim()
     @template_html.setText("")
-    @template_css.setText("")
+    # @template_css.setText("")
     @template_lua.setText("")
     @cbb_tree.empty()
     @source_list = {}
@@ -575,3 +573,33 @@ class InstalledTemplatePanel extends ScrollView
     tmp_opt.selected = "selected"
     @logo_select.append tmp_opt
     @logo_image.attr("src", logo_img)
+
+  # --------------------------- callback -------------------------
+  #  callback of ImgSourceElementPanel ,显示资源图片
+  show_detail_img:(img, show_type) ->
+    if show_type
+      @detail_img.attr("src", img)
+      @detail_div.show()
+    else
+      @src_img.attr("src", img)
+      @src_div.show()
+
+  remove_all_detail: ->
+    for tmp_name, tmp_view of @image_detail
+      tmp_view.destroy()
+    @image_detail ={}
+
+  #  callback of ImgSourceElementPanel, 删除实例图片或者资源图片
+  remove_detail_callback: (name, re_type)->
+    if re_type
+      @image_detail[name].destroy()
+      @detail_div.hide()
+      delete @image_detail[name]
+    else
+      @source_files[name].destroy()
+      @src_div.hide()
+      delete @source_files[name]
+
+  # remove  callback
+  remove_td_callback: (name)->
+    delete @source_files[name]

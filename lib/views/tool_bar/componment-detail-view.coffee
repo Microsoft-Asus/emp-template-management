@@ -120,7 +120,7 @@ class CbbDetailView extends View
     @snippet_obj = JSON.parse ele_json_data
 
     @html_obj = @snippet_obj.html
-    @css_obj = @snippet_obj.css
+    # @css_obj = @snippet_obj.css
     @lua_obj = @snippet_obj.lua
 
     @html_snippet = @set_con(@html_obj)
@@ -457,7 +457,6 @@ class CbbDetailView extends View
 
   show_css_detail: ->
     console.log "show_css_detail"
-
 
   show_source_detail: ->
     console.log "show_source_detail"

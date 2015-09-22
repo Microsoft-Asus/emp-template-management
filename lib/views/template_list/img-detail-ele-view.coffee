@@ -16,14 +16,14 @@ class ImgSourceElementPanel extends View
         # @button class:'btn btn-info',click:'do_edit',"Edit"
         @button class:'btn btn-error',click:'do_remove',"Remove"
 
-  initialize: (@fa_view, @name)->
+  initialize: (@fa_view, @name, @type)->
     # @disposable = new CompositeDisposable
     @ele_name.on "click" ,=>
-      @fa_view.show_detail_img(@name)
+      @fa_view.show_detail_img(@name, @type)
 
 
   do_remove: ->
-    @fa_view.remove_detail_callback(@name)
+    @fa_view.remove_detail_callback(@name, @type)
 
   show_detail: ->
 

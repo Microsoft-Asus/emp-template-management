@@ -52,7 +52,7 @@ class EmpCbbEle
   get_json: ->
     if !@ele_json
       @ele_json = {name:@name, version:@ver, desc: @desc,
-      type: @type, logo:@logo, html:@html, css:@css, lua:@lua,
+      type: @type, logo:@logo, html:@html, lua:@lua, #css:@css,
       available:@available, own_package: @own_package,
       source:@src_list_rel,detail:@img_list_rel,
       element_path:@element_path_rel, level:@lv}
@@ -92,7 +92,7 @@ class EmpCbbEle
         @detail = tmp_obj.detail
         @element_path = tmp_obj.element_path
         @html = tmp_obj.html
-        @css = tmp_obj.css
+        # @css = tmp_obj.css
         @lua = tmp_obj.lua
         @available = tmp_obj.available
         @own_package = tmp_obj.own_package
@@ -137,8 +137,8 @@ class EmpCbbEle
     if @html?.type is emp.EMP_FILE_TYPE
       @html.body = @copy_content_ch @html.body
 
-    if @css?.type is emp.EMP_FILE_TYPE
-      @css.body = @copy_content_ch path.join @template_path, @css.body
+    # if @css?.type is emp.EMP_FILE_TYPE
+    #   @css.body = @copy_content_ch path.join @template_path, @css.body
     if @lua?.type is emp.EMP_FILE_TYPE
       @lua.body = @copy_content_ch path.join @template_path, @lua.body
 
@@ -160,8 +160,8 @@ class EmpCbbEle
     if @html?.type is emp.EMP_FILE_TYPE
       @html.body = @copy_content_ch @html.body
 
-    if @css?.type is emp.EMP_FILE_TYPE
-      @css.body = @copy_content_ch @css.body
+    # if @css?.type is emp.EMP_FILE_TYPE
+    #   @css.body = @copy_content_ch @css.body
     if @lua?.type is emp.EMP_FILE_TYPE
       @lua.body = @copy_content_ch @lua.body
 
@@ -195,7 +195,7 @@ class EmpCbbEle
     tmp_obj = @new_con_obj(tmp_con)
     switch ctype
       when emp.EMP_QHTML then @html = tmp_obj
-      when emp.EMP_QCSS then @css = tmp_obj
+      # when emp.EMP_QCSS then @css = tmp_obj
       when emp.EMP_QLUA then @lua = tmp_obj
 
   set_file: (tmp_file, ctype) ->
@@ -203,7 +203,7 @@ class EmpCbbEle
       tmp_obj = @new_file_obj(tmp_file)
       switch ctype
         when emp.EMP_QHTML then @html = tmp_obj
-        when emp.EMP_QCSS then @css = tmp_obj
+        # when emp.EMP_QCSS then @css = tmp_obj
         when emp.EMP_QLUA then @lua = tmp_obj
 
   set_edit_con: (tmp_con, ctype, def_type) ->
@@ -214,7 +214,7 @@ class EmpCbbEle
 
     switch ctype
       when emp.EMP_QHTML then @html = tmp_obj
-      when emp.EMP_QCSS then @css = tmp_obj
+      # when emp.EMP_QCSS then @css = tmp_obj
       when emp.EMP_QLUA then @lua = tmp_obj
 
   set_del_files: (@del_source_files, @del_image_detail)->

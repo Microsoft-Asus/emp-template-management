@@ -84,10 +84,12 @@ module.exports =
   ESCAPEKEY:27
 
   EMP_TEMP_URI : 'emp://template_management_wizard'
+  EMP_KEYMAP_MAN : 'emp://keymaps_man'
 
   LOGO_IMAGE_SIZE : '48px'
   LOGO_IMAGE_BIG_SIZE : '156px'
 
+  KEYMAP_WIZARD_VIEW: 'EmpKeymapsView'
   TEMP_WIZARD_VIEW: 'EmpTemplateView'
   DEFAULT_PANEL: 'OverView'
 
@@ -203,7 +205,7 @@ module.exports =
   create_editor:(tmp_file_path, tmp_grammar, callback, content) ->
     changeFocus = true
     tmp_editor = atom.workspace.open(tmp_file_path, { changeFocus }).then (tmp_editor) =>
-      gramers = @getGrammars()
+      gramers = @getGrammars(tmp_grammar)
       # console.log content
       unless content is undefined
         tmp_editor.setText(content) #unless !content
@@ -214,8 +216,9 @@ module.exports =
   getGrammars: (grammar_name)->
     grammars = atom.grammars.getGrammars().filter (grammar) ->
       (grammar isnt atom.grammars.nullGrammar) and
-      grammar.name is 'CoffeeScript'
+      grammar.name is grammar_name
     grammars
+
 
   get_project_path: ->
     project_path_list = atom.project.getPaths()
