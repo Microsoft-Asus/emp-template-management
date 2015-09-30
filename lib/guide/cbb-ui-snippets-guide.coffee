@@ -305,21 +305,26 @@ class ErtUiGuide
     emp_params = snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
     type_list = emp_params?[emp.DEFAULT_SNIPPET_TYPE_KEY]
     # console.log type_list
+    type_obj = {}
     if type_list
-      type_obj = {}
       for tmp_type in type_list
         type_obj[tmp_type] = {}
       if type_list.indexOf(default_val) is -1
         type_obj[default_val] = {}
+    else
+      type_obj[default_val] = {}
+      
+    # 删除文件中类型列表,为下面的循环做准备
+    delete snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
+    for tmp_source, tmp_objs of snippet_obj
+      for tmp_name, tmp_obj of tmp_objs
+        tmp_type = tmp_obj.type
+        if type_obj[tmp_type]
+          type_obj[tmp_type][tmp_name]=tmp_obj
+        else
+          type_obj[tmp_type] = {}
+          type_obj[tmp_type][tmp_name]=tmp_obj
 
-      delete snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
-      for tmp_source, tmp_objs of snippet_obj
-        for tmp_name, tmp_obj of tmp_objs
-          tmp_type = tmp_obj.type
-          if type_obj[tmp_type]
-            type_obj[tmp_type][tmp_name]=tmp_obj
-          else
-            type_obj[default_val][tmp_name]=tmp_obj
 
     # console.log type_obj
     for type,type_obj_list of type_obj
