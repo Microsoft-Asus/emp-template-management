@@ -187,7 +187,7 @@ module.exports =
     tmp_obj
 
   get_default_logo: ->
-    path.join __dirname,'../../',@EMP_DEFAULT_LOGO
+    path.join __dirname,'..', '..', @EMP_DEFAULT_LOGO
 
   get_default_path: () ->
     path.join atom.packages.resolvePackagePath(this.PACKAGE_NAME), this.EMP_TEMPLATES_PATH
@@ -379,6 +379,11 @@ module.exports.chose_detail = (opts=['openFile', "openDirectory"], callback)->
 
 module.exports.get_random = (range) ->
   Math.round(Math.random()*range)
+
+module.exports.get_sep_path = (tmp_path='') ->
+  path_ele = tmp_path.split /[/\\]/ig
+  path_ele.join path.sep
+
 
 
 valid_ip = (ip_add)->

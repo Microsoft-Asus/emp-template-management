@@ -19,6 +19,7 @@ class AvailableTemplatePanel extends View
     if !logo
       logo = emp.get_default_logo()
     else
+      logo = emp.get_sep_path logo
       logo = path.join(temp_path, logo)
 
     @div class: 'row', =>
@@ -57,6 +58,7 @@ class AvailableTemplatePanel extends View
         if detail_img = element.detail
           @div outlet:'detail_div', style:"display:none;", class: 'meta_detail', =>
             for tmp_img in detail_img
+              tmp_img = emp.get_sep_path tmp_img
               tmp_img_path = path.join temp_path, tmp_img
               @img outlet: 'detail_img', class: 'avatar', src: "#{tmp_img_path}"
 

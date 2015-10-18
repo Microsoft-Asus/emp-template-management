@@ -113,7 +113,10 @@ class CbbDetailView extends View
     @css_com_file = @cbb_management.get_common_css(@pack_name)
 
     @css_com_file_name = path.basename @css_com_file
-    @ele_path = @com.element_path
+    # @ele_path = @com.element_path
+
+    @ele_path = emp.get_sep_path(@com.element_path)
+
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
 
     ele_json_data = fs.readFileSync @ele_json, 'utf-8'
@@ -323,7 +326,8 @@ class CbbDetailView extends View
               if @lua_obj.type is emp.EMP_CON_TYPE
                 tmp_body = @lua_obj.body
               else
-                temp_path = path.join @templates_path, @lua_obj.body
+                temp_path = emp.get_sep_path @lua_obj.body
+                temp_path = path.join @templates_path, temp_path
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
               if fs.existsSync temp_path
                 fs.appendFileSync temp_lua_path,"\n"+tmp_body
@@ -336,7 +340,8 @@ class CbbDetailView extends View
                 emp.show_error "请指定需要插入的Lua文件!"
                 return
               else
-                temp_path = path.join @templates_path, @lua_obj.body
+                temp_path = emp.get_sep_path @lua_obj.body
+                temp_path = path.join @templates_path, temp_path
                 tmp_body =  fs.readFileSync temp_path, 'utf-8'
                 tmp_name = path.basename temp_path
                 temp_lua_path = path.join temp_lua_path, tmp_name
@@ -361,6 +366,7 @@ class CbbDetailView extends View
             emp.mkdir_sync_safe tmp_path
 
             for tmp_src in @src_obj
+              tmp_src = emp.get_sep_path tmp_src
               temp_path = path.join @templates_path, tmp_src
               f_con = fs.readFileSync temp_path
               tmp_name = path.basename tmp_src
@@ -438,7 +444,8 @@ class CbbDetailView extends View
       if tmp_obj.type is emp.EMP_CON_TYPE
         return tmp_obj.body
       else
-        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_path = emp.get_sep_path tmp_obj.body
+        tmp_path = path.join @templates_path, tmp_path
         return fs.readFileSync tmp_path, 'utf-8'
     else
       return null
