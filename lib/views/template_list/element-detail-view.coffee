@@ -179,7 +179,8 @@ class ElementDetailPanel extends View
 
     @title.text("#{_.undasherize(_.uncamelcase(@element.name))} Detail")
     @templates_path = atom.project.templates_path
-    @ele_path = @element.element_path
+    # @ele_path = @element.element_path
+    @ele_path = emp.get_sep_path(@element.element_path)
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
     ele_json_data = fs.readFileSync @ele_json, 'utf-8'
     @snippet_obj = JSON.parse ele_json_data
@@ -201,7 +202,8 @@ class ElementDetailPanel extends View
        tmp_body = tmp_obj.body
     else
       # TODO 改为文件显示
-      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_path = emp.get_sep_path tmp_obj.body
+      tmp_path = path.join @templates_path, tmp_path
       tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
     @html_body.empty()
@@ -218,7 +220,8 @@ class ElementDetailPanel extends View
          tmp_body = tmp_obj.body
       else
         # TODO 改为文件显示
-        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_path = emp.get_sep_path tmp_obj.body
+        tmp_path = path.join @templates_path, tmp_path
         tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
       @css_body.empty()
@@ -234,7 +237,8 @@ class ElementDetailPanel extends View
        tmp_body = tmp_obj.body
     else
       # TODO 改为文件显示
-      tmp_path = path.join @templates_path, tmp_obj.body
+      tmp_path = emp.get_sep_path tmp_obj.body
+      tmp_path = path.join @templates_path, tmp_path
       tmp_body = fs.readFileSync tmp_path, 'utf-8'
 
     @lua_body.empty()
@@ -250,6 +254,7 @@ class ElementDetailPanel extends View
 
     if tmp_logo = @snippet_obj.logo
       text = path.basename tmp_logo
+      tmp_logo = emp.get_sep_path tmp_logo
       value = path.join @templates_path, tmp_logo
     else
       value = emp.get_default_logo()
@@ -262,6 +267,7 @@ class ElementDetailPanel extends View
   initial_source_list: (src_files=[])->
     @cbb_tree.empty()
     for tmp_file in src_files
+      tmp_file = emp.get_sep_path tmp_file
       tmp_name = path.join @templates_path, tmp_file
       tmp_view = new CbbSrcEleView(this, tmp_name)
       @source_files[tmp_name] = tmp_view
@@ -271,6 +277,7 @@ class ElementDetailPanel extends View
   initial_detail_list: (detail_list=[]) ->
     @image_detail_tree.empty()
     for tmp_file in detail_list
+      tmp_file = emp.get_sep_path tmp_file
       tmp_name = path.join @templates_path, tmp_file
       tmp_view = new CbbSrcEleView(this, tmp_name, emp.EMP_DETAIL_ELE_VIEW )
       @image_detail[tmp_name] = tmp_view
@@ -500,7 +507,8 @@ class ElementDetailPanel extends View
 
       else
         # TODO 改为文件显示
-        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_path = emp.get_sep_path tmp_obj.body
+        tmp_path = path.join @templates_path, tmp_path
         tmp_editor = @create_editor_cb(tmp_path, (tmp_editor) =>
                 tmp_editor.onDidSave (event) =>
                   # console.log event
@@ -533,7 +541,9 @@ class ElementDetailPanel extends View
 
       else
         # TODO 改为文件显示
-        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_path = emp.get_sep_path tmp_obj.body
+        tmp_path = path.join @templates_path, tmp_path
+        # tmp_path = path.join @templates_path, tmp_obj.body
         tmp_editor = @create_editor_cb(tmp_path, (tmp_editor) =>
                     tmp_editor.onDidSave (e) =>
                       tmp_body = tmp_editor.getText()
@@ -565,7 +575,9 @@ class ElementDetailPanel extends View
 
       else
         # TODO 改为文件显示
-        tmp_path = path.join @templates_path, tmp_obj.body
+        tmp_path = emp.get_sep_path tmp_obj.body
+        tmp_path = path.join @templates_path, tmp_path
+        # tmp_path = path.join @templates_path, tmp_obj.body
         tmp_editor = @create_editor(tmp_path)
     else
       emp.show_error 'no lua script!'
@@ -651,6 +663,7 @@ class ElementDetailPanel extends View
     cbb_html = @snippet_obj.html.body
     tmp_html_type = @snippet_obj.html.type
     if tmp_html_type is emp.EMP_FILE_TYPE
+      cbb_html = emp.get_sep_path cbb_html
       cbb_obj.set_file path.join(@template_path, cbb_html), emp.EMP_QHTML
     else
       cbb_obj.set_con cbb_html, emp.EMP_QHTML
@@ -659,6 +672,7 @@ class ElementDetailPanel extends View
       cbb_css = @snippet_obj.css.body
       tmp_css_type = @snippet_obj.css.type
       if tmp_css_type is emp.EMP_FILE_TYPE
+        cbb_css = emp.get_sep_path cbb_css
         cbb_obj.set_file path.join(@template_path, cbb_css), emp.EMP_QCSS
       else
         cbb_obj.set_con cbb_css, emp.EMP_QCSS
@@ -667,6 +681,7 @@ class ElementDetailPanel extends View
       cbb_lua = @snippet_obj.lua.body
       tmp_lua_type = @snippet_obj.lua.type
       if tmp_lua_type is emp.EMP_FILE_TYPE
+        cbb_lua = emp.get_sep_path cbb_lua
         cbb_obj.set_file path.join(@template_path, cbb_lua), emp.EMP_QLUA
       else
         cbb_obj.set_con cbb_lua, emp.EMP_QLUA

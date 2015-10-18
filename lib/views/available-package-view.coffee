@@ -11,9 +11,10 @@ module.exports =
 class AvailablePackageView extends View
 
   @content: (@fa_view, @package_obj) ->
-    # console.log @package_obj
+    console.log @package_obj
     temp_path = atom.project.templates_path
     if tmp_logo= @package_obj.logo
+      tmp_logo = emp.get_sep_path tmp_logo
       tmp_logo = path.join temp_path,tmp_logo
     else
       tmp_logo= emp.get_default_logo()

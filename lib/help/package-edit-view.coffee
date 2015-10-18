@@ -15,7 +15,7 @@ class EditPackageView extends View
 
   @content: ()->
 
-    @div outlet:'cbb_detail_div', class:'cbb-detail-view  overlay from-top', =>
+    @div outlet:'cbb_detail_div', class:'cbb-detail-view overlay from-top', =>
       @div class:'cbb_detail_panel panel', =>
         @h1 "Edit KeyMaps' Detail", class: 'panel-heading'
         @div class:'bar_div', =>
