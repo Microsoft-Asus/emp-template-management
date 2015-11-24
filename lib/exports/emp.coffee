@@ -137,6 +137,9 @@ module.exports =
   EMP_DEFAULT_LUA_TEMP: "default.lua"
   EMP_DEFAULT_LOGO: "images/logo/logo_s.png"
 
+  # 代码全部目录
+  EMP_ALL_PACKAGE: "ALL"
+  EMP_ALL_TYPE: "ALL"
 
   # 代码根目录
   EMP_DEFAULT_PACKAGE: "default"

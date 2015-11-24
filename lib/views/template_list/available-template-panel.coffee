@@ -8,6 +8,7 @@ logo_image_big_size = '156px'
 fs = require 'fs'
 path = require 'path'
 
+# package detail 里的内容 (package 里的模板集)
 module.exports =
 class AvailableTemplatePanel extends View
   # Subscriber.includeInto(this)

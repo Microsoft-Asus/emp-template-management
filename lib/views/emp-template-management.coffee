@@ -25,7 +25,7 @@ class EmpTemplateManagement
     @do_initial()
     # 以 Package 为单位合并所有的模板 UI, 生成公共的 Css 文件
     @initialize_common_ui_css_merge()
-    # @check_ui_snippet_link()
+    @check_ui_snippet_link()
 
   do_initial: ->
     # if !templates_store_path = atom.project.templates_path
@@ -315,10 +315,10 @@ class EmpTemplateManagement
     pack_snippet_src_path = path.join snippet_src_path, 'snippets'
     pack_path = emp.get_pack_path()
     pack_snippet_dest_path = path.join pack_path, 'snippets'
-    # console.log pack_snippet_src_path
-    # console.log pack_snippet_dest_path
+    console.log pack_snippet_src_path
+    console.log pack_snippet_dest_path
     # console.log "----------+++++++++++++ "
-    # console.log fs.existsSync pack_snippet_dest_path
+    console.log fs.existsSync pack_snippet_dest_path
 
     if fs.existsSync pack_snippet_dest_path
       fs.lstat pack_snippet_dest_path, (err, stats) =>

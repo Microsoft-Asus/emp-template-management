@@ -8,6 +8,7 @@ logo_image_big_size = '156px'
 
 AvailableTemplatePanel = require './available-template-panel'
 
+# package 下的 type 集合, 该集合下位 template 的具体内容
 module.exports =
 class AvailableTypePanel extends View
   # Subscriber.includeInto(this)
