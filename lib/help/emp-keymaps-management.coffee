@@ -12,14 +12,15 @@ dialog = remote.require 'dialog'
 fs_plus = require 'fs-plus'
 fuzzaldrin = require 'fuzzaldrin'
 
-setting_pack_main_path = atom.packages.activePackages["settings-view"].mainModulePath
-setting_pack_dir = path.dirname setting_pack_main_path
-PackageManager =  require path.join(setting_pack_dir, 'package-manager')
-{ownerFromRepository, packageComparatorAscending} =  require path.join(setting_pack_dir, 'utils')
-List =  require path.join(setting_pack_dir, 'list')
-ListView =  require path.join(setting_pack_dir, 'list-view')
-PackageView =  require './package-view'
-PackageKeymapsView =  require './package-keymaps-view'
+setting_pack_main_path = ''
+setting_pack_dir = ''
+PackageManager =  ''
+ownerFromRepository = ''
+packageComparatorAscending = ''
+List = ''
+ListView = ''
+PackageView = ''
+PackageKeymapsView = ''
 
 module.exports =
 class EmpKeymapsManView extends ScrollView
@@ -45,6 +46,16 @@ class EmpKeymapsManView extends ScrollView
 
   initialize: ({@uri}={}) ->
     super
+
+    setting_pack_main_path = atom.packages.activePackages["settings-view"].mainModulePath
+    setting_pack_dir = path.dirname setting_pack_main_path
+    PackageManager =  require path.join(setting_pack_dir, 'package-manager')
+    {ownerFromRepository, packageComparatorAscending} =  require path.join(setting_pack_dir, 'utils')
+    List =  require path.join(setting_pack_dir, 'list')
+    ListView =  require path.join(setting_pack_dir, 'list-view')
+    PackageView =  require './package-view'
+    PackageKeymapsView =  require './package-keymaps-view'
+
     @package_manager = new PackageManager()
 
     @keymaps_view = new PackageKeymapsView()

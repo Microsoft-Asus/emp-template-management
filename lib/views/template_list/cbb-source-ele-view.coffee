@@ -3,6 +3,7 @@ emp = require '../../exports/emp'
 
 global_callback = null
 
+# cbb resource 的子项
 module.exports =
 class CbbSourceElementPanel extends View
 

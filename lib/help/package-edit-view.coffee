@@ -12,7 +12,6 @@ class EditPackageView extends View
   insert_src_view: {}
   # insert_css_view:{}
   insert_lua_view: {}
-
   @content: ()->
 
     @div outlet:'cbb_detail_div', class:'cbb-detail-view overlay from-top', =>

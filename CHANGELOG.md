@@ -1,3 +1,11 @@
+![EMP](https://raw.githubusercontent.com/wiki/RYTong/emp-debugger/images/emp.png)
+
+# Emp Template Management Package Change Log
+## 0.2.2
+1. 添加 CBB Tool Bar 搜索功能
+2. 优化 CBB TOOl, 现在给以为 tab 配置为所有模板
+3. 适配 Atom Ver1.2
+
 ## 0.2.0
 1. 添加 Keymaps 管理, 位置为 EMP/Help/Key Bindings.目前只能修改用户安装的 package 中的热键.
 2. 重定义 CBB 使用流程,现在CSS 样式使用,统一修改一个文件,有开发人员来控制版本与合并.

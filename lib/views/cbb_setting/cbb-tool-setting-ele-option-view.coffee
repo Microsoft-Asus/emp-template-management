@@ -1,7 +1,9 @@
 {$, $$, View} = require 'atom-space-pen-views'
 emp = require '../../exports/emp'
-default_select_pack = emp.EMP_DEFAULT_PACKAGE
-default_select_type = emp.EMP_DEFAULT_TYPE
+default_select_pack = emp.EMP_ALL_PACKAGE
+default_select_type = emp.EMP_ALL_TYPE
+# default_select_pack = emp.EMP_DEFAULT_PACKAGE
+# default_select_type = emp.EMP_DEFAULT_TYPE
 
 module.exports =
 class CbbToolSettingOptionView extends View
@@ -33,29 +35,43 @@ class CbbToolSettingOptionView extends View
 
     @pack_select.change (event) =>
       tmp_name = @pack_select.val()
-      tmp_obj = @packs[tmp_name]
-      type_list = tmp_obj.get_type()
       @type_select.empty()
-      for tmp_type in type_list
-        if tmp_type is @default_pack
-          @type_select.append @new_selec_option(tmp_type)
-        else
-          @type_select.append @new_option(tmp_type)
+      if tmp_name is default_select_pack
+        @type_select.append @new_selec_option(default_select_type)
+      else
+        tmp_obj = @packs[tmp_name]
+        type_list = tmp_obj.get_type()
+        for tmp_type in type_list
+          if tmp_type is @default_type
+            @type_select.append @new_selec_option(tmp_type)
+          else
+            @type_select.append @new_option(tmp_type)
 
     @pack_select.empty()
+
+    type_list = []
+
+    if @default_pack is default_select_pack
+      @pack_select.append @new_selec_option(default_select_pack)
+    else
+      @pack_select.append @new_option(default_select_pack)
+      tmp_pack = @packs[@default_pack]
+      # console.log tmp_pack
+      if tmp_pack
+        # tmp_pack = @packs[default_select_pack]
+        type_list = tmp_pack.get_type()
+
     for name, obj of @packs
       if name is @default_pack
         @pack_select.append @new_selec_option(name)
       else
         @pack_select.append @new_option(name)
 
-    tmp_pack = @packs[@default_pack]
-    # console.log tmp_pack
-    if !tmp_pack
-      tmp_pack = @packs[default_select_pack]
-
-    type_list = tmp_pack.get_type()
     @type_select.empty()
+    if @default_type is default_select_type
+      @type_select.append @new_selec_option(default_select_type)
+    else
+      @type_select.append @new_option(default_select_type)
     for tmp_type in type_list
       if tmp_type is @default_type
         @type_select.append @new_selec_option(tmp_type)
