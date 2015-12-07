@@ -62,7 +62,6 @@ module.exports =
   #     order: 1
 
 
-
   activate: (state)->
     # console.log "emp active~:#{state}"
     # provider.loadCompletions()
@@ -83,11 +82,12 @@ module.exports =
         if uri.startsWith emp.EMP_KEYMAP_MAN
           create_keymap_man({uri})
 
-    snippets = require atom.packages.activePackages.snippets.mainModulePath
+
     atom.commands.add "atom-workspace",
       "emp-template-management:temp-management": -> atom.workspace.open(default_uri)
       "emp-template-management:snippets-management": -> atom.workspace.open(default_uri+"/"+emp.EMP_SHOW_UI_LIB)
       "emp-template-management:reload-snippets": ->
+        snippets = require atom.packages.activePackages.snippets.mainModulePath
         snippets.loadAll()
         emp.show_info "刷新 Snippets 成功!"
       "emp-template-management:set-keymaps": ->
