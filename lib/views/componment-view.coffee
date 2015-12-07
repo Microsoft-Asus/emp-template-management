@@ -137,8 +137,8 @@ module.exports = class EmpDebugAdpPackageView extends View
                 tempView = new ComponmentElementView(obj, this, pack_name)
                 @list.append tempView
         else
-          pack = @cbb_management.get_pacakge key
-          # console.log pack
+          pack_obj = @cbb_management.get_pacakge key
+          # console.log pack_obj
           if pack_obj
             for tmp_type in val
               # 判断是否为显示全部类型

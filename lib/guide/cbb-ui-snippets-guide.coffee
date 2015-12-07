@@ -61,11 +61,11 @@ class ErtUiGuide
     @cbb_html_path = path.join __dirname, cbb_guide_html_file
 
     @templates_path = atom.project.templates_path
-    md_path = atom.packages.activePackages["markdown-preview"].mainModulePath
-    md_base_dir = path.dirname md_path
-    reder_path = path.join md_base_dir, 'renderer'
-    @md_preview = require atom.packages.activePackages["markdown-preview"].mainModulePath
-    @md_renderer = require reder_path
+    # md_path = atom.packages.activePackages["markdown-preview"].mainModulePath
+    # md_base_dir = path.dirname md_path
+    # reder_path = path.join md_base_dir, 'renderer'
+    # @md_preview = require atom.packages.activePackages["markdown-preview"].mainModulePath
+    # @md_renderer = require reder_path
 
     html_top_path = path.join __dirname , html_top
     html_bottom_path = path.join __dirname , html_bottom
@@ -175,6 +175,8 @@ class ErtUiGuide
         @gen_html(html_file, re_content, html_title)
         open(@ui_html_file)
     else
+      if !@md_preview
+        @md_preview = require atom.packages.activePackages["markdown-preview"].mainModulePath
       if fs.existsSync md_file
         @md_preview.previewFile(@new_target(md_file))
       else
@@ -313,7 +315,7 @@ class ErtUiGuide
         type_obj[default_val] = {}
     else
       type_obj[default_val] = {}
-      
+
     # 删除文件中类型列表,为下面的循环做准备
     delete snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
     for tmp_source, tmp_objs of snippet_obj
