@@ -306,42 +306,47 @@ class EmpTemplateManagement
 
 
   check_ui_snippet_link: ->
-    snippet_src_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
-    # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
-    unless snippet_src_path
-      snippet_src_path = emp.get_default_snippet_path()
-      atom.config.set(emp.EMP_APP_STORE_UI_PATH, snippet_src_path)
+    try
+      snippet_src_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+      # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+      unless snippet_src_path
+        snippet_src_path = emp.get_default_snippet_path()
+        atom.config.set(emp.EMP_APP_STORE_UI_PATH, snippet_src_path)
 
-    pack_snippet_src_path = path.join snippet_src_path, 'snippets'
-    pack_path = emp.get_pack_path()
-    pack_snippet_dest_path = path.join pack_path, 'snippets'
-    console.log pack_snippet_src_path
-    console.log pack_snippet_dest_path
-    # console.log "----------+++++++++++++ "
-    console.log fs.existsSync pack_snippet_dest_path
+      pack_snippet_src_path = path.join snippet_src_path, 'snippets'
+      pack_path = emp.get_pack_path()
+      pack_snippet_dest_path = path.join pack_path, 'snippets'
+      console.log pack_snippet_src_path
+      console.log pack_snippet_dest_path
+      # console.log "----------+++++++++++++ "
+      console.log fs.existsSync pack_snippet_dest_path
 
-    if fs.existsSync pack_snippet_dest_path
-      fs.lstat pack_snippet_dest_path, (err, stats) =>
-        if stats.isSymbolicLink()
-          fs.unlinkSync pack_snippet_dest_path
-        else
-          fs_plus.removeSync(pack_snippet_dest_path)
+      if fs.existsSync pack_snippet_dest_path
+        fs.lstat pack_snippet_dest_path, (err, stats) =>
+          if stats.isSymbolicLink()
+            fs.unlinkSync pack_snippet_dest_path
+          else
+            fs_plus.removeSync(pack_snippet_dest_path)
 
+          fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
+            if err
+              console.error err
+              fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
+            snippets = require atom.packages.activePackages.snippets.mainModulePath
+            snippets.loadAll()
+      else
         fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
           if err
             console.error err
-            fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
+            #  ---- comment this !-----
+            if !fs.existsSync pack_snippet_dest_path
+              fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
+
           snippets = require atom.packages.activePackages.snippets.mainModulePath
           snippets.loadAll()
-    else
-      fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
-        if err
-          console.error err
-          fs_plus.copySync pack_snippet_src_path, pack_snippet_dest_path
-
-        snippets = require atom.packages.activePackages.snippets.mainModulePath
-        snippets.loadAll()
-
+    catch err
+      console.info "create snippet symlink error !"
+      console.error err
   # merge_package1: (fa_path, tmp_obj, tmp_entries) ->
   #
   #   templates = tmp_obj.templates

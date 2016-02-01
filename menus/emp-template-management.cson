@@ -1,10 +1,14 @@
 # See https://atom.io/docs/latest/creating-a-package#menus for more details
 'context-menu':
   'atom-text-editor': [
+    {'type': 'separator'}
     {
-      'label': 'Toggle emp-template-management'
-      'command': 'emp-template-management:toggle'
+      'label': 'Emp '
+      'submenu': [
+        {'label': 'Setting Template Management', 'command': 'emp-template-management:temp-management'}
+       ]
     }
+    {'type': 'separator'}
   ]
 'menu': [
   {
