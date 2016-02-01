@@ -2,6 +2,9 @@
 
 # Emp Template Management Package Change Log
 
+## 0.2.4
+1. 为开始的 snippet 目录初始化,创建 try catch. 现在不会因为错误的发生而阻断插件的运行.
+
 ## 0.2.3
 1. 适配 Atom Ver1.2
 2. 修改 CBB 面板除全部显示外, 其他配置不显示的问题.
