@@ -2,6 +2,9 @@
 
 # Emp Template Management Package Change Log
 
+#0.2.5
+1. 插件启动时, 若 snippet 链接为假性链接,则删除该链接,避免后续出错.
+
 ## 0.2.4
 1. 为开始的 snippet 目录初始化,创建 try catch. 现在不会因为错误的发生而阻断插件的运行.
 
