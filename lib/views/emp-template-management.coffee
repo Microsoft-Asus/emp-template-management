@@ -319,7 +319,7 @@ class EmpTemplateManagement
       console.log pack_snippet_src_path
       console.log pack_snippet_dest_path
       # console.log "----------+++++++++++++ "
-      console.log fs.existsSync pack_snippet_dest_path
+      # console.log fs.existsSync pack_snippet_dest_path
 
       if fs.existsSync pack_snippet_dest_path
         fs.lstat pack_snippet_dest_path, (err, stats) =>
@@ -335,6 +335,8 @@ class EmpTemplateManagement
             snippets = require atom.packages.activePackages.snippets.mainModulePath
             snippets.loadAll()
       else
+        # console.log pack_snippet_dest_path
+        fs_plus.removeSync pack_snippet_dest_path
         fs.symlink pack_snippet_src_path, pack_snippet_dest_path, 'dir', (err)=>
           if err
             console.error err
@@ -347,57 +349,3 @@ class EmpTemplateManagement
     catch err
       console.info "create snippet symlink error !"
       console.error err
-  # merge_package1: (fa_path, tmp_obj, tmp_entries) ->
-  #
-  #   templates = tmp_obj.templates
-  #   ori_templates = @get_pacakges_list()
-  #   # @templates_obj
-  #   templates.forEach (pack) ->
-  #     if ori_templates.indexOf pack
-  #       console.log "do"
-  #
-  #     else
-  #       @templates_obj.templates.push pack
-  #       @templates_obj[pack] = templates[pack]
-  #       # @packages[pack] = new CbbPackage templates_store_path,  templates[pack]
-  #       # @packages[pack].refresh()
-  #       @copy_pack(templates[pack], fa_path, tmp_entries)
-  #       @packages[pack] = new CbbPackage templates_store_path,  templates[pack]
-  #
-  #
-  # copy_pack: (pack_obj, fa_path, tmp_entries) ->
-  #   pack_path = path.join templates_store_path, pack_obj.name
-  #   emp.mkdir_sync pack_path
-  #   fa_path = path.join fa_path, pack_obj.name
-  #   tmp_key = path.join fa_path, emp.EMP_TEMPLATE_JSON
-  #
-  #   store_path = path.join pack_path, emp.EMP_TEMPLATE_JSON
-  #
-  #
-  #
-  #   for tmp_type in pack_obj.type
-  #     emp.mkdir_sync path.join(pack_path, tmp_type)
-
-
-  #
-  # merge_file: (fa_path, tmp_obj, tmp_entries) ->
-  #
-  #   if fa_path is emp.EMP_TEMPLATES_PATH
-  #     console.log " ----"
-  #   else
-  #
-  #
-  #
-  #
-  #   templates = tmp_obj.templates
-  #   ori_templates = @get_pacakges_list()
-
-
-
-    #
-    # @packages[cbb_package.name] = cbb_package
-    # @templates_obj.templates.push cbb_package.name
-    # @templates_obj[cbb_package.name] = cbb_package.get_info()
-
-
-    # return tool_list #[count]
