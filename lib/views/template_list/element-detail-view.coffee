@@ -5,7 +5,7 @@ emp = require '../../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 CbbEle = require '../../util/emp_cbb_element'
-AvailableTypePanel = require './available-type-panel'
+# AvailableTypePanel = require './available-type-panel'
 CbbSrcEleView = require './cbb-source-ele-view'
 fs = require 'fs'
 path = require 'path'
@@ -27,7 +27,7 @@ class ElementDetailPanel extends View
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
             @text 'Edit Snippet'
-            @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
+            # @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
 
           @div class: 'section-body', =>
             @div class: 'control-group', =>

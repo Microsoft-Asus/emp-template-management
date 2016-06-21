@@ -27,7 +27,7 @@ class InstalledTemplatePanel extends ScrollView
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
             @text 'Add Packages'
-            @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
+            # @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
           # @div class: 'section-body', =>
           #   @div class: 'control-group', =>
           #     @div class: 'controls', =>

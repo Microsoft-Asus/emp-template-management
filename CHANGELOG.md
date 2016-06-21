@@ -2,6 +2,12 @@
 
 # Emp Template Management Package Change Log
 
+#0.2.6
+修复 bug:
+1. CBB Panel type 不能选择为 All.(已修改)
+2. CBB 组件不能为空,否则使用时报错.(已修改)
+3. UI Snippet 创建时若为新 Type 则报错.
+
 #0.2.5
 1. 插件启动时, 若 snippet 链接为假性链接,则删除该链接,避免后续出错.
 

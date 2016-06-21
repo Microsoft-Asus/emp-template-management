@@ -27,7 +27,7 @@ class AvailablePackageView extends View
           @span class: 'icon icon-versions'
       @div class: 'body', =>
         @h4 class: 'card-name', =>
-          @a outlet: 'packageName', @package_obj.name
+          @a outlet: 'packageName', click:'show_detail', @package_obj.name
         @span outlet: 'packageDescription', class: 'package-description', tmp_desc
 
       @div class: 'meta', =>

@@ -25,7 +25,7 @@ class PackageDetailPanel extends View
           @section outlet:'package_list', class: 'sub-section installed-packages', =>
             @div class: 'section-heading icon icon-package', =>
               @text "Search Templates: "
-              @span outlet: 'total_temp', class:'section-heading-count', ' (…)'
+              # @span outlet: 'total_temp', class:'section-heading-count', ' (…)'
             @div class: 'container package-container', =>
               # @div class: 'alert alert-info loading-area icon icon-hourglass', "No CBB Element"
               @subview "temp_search", new TextEditorView(mini: true,attributes: {id: 'temp_search', type: 'string'},  placeholderText: ' Template Name')
@@ -60,7 +60,8 @@ class PackageDetailPanel extends View
     # console.log "loadTemplates1"
     @section_container.empty()
     type_list = @pack.type_list
-    for tmp_type in @pack.type_list
+    # console.log type_list
+    for tmp_type in type_list
       tmp_type_panel = new AvailableTypePanel(tmp_type, @pack)
       @section_container.append tmp_type_panel
 

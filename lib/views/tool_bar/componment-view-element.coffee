@@ -206,5 +206,8 @@ class ComponmentEleView extends View
   do_click_panel: ->
     # console.log @com
     @detail_view = new CbbDetailView(@com, @pack_name)
-    @detail_view.show()
-    @fa_view.store_ele_detail(@detail_view)
+    if @detail_view.bAlive
+      @detail_view.show()
+      @fa_view.store_ele_detail(@detail_view)
+    else
+      @detail_view.destroy()

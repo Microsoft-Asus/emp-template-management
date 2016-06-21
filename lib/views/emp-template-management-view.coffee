@@ -68,6 +68,8 @@ class EmpTmpManagementView extends ScrollView
     @addCorePanel emp.EMP_UI_LIB, 'plus', -> new CbbAddUiSnippetsView("7")
     @addCorePanel emp.EMP_CONFIG, 'gear', -> new CbbConfigView("8")
 
+    # @addCorePanel emp.EMP_NEW_CMI, 'newcmi', -> new NewTemplate("9")
+
     # @addCorePanel emp.EMP_MANAGE, 'settings', -> new GeneralPanel("5")
 
     @addOtherPanel emp.EMP_CCB_PACK_DETAIL, -> new PackageDetailView()

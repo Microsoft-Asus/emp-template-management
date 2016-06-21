@@ -20,7 +20,7 @@ class InstalledTemplatePanel extends ScrollView
         @div class: 'section-container', =>
           @div class: 'section-heading icon icon-package', =>
             @text 'Add UI Snippets'
-            @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
+            # @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
 
           # # 包图标
           # @div class: 'section-body', =>
@@ -237,7 +237,7 @@ class InstalledTemplatePanel extends ScrollView
       type_list = @get_emp_params(snippet_pack)
       console.log type_list
       for tmp_key in type_list
-        tmp_option = @new_option(tmp_option_val)
+        tmp_option = @new_option(tmp_key)
         @snippet_type_sel.append tmp_option
 
     @snippet_type.getModel().getBuffer().onDidStopChanging =>
@@ -407,11 +407,11 @@ class InstalledTemplatePanel extends ScrollView
           snippet_obj = CSON.parseCSONFile(file_name)
       @temp_frame[snippet_pack] = snippet_obj
 
-    console.log snippet_obj
-    console.log snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
+    # console.log snippet_obj
+    # console.log snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
     if emp_params = snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
       tmp_re = emp_params[emp.DEFAULT_SNIPPET_TYPE_KEY]
-      if tmp_re.length >0
+      if tmp_re?.length >0
         tmp_re
       else
         [default_val]
@@ -433,11 +433,11 @@ class InstalledTemplatePanel extends ScrollView
     console.log " create snippet"
     unless snippet_pack = @snippet_pack.getText()?.trim()
       snippet_pack = @snippet_pack_sel.val()
-    console.log snippet_pack
+    # console.log snippet_pack
 
     unless snippet_type = @snippet_type.getText()?.trim()
       snippet_type = @snippet_type_sel.val()
-    console.log snippet_type
+    # console.log snippet_type
 
     if !snippet_name = @snippet_name.getText()?.trim()
       emp.show_error "模板名称不能为空!"
@@ -457,7 +457,7 @@ class InstalledTemplatePanel extends ScrollView
 
     snippet_body = @snippet_body.context.value
     # snippet_css = @snippet_css.context.value
-    # console.log snippet_body
+    console.log snippet_body
     snippet_obj = null
     file_name = path.join @snippet_sotre_path, snippet_pack + emp.DEFAULT_SNIPPET_FILE_EXT
     if !snippet_obj = @temp_frame[snippet_pack]
@@ -485,7 +485,10 @@ class InstalledTemplatePanel extends ScrollView
       # @snippet_img_path
 
     # console.log file_name
-    snippet_obj[snippet_source]?[snippet_name] = {
+    # console.log snippet_source
+    if !snippet_obj[snippet_source]
+      snippet_obj[snippet_source] = {}
+    snippet_obj[snippet_source][snippet_name] = {
       'prefix': snippet_tab
       'body':snippet_body
       'desc':snippet_info
@@ -493,6 +496,8 @@ class InstalledTemplatePanel extends ScrollView
       'img':img_list
       # 'css': snippet_css
     }
+    # console.log snippet_obj
+
 
     # 更新类型列表
     tmp_params = snippet_obj[emp.DEFAULT_SNIPPET_TYPE]
@@ -512,6 +517,7 @@ class InstalledTemplatePanel extends ScrollView
       snippet_cson_str = CSON.stringify(snippet_obj, null, '\t')
 
     # console.log file_name
+    # console.log snippet_cson_str
     fs.writeFile(file_name, snippet_cson_str, (error) ->
         if error
           console.log error
@@ -536,7 +542,7 @@ class InstalledTemplatePanel extends ScrollView
     f_con = fs.readFileSync f_path
     # force copy
     re_name = @get_new_name(to_path, f_name)
-    console.log re_name
+    # console.log re_name
     re_file = path.join to_path, re_name
     re_file_rel = path.join to_path_rel, re_name
     fs.writeFileSync re_file, f_con  #unless fs.existsSync(re_file)#, 'utf8'
@@ -549,7 +555,7 @@ class InstalledTemplatePanel extends ScrollView
     f_name
 
   check_exist_img: (to_path, f_name, ext_name) ->
-    console.log to_path
+    # console.log to_path
     re_file = path.join to_path, f_name
     if fs.existsSync re_file
       f_name = emp.get_random(1000000)+ext_name
@@ -565,11 +571,11 @@ class InstalledTemplatePanel extends ScrollView
 
     unless snippet_pack = @snippet_pack.getText()?.trim()
       snippet_pack = @snippet_pack_sel.val()
-    console.log snippet_pack
+    # console.log snippet_pack
 
     unless snippet_type = @snippet_type.getText()?.trim()
       snippet_type = @snippet_type_sel.val()
-    console.log snippet_type
+    # console.log snippet_type
 
     if !snippet_name = @snippet_name.getText()?.trim()
       emp.show_error "模板名称不能为空!"
@@ -589,7 +595,7 @@ class InstalledTemplatePanel extends ScrollView
 
     snippet_body = @snippet_body.context.value
     # snippet_css = @snippet_css.context.value
-    console.log snippet_body
+    # console.log snippet_body
 
     if snippet_pack isnt @edit_pack
       @delete_element()
