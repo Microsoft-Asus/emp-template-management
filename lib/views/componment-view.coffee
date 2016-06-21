@@ -12,7 +12,6 @@ ComponmentElementView = require './tool_bar/componment-view-element'
 # CBB 边栏
 module.exports = class EmpDebugAdpPackageView extends View
 
-
   @content: ->
     @div oulet:'cbb_tool_view', class:'cbb-view-resizer tool-panel', 'data-show-on-right-side': atom.config.get('emp-template-management.showOnRightSide'), =>
       @div class:'cbb-view-scroller', =>
@@ -138,14 +137,14 @@ module.exports = class EmpDebugAdpPackageView extends View
                 @list.append tempView
         else
           pack_obj = @cbb_management.get_pacakge key
-          # console.log pack_obj
           if pack_obj
             for tmp_type in val
               # 判断是否为显示全部类型
               if tmp_type is emp.EMP_ALL_TYPE
                 tmp_type_list = pack_obj.type_list
                 for tmp_type_ele in tmp_type_list
-                  for  name, obj of  pack_obj.get_element(tmp_type)
+                  ele_list = pack_obj.get_element(tmp_type_ele)
+                  for  name, obj of  ele_list
                     tempView = new ComponmentElementView(obj, this, key)
                     @list.append tempView
               else

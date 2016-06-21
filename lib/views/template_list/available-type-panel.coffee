@@ -20,7 +20,7 @@ class AvailableTypePanel extends View
       #   @span outlet: 'templateCount', class:'section-heading-count', ' (…)'
       @div class: 'section-heading icon icon-package', =>
         @text "Packages Type: #{type}"
-        @span outlet: 'totalPackages', class:'section-heading-count', ' (…)'
+        @span outlet: 'totalTypes', class:'section-heading-count', " (0)"
 
       @div outlet: 'template_element', class: 'container package-container', =>
         @div class: 'alert alert-info loading-area icon icon-hourglass', "No CBB Element"
@@ -41,6 +41,7 @@ class AvailableTypePanel extends View
     if ele_list = @pack.get_element(@type)
       @template_element.empty()
       # console.log ele_list
+      # @totalTypes.setText(ele_list.length)
       for ele, ele_obj of ele_list
         # console.log ele_obj
         ele_panel = new AvailableTemplatePanel(ele_obj, this, @pack, @type)

@@ -19,6 +19,7 @@ class CbbDetailView extends View
   insert_src_view: {}
   # insert_css_view:{}
   insert_lua_view: {}
+  bAlive:true
 
   @content: (@ele_obj)->
     temp_path = atom.project.templates_path
@@ -106,8 +107,8 @@ class CbbDetailView extends View
         # @button "test", class: "createSnippetButton btn-warning btn btn-primary", click:'do_test'
 
   initialize: (@com, @pack_name) ->
-    console.log @com
-    console.log @pack_name
+    # console.log @com
+    # console.log @pack_name
     @cbb_management = atom.project.cbb_management
     @templates_path = atom.project.templates_path
     @css_com_file = @cbb_management.get_common_css(@pack_name)
@@ -118,6 +119,11 @@ class CbbDetailView extends View
     @ele_path = emp.get_sep_path(@com.element_path)
 
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
+    console.log @ele_json
+    if !fs.existsSync(@ele_json)
+      @bAlive=false
+      emp.show_error("该模板不存在!")
+      return
 
     ele_json_data = fs.readFileSync @ele_json, 'utf-8'
     @snippet_obj = JSON.parse ele_json_data

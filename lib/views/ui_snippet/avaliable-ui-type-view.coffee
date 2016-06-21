@@ -6,14 +6,14 @@ fs = require 'fs'
 UiSnippetElementView = require './element-ui-snippet-view'
 
 module.exports =
-class AvailableTypePanel extends View
+class AvailableTypeView extends View
 
   @content: (snippet_source, snippet_objs) ->
     # snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
     @section outlet:'package_list', class: 'sub-section installed-packages', =>
       @div class: 'section-heading icon icon-package', =>
         @text "Snippets Type: #{snippet_source}"
-        @span outlet: 'total_snippets', class:'section-heading-count', ' (…)'
+        # @span outlet: 'total_snippets', class:'section-heading-count', ' (…)'
 
       @div outlet: 'no_snippets_info', class: 'container package-container', =>
         @div class: 'alert alert-info loading-area icon icon-hourglass', "No UI Snippets"

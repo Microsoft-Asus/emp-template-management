@@ -34,7 +34,7 @@ module.exports =
 
   EMP_DEFAULT_SNIPPETS:["emp-lua.cson", "eui.cson"]
 
-  EMP_ALL_TYPE : "All Type"
+  # EMP_ALL_TYPE : "All Type"
 
 
 
@@ -101,6 +101,7 @@ module.exports =
   EMP_UI_LIB:'Add UI Snippets'
   EMP_EXI:'Export/Inport'
   EMP_CONFIG:'Config'
+  EMP_NEW_CMI:'New Template'
 
   EMP_SNIPPET_DETAIL:'show_snippet_detail'
 

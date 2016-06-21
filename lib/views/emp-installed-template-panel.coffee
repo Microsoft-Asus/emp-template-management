@@ -30,7 +30,7 @@ class InstalledTemplatePanel extends View
           @section outlet:'package_list', class: 'sub-section installed-packages', =>
             @h3 class: 'sub-section-heading icon icon-package', =>
               @text 'Installed Packages'
-              @span outlet: 'templateCount', class:'section-heading-count', ' (…)'
+              # @span outlet: 'templateCount', class:'section-heading-count', ' (…)'
             @div outlet: 'templatePackages', class: 'container package-container', =>
               @div class: 'alert alert-info loading-area icon icon-hourglass', "Loading packages…"
 
