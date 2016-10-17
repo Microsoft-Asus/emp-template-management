@@ -48,7 +48,7 @@ class EmpTemplateManagement
         @initialize_default()
     catch err
       console.error err
-      emp.show_error "导入插件描述文件失败,请检查描述文件格式是否正确.(package.json)"
+      emp.show_error "导入插件描述文件失败,请检查描述文件格式是否正确.(template.json)"
       @initialize_default()
     # console.log @templates_obj
 
@@ -71,7 +71,8 @@ class EmpTemplateManagement
     @packages[emp.EMP_DEFAULT_PACKAGE] = @default_package
     for tmp_package in package_list
       unless tmp_package is emp.EMP_DEFAULT_PACKAGE
-        @packages[tmp_package] = new CbbPackage templates_store_path,  @templates_obj[tmp_package]
+        unless !oTmpPackage = @templates_obj[tmp_package]
+          @packages[tmp_package] = new CbbPackage templates_store_path,  oTmpPackage
 
 
     # temp_str = JSON.stringify @default_package
@@ -150,6 +151,17 @@ class EmpTemplateManagement
     tmp_dir = path.join templates_store_path, name
     fs_plus.removeSync(tmp_dir) unless !fs.existsSync tmp_dir
     @delete_package(name)
+
+  #校验 CBB 内容,并修正错误的路径
+  check_cbb_list: (sPackName)->
+    console.log sPackName
+    console.log @templates_obj
+    oCheckPack = @packages[sPackName]
+    console.log oCheckPack
+
+    console.log @templates_obj[sPackName]
+    oCheckPack.check_path()
+
 
   refresh: ->
     temp_str = JSON.stringify @templates_obj, null, '\t'

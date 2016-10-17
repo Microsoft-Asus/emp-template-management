@@ -7,7 +7,7 @@ fs = require 'fs'
 module.exports =
 class UiSnippetElementView extends View
 
-  @content: (name, {body, css, prefix}=tmp_obj, snippet_source, snippet_pack) ->
+  @content: (name, {body, css, prefix}, snippet_source, snippet_pack) ->
     name ?= ''
     prefix ?= ''
     body = body?.replace(/\t/g, '\\t').replace(/\n/g, '\\n') ? ''

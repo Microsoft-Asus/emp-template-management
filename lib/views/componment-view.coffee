@@ -104,7 +104,7 @@ module.exports = class EmpDebugAdpPackageView extends View
     if temp_list
       if temp_list.length > 0
         for tmp_obj in temp_list
-          tempView = new ComponmentElementView(tmp_obj.obj, this, tmp_obj.pack)
+          tempView = new ComponmentElementView(tmp_obj.obj, this, tmp_obj.pack, tmp_obj.type)
           @query_ol_list.append tempView
       else
         tempView = $$ ->
@@ -133,10 +133,11 @@ module.exports = class EmpDebugAdpPackageView extends View
             tmp_type_list = pack_obj.type_list
             for tmp_type in tmp_type_list
               for name, obj of  pack_obj.get_element(tmp_type)
-                tempView = new ComponmentElementView(obj, this, pack_name)
+                tempView = new ComponmentElementView(obj, this, pack_name, tmp_type)
                 @list.append tempView
         else
           pack_obj = @cbb_management.get_pacakge key
+          console.log pack_obj
           if pack_obj
             for tmp_type in val
               # 判断是否为显示全部类型
@@ -145,15 +146,15 @@ module.exports = class EmpDebugAdpPackageView extends View
                 for tmp_type_ele in tmp_type_list
                   ele_list = pack_obj.get_element(tmp_type_ele)
                   for  name, obj of  ele_list
-                    tempView = new ComponmentElementView(obj, this, key)
+                    tempView = new ComponmentElementView(obj, this, key, tmp_type_ele)
                     @list.append tempView
               else
                 ele_list = pack_obj.get_element tmp_type
                 # console.log ele_list
                 # console.log templates_obj.templates?[emp.EMP_DEFAULT_TYPE]
-                if tmp_type
+                if ele_list
                   for name, obj of ele_list
-                    tempView = new ComponmentElementView(obj, this, key)
+                    tempView = new ComponmentElementView(obj, this, key, tmp_type)
                     @list.append tempView
     else
         tempView = $$ ->

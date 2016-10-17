@@ -9,7 +9,7 @@ fs = require 'fs'
 
 
 module.exports =
-class AvailablePackageView extends View
+class AvailableUISnippetView extends View
 
   @content: (fa_view, snippet_path, snippet_file) ->
     snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
@@ -31,7 +31,7 @@ class AvailablePackageView extends View
             @button type: 'button', class: 'btn icon icon-repo', click:'show_detail', 'Detail'
 
   initialize: (@fa_view,@snippet_path, @snippet_file) ->
-    @snippet_pack = path.basename snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
+    @snippet_pack = path.basename @snippet_file, emp.DEFAULT_SNIPPET_FILE_EXT
     # @snippet_css_path = path.join __dirname, '../../../css/'
     @cbb_management = atom.project.cbb_management
     # 设置 ui snippet 存储路径
