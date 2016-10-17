@@ -201,3 +201,7 @@ class EmpCbbPackage
     fs_plus.removeSync(tmp_dir) unless !fs.existsSync tmp_dir
     @delete_element(name, type)
     # @delete_package(name)
+
+  check_path: ->
+    console.log "pack check !!"
+    @obj_json

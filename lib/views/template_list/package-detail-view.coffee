@@ -29,6 +29,17 @@ class PackageDetailPanel extends View
             @div class: 'container package-container', =>
               # @div class: 'alert alert-info loading-area icon icon-hourglass', "No CBB Element"
               @subview "temp_search", new TextEditorView(mini: true,attributes: {id: 'temp_search', type: 'string'},  placeholderText: ' Template Name')
+      @section class: 'section', =>
+        @div class: 'section-container', =>
+          @section class: 'sub-section installed-packages', =>
+            @div class: 'section-heading icon icon-package', =>
+              @text "校验组件: "
+              # @span outlet: 'total_temp', class:'section-heading-count', ' (…)'
+            # @div class: 'container package-container', =>
+            #   # @div class: 'alert alert-info loading-area icon icon-hourglass', "No CBB Element"
+            #   # @subview "temp_search", new TextEditorView(mini: true,attributes: {id: 'cbb_check', type: 'string'},  placeholderText: ' Template Name')
+            #   @button class: 'control-btn btn btn-info', click:'do_cbb_check','Check CBB List'
+
         @div outlet:"search_container", style:"display:none;", class: 'section-container', =>
           @section class: 'sub-section installed-packages', =>
             @div class: 'section-heading icon icon-package', =>
@@ -47,7 +58,7 @@ class PackageDetailPanel extends View
     @disposables.add atom.commands.add @temp_search.element, 'core:confirm', =>
       @do_temp_search()
 
-  refresh_detail:(@pack) ->
+  refresh_detail:(@pack={}) ->
     # console.log "do refresh"
     # console.log @pack
     @title.text("#{_.undasherize(_.uncamelcase(@pack.name))}")
@@ -111,3 +122,10 @@ class PackageDetailPanel extends View
 
   new_temp:(tmp_name, tmp_type, tmp_obj) ->
     {name:tmp_name, type:tmp_type, obj:tmp_obj}
+
+
+  do_cbb_check: ()->
+    console.log "do check"
+    # console.log @pack
+    @pack.check_path()
+    # @cbb_management.check_cbb_list(@pack?.name)

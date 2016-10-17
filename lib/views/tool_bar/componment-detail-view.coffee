@@ -132,15 +132,26 @@ class CbbDetailView extends View
     # @css_obj = @snippet_obj.css
     @lua_obj = @snippet_obj.lua
 
-    @html_snippet = @set_con(@html_obj)
+    @html_snippet = ""
+    oReadHtml = @set_con(@html_obj)
+    unless oReadHtml.state
+      @show_content_error()
+      return
 
+    @html_snippet = oReadHtml.con
     @lua_insert_flag = true
     if !@lua_obj
       @lua_div.hide()
       @lua_insert_flag = false
     else
 
-      @lua_snippet = @set_con(@lua_obj)
+      @lua_snippet = ""
+      oReadLua = @set_con(@lua_obj)
+      unless oReadLua.state
+        @show_content_error()
+        return
+
+      @lua_snippet = oReadHtml.con
       if @lua_obj.type isnt emp.EMP_CON_TYPE
         tmp_view = new SniEle(this, @lua_obj.body)
         tmp_name = path.basename tmp_view
@@ -446,19 +457,24 @@ class CbbDetailView extends View
       re_text = head_parser.insert debug_text, @css_com_file_name, "     "
 
   set_con: (tmp_obj) ->
+    oResult = {state:true, con:""}
     if tmp_obj
       if tmp_obj.type is emp.EMP_CON_TYPE
-        return tmp_obj.body
+        oResult.con=tmp_obj.body
       else
         tmp_path = emp.get_sep_path tmp_obj.body
         tmp_path = path.join @templates_path, tmp_path
-        return fs.readFileSync tmp_path, 'utf-8'
-    else
-      return null
+        if fs.existsSync tmp_path
+          oResult.con= fs.readFileSync tmp_path, 'utf-8'
+        else
+          oResult.state = false
+
+    return oResult
   # 在 cbb 界面显示 html 代码
   show_html_detail: ->
     @btn_hide_html.show()
     @btn_show_html.hide()
+
     re_body = new ExampleView(@html_snippet, emp.EMP_HTML_GRAMMAR)
     @snippet_html.append re_body
 
@@ -474,6 +490,9 @@ class CbbDetailView extends View
   show_source_detail: ->
     console.log "show_source_detail"
 
+  show_content_error: ->
+    @bAlive=false
+    emp.show_error("该模板配置错误,请通过编辑修改,或者Template Management 来校验!")
 
   show_alert: (msg) ->
     atom.confirm

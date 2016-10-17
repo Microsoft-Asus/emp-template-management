@@ -1,7 +1,9 @@
+
 {View} = require 'atom-space-pen-views'
 emp = require '../exports/emp'
 remote = require 'remote'
 dialog = remote.require 'dialog'
+fs = require 'fs'
 path = require 'path'
 
 logo_image_size = '48px'
@@ -13,11 +15,13 @@ class AvailablePackageView extends View
   @content: (@fa_view, @package_obj) ->
     # console.log @package_obj
     temp_path = atom.project.templates_path
-    if tmp_logo= @package_obj.logo
-      tmp_logo = emp.get_sep_path tmp_logo
-      tmp_logo = path.join temp_path,tmp_logo
+    if sLogo= @package_obj.logo
+      sLogo = emp.get_sep_path sLogo
+      sLogo = path.join temp_path,sLogo
+      unless fs.existsSync sLogo
+        sLogo= emp.get_default_logo()
     else
-      tmp_logo= emp.get_default_logo()
+      sLogo= emp.get_default_logo()
     unless tmp_desc = @package_obj.desc
       tmp_desc = emp.EMP_DEF_DESC
 
@@ -33,7 +37,7 @@ class AvailablePackageView extends View
       @div class: 'meta', =>
         @div class: 'meta-user', =>
           # @a outlet: 'avatarLink', href: "https://atom.io/users/#{owner}", =>
-          @img outlet: 'logo_img', class: 'avatar', src: "#{tmp_logo}", click:'image_format'  # A transparent gif so there is no "broken border"
+          @img outlet: 'logo_img', class: 'avatar', src: "#{sLogo}", click:'image_format'  # A transparent gif so there is no "broken border"
           # @a outlet: 'loginLink', class: 'author', href: "https://atom.io/users/#{owner}", owner
         @div class: 'meta-controls', =>
           # @div class: 'btn-group', =>
@@ -43,7 +47,9 @@ class AvailablePackageView extends View
             @button type: 'button', class: 'btn icon icon-gear', outlet: 'edit_button', click:'do_edit', 'Edit Pack'
             if @package_obj.name isnt emp.EMP_DEFAULT_PACKAGE
               @button type: 'button', class: 'btn icon icon-trashcan', outlet: 'uninstall_button', click:'do_uninstall', 'Uninstall'
+            # @button type: 'button', class: 'btn icon icon-eye-watch', outlet: 'check_cbb', click:'do_cbb_check', 'Check CBB'
             @button type: 'button', class: 'btn icon icon-repo', outlet: 'detail_utton', click:'show_detail', 'Detail'
+
             # @button type: 'button', class: 'btn status-indicator', tabindex: -1, outlet: 'statusIndicator'
 
   initialize: (@fa_view, @package_obj) ->
@@ -89,6 +95,11 @@ class AvailablePackageView extends View
   do_edit_css: ->
     css_file = @cbb_management.get_common_css(@package_obj.name)
     emp.create_editor(css_file, emp.EMP_GRAMMAR_CSS)
+
+  do_cbb_check: ->
+    console.log "do check"
+    @package_obj.check_path()
+    # @cbb_management.check_cbb_list(@package_obj.name)
 
   show_alert: (replace_con, relative_path, editor) ->
     atom.confirm

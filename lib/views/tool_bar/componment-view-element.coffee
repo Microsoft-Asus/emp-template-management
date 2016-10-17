@@ -14,7 +14,7 @@ path = require 'path'
 
 
 module.exports =
-class ComponmentEleView extends View
+class ComponmentElementView extends View
   # Subscriber.includeInto(this)
   snippets:null
 
@@ -33,7 +33,7 @@ class ComponmentEleView extends View
 # click: 'do_click',
 
 
-  initialize: (@com, @fa_view, @pack_name) ->
+  initialize: (@com, @fa_view, @pack_name, @pack_type) ->
     @templates_path = atom.project.templates_path
     @ele_path = @com.element_path
     @ele_json = path.join @templates_path, @ele_path, emp.EMP_TEMPLATE_JSON
@@ -47,8 +47,8 @@ class ComponmentEleView extends View
     # you know
 
   image_format: ->
-    console.log 'image_format'
-    console.log @logo_img.css('height')
+    # console.log 'image_format'
+    # console.log @logo_img.css('height')
     if @logo_img.css('height') is emp.LOGO_IMAGE_SIZE
       # @logo_img.css('height', logo_image_big_size)
       # @logo_img.css('width', logo_image_big_size)
@@ -205,9 +205,13 @@ class ComponmentEleView extends View
 
   do_click_panel: ->
     # console.log @com
-    @detail_view = new CbbDetailView(@com, @pack_name)
-    if @detail_view.bAlive
-      @detail_view.show()
-      @fa_view.store_ele_detail(@detail_view)
+    # console.log @pack_type
+    if @com.type is @pack_type
+      @detail_view = new CbbDetailView(@com, @pack_name)
+      if @detail_view.bAlive
+        @detail_view.show()
+        @fa_view.store_ele_detail(@detail_view)
+      else
+        @detail_view.destroy()
     else
-      @detail_view.destroy()
+      emp.show_error("该模板配置错误,请通过编辑修改,或者Template Management 来校验!")

@@ -385,6 +385,7 @@ class InstalledTemplatePanel extends ScrollView
               else
                 tmp_option = @new_option(tmp_key)
                 @snippet_type_sel.append tmp_option
+
           else
             tmp_sel_option = @new_option(emp.EMP_NAME_DEFAULT)
             @snippet_pack_sel.append tmp_sel_option
@@ -559,7 +560,7 @@ class InstalledTemplatePanel extends ScrollView
     re_file = path.join to_path, f_name
     if fs.existsSync re_file
       f_name = emp.get_random(1000000)+ext_name
-      check_exist_img(to_path, f_name, ext_name)
+      @check_exist_img(to_path, f_name, ext_name)
     else
       f_name
 
