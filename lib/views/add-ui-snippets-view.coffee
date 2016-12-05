@@ -286,9 +286,11 @@ class InstalledTemplatePanel extends ScrollView
         @snippet_name.setText(@edit_name)
         @snippet_tab.setText(prefix)
         @snippet_scope.setText(@edit_source)
-        for tmp_img in img
-          tmp_path = path.join @snippet_img_path, tmp_img
-          @add_image_detail(tmp_path)
+        # console.log img
+        unless !img
+          for tmp_img in img
+            tmp_path = path.join @snippet_img_path, tmp_img
+            @add_image_detail(tmp_path)
         @snippet_body.context.value = body
         @snippet_desc.context.value = desc
         # @snippet_css.context.value = @edit_css
