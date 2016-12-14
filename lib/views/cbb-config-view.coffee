@@ -109,8 +109,7 @@ class CbbConfigView extends View
       unless fs.existsSync tmp_conf_path
         if @show_exist_path_alert(tmp_conf_path)
           emp.mkdir_sync_safe tmp_conf_path
-        else
-          return
+
       tmp_json = path.join tmp_conf_path, emp.EMP_TEMPLATE_JSON
       unless fs.existsSync tmp_json
         if @show_exist_temp_alert(tmp_conf_path)
@@ -118,8 +117,7 @@ class CbbConfigView extends View
           # console.log @default_store_path
           # console.log tmp_conf_path
           fs_plus.copySync  @default_store_path, tmp_conf_path
-        else
-          return
+
       atom.config.set emp.EMP_TEMPLATES_DEFAULT_KEY, tmp_conf_path
       @cbb_management.do_initialize()
       emp.show_info "修改默认路径成功"

@@ -2,6 +2,11 @@
 
 # Emp Template Management Package Change Log
 
+#0.2.9
+修复 bug
+1. 修改设置配置文件路径时, 在选择不复制之前模板内容,造成的修改取消.
+2. 更改部分逻辑, 现在模板包 default 不再能够修改 name.
+
 #0.2.6
 修复 bug:
 1. CBB Panel type 不能选择为 All.(已修改)

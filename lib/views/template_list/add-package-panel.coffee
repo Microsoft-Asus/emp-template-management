@@ -1,4 +1,4 @@
-{$$, TextEditorView, View} = require 'atom-space-pen-views'
+{$, $$, TextEditorView, View} = require 'atom-space-pen-views'
 remote = require 'remote'
 dialog = remote.require 'dialog'
 fs = require 'fs'
@@ -35,6 +35,8 @@ class AddPackagePanel extends View
                 @div class: 'info-label', "模板集合名称"
                 @div class: 'setting-description', "分类模板的根级路径"
               # @div class: 'editor-container', =>
+              @div outlet:'unedit_name', style:'display:none;', =>
+                @label outlet:'show_name', class: 'info-label'
               @subview "package_name", new TextEditorView(mini: true,attributes: {id: 'package_name', type: 'string'},  placeholderText: ' Package Name')
 
         @div class: 'section-body', =>
@@ -116,6 +118,7 @@ class AddPackagePanel extends View
       @type_view[tmp_name]= tmp_view
       @ccb_tree.append tmp_view
 
+    @hide_unedit_name()
     @package_name.setText ""
     @package_desc.setText ""
     @package_type_add.setText ""
@@ -140,6 +143,10 @@ class AddPackagePanel extends View
 
     @set_add_flag(false)
     @package_name.setText(tmp_obj.name)
+
+    unless tmp_obj.name isnt emp.EMP_DEFAULT_PACKAGE
+      @show_unedit_name(tmp_obj.name)
+
     @package_desc.setText(tmp_obj.desc) unless !tmp_obj.desc
     @old_name = tmp_obj.name
 
@@ -165,6 +172,15 @@ class AddPackagePanel extends View
         @type_view[tmp_type]= tmp_view
         @ccb_tree.append tmp_view
 
+  show_unedit_name:(sTmpName) ->
+    @package_name.hide()
+    @unedit_name.show()
+    # console.log @show_name
+    @show_name.text(sTmpName)
+
+  hide_unedit_name:() ->
+    @package_name.show()
+    @unedit_name.hide()
 
   # 按键回调
   do_cancel: ()->
@@ -177,7 +193,7 @@ class AddPackagePanel extends View
       # @do_submit_edit()
 
   do_submit_edit: ->
-    console.log "this is  edit!"
+    # console.log "this is  edit!"
     @set_add_flag()
 
 
@@ -298,8 +314,8 @@ class AddPackagePanel extends View
 # ----------------------------------------------
   # 用于其他方法的回调方法
   remove_td_callback: (name) ->
-    console.log @type_view
-    console.log name
+    # console.log @type_view
+    # console.log name
     delete @type_view[name]
 
     if old_name = @edit_type[name]
