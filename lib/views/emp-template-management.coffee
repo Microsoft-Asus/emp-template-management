@@ -43,12 +43,13 @@ class EmpTemplateManagement
       if fs.existsSync @templates_json
         json_data = fs.readFileSync @templates_json
         @templates_obj = JSON.parse json_data
+        # console.log @templates_obj
         @initial_package()
       else
         @initialize_default()
     catch err
       console.error err
-      emp.show_error "导入插件描述文件失败,请检查描述文件格式是否正确.(template.json)"
+      emp.show_error "导入插件描述文件失败,请检查描述文件格式是否正确.(#{@templates_json})"
       @initialize_default()
     # console.log @templates_obj
 
@@ -113,11 +114,15 @@ class EmpTemplateManagement
 
   edit_package: (old_name, name, desc, logo, type, add_type, edit_type, del_type) ->
     # console.log @packages
+    # console.log old_name, name, desc, logo, type, add_type, edit_type, del_type
     tmp_package = @packages[old_name]
     delete @packages[old_name]
+    delete @templates_obj[old_name]
+
     @templates_obj.templates = @templates_obj.templates.filter (tmp_pack) -> tmp_pack isnt old_name
     if tmp_package
       tmp_package.edit_detail({name:name, desc:desc, logo:logo, type:type, add_type:add_type,edit_type:edit_type, del_type:del_type})
+      # console.log tmp_package
       @store_package(tmp_package)
       tmp_package
     else
@@ -132,9 +137,11 @@ class EmpTemplateManagement
 
   # 保存创建修改
   store_package:(cbb_package)->
+    # console.log @templates_obj, cbb_package
     @packages[cbb_package.name] = cbb_package
     @templates_obj.templates.push cbb_package.name
     @templates_obj[cbb_package.name] = cbb_package.get_info()
+
     @refresh()
 
   # 删除模板集得相关描述
@@ -154,12 +161,12 @@ class EmpTemplateManagement
 
   #校验 CBB 内容,并修正错误的路径
   check_cbb_list: (sPackName)->
-    console.log sPackName
-    console.log @templates_obj
+    # console.log sPackName
+    # console.log @templates_obj
     oCheckPack = @packages[sPackName]
-    console.log oCheckPack
+    # console.log oCheckPack
 
-    console.log @templates_obj[sPackName]
+    # console.log @templates_obj[sPackName]
     oCheckPack.check_path()
 
 
@@ -321,6 +328,7 @@ class EmpTemplateManagement
     try
       snippet_src_path = atom.config.get(emp.EMP_APP_STORE_UI_PATH)
       # console.log atom.config.get(emp.EMP_APP_STORE_UI_PATH)
+      console.log snippet_src_path
       unless snippet_src_path
         snippet_src_path = emp.get_default_snippet_path()
         atom.config.set(emp.EMP_APP_STORE_UI_PATH, snippet_src_path)
